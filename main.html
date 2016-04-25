@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>FCL Explantory Visualization</title>
+
+    <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="css/slider.css"/>
+
+    <script src="//d3js.org/d3.v3.min.js"></script>
+    <script src="js/lib/topojson.v1.min.js"></script>
+</head>
+
+<body>
+
+<script>
+    var start_year = 1964,
+            end_year = 2014;
+
+    var cur_year = start_year;
+
+
+    this.world_topo, this.population, this.country_size;
+
+    d3.json("data/world-topo.json", function (error, world) {
+        this.world_topo = topojson.feature(world, world.objects.countries).features;
+
+        load_country_size();
+    });
+
+    function load_country_size(){
+        d3.csv("data/country_size.csv", function (error, data) {
+            this.country_size = data;
+
+            load_population();
+        });
+    }
+
+    function load_population() {
+        d3.csv("data/sp.pop.totl_Indicator_en_csv_modified.csv", function (error, data) {
+            this.population = data;
+
+            draw(this.world_topo, this.population, this.country_size);
+            animate_time();
+        });
+    }
+
+</script>
+
+<div id = "info">
+    <div id="info_text">
+        <h2> FCL Explantory Visualization </h2>
+        <p>The map shows the world population growth, together with FCL projects and researchers.</p>  <p>contact: Zeng Wei (<a href="mailto:zeng@arch.ethz.ch">zeng@arch.ethz.ch</a>)</p>
+    </div>
+    <div id="fcl_logo">
+        <a href="http://www.fcl.ethz.ch"><img src="res/fcl_logo.png"  alt="FCL Logo"></a>
+    </div>
+</div>
+
+<div id="map_container">
+</div>
+
+<div id="time_slider"></div>
+
+<script src="js/map/world_map.js"></script>
+<script src="js/slider/timer_slider.js"></script>
+
+</body>
+</html>
