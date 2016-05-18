@@ -7,17 +7,18 @@
 
 #info #info_text {
     float: left;
-    width: 45%;
+    width: 57%;
     background: #cccccc;
-    padding: 10px;
-    margin-right: 10px;
+    padding: 1px;
+    margin-right: 8px;
     height:140px;
 }
 
 #info #fcl_logo {
     background: #FFFf00;
-    float: right;
-    width: 45%;
+    float: left;
+    width: 510px;
+    height: 123px;
     padding: 10px;
 }
 
@@ -72,7 +73,7 @@ div.tooltip {
 .graticule {
     fill: none;
     stroke: #bbb;
-    stroke-width: .5px;
+    stroke-width: 1px;/*.*/
     stroke-opacity: .5;
 }
 
@@ -81,10 +82,3 @@ div.tooltip {
     stroke-width: 1px;
 }
 
-.legend-bg {
-    fill: #fff;
-    fill-opacity: 0.8; }
-
-.legend-bar {
-    stroke: #333;
-    stroke-width: 1px; }

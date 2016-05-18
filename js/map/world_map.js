@@ -27,6 +27,7 @@ function setup(width, height) {
     projection = d3.geo.mercator()
         .translate([(width / 2), (height / 2)])
         .scale(width / 2 / Math.PI);
+
     path = d3.geo.path().projection(projection);
 
     svg = d3.select("#map_container").append("svg")
@@ -34,7 +35,7 @@ function setup(width, height) {
         .attr("height", height)
         .call(zoom)
         .on("click", click)
-        .append("g");
+        .append("g");         // ??????? why 2 times
 
     g = svg.append("g");
 }
@@ -56,9 +57,12 @@ function draw(world_topo, population, world_country_size) {
         .attr("title", function (d, i) {
             return d.properties.name;
         })
-        .attr("fill",
-        function (d, j) {
-            var name = d.properties.name;
+        .attr("stroke","black")
+        .attr("stroke-width",0.1)
+        .attr("fill",function (d,i) {
+            //'#DEEBF7'
+         return d.properties.color;}
+                /*var name = d.properties.name;
             var country_properties = find_country_population(population, name);
             var country_size = find_country_size(world_country_size, name);
 
@@ -73,7 +77,7 @@ function draw(world_topo, population, world_country_size) {
             } else {
                 return colors[colors.length - 1];
             }
-        }
+        }*/
     );
 
     var offsetL = document.getElementById("map_container").offsetLeft + 20;
@@ -97,9 +101,12 @@ function draw(world_topo, population, world_country_size) {
         tooltip.classed("hidden", true);
     });
 
-    d3.csv("data/country-capitals.csv", function (err, capitals) {
+    //console.log('new!');
+    d3.csv("data/fitted/country-capitals.csv", function (err, capitals) {
         capitals.forEach(function (i) {
             addpoint(i.CapitalLongitude, i.CapitalLatitude, i.CapitalName);
+            //console.log(i.CountryName + ':  '+i.CapitalName);
+
         });
 
     });
@@ -131,22 +138,22 @@ function draw_legend() {
     d3.selectAll(".color_legend").remove();
     //d3.selectAll("#color_legend").append("g").attr("class", "color_legend").html(legend);
 
-    var wBox = undefined,
-        hBox = undefined;
 
     var wFactor = 10,
         hFactor = 2;
 
-    wBox = map_width / wFactor;
-    hBox = map_height / hFactor;
+    var wBox = map_width / wFactor,
+        hBox = map_height / hFactor;
+    //console.log('map_width  '+map_width +'   map_height'+map_height);
+
 
     var wRect = wBox / (wFactor * 0.75),
-        hLegend = hBox - hBox / (hFactor * 1.8),
         offsetText = wRect / 2,
-        offsetY = map_height - hBox * 0.9,
+        offsetY = map_height - hBox * 1.2,//0.9
         tr = 'translate(' + offsetText + ',' + offsetText * 3 + ')';
 
     var steps = colors.length,
+        hLegend = hBox - hBox / (hFactor * 1.8),
         hRect = hLegend / steps,
         offsetYFactor = hFactor / hRect;
 
@@ -155,17 +162,12 @@ function draw_legend() {
         attr('width', wBox).attr('height', hBox)
         .attr('transform', 'translate(0,' + offsetY + ')');
 
-    legend.append('rect').
-        style('fill', '#ffffff')
-        .attr('class', 'legend-bg')
-        .attr('width', wBox).attr('height', hBox);
 
-    // Draw a rectangle around the color scale to add a border.
-    legend.append('rect').attr('class', 'legend-bar').attr('width', wRect).attr('height', hLegend).attr('transform', tr);
+    var sg = legend.append('g')
+        .attr('transform', tr);
 
-    var sg = legend.append('g').attr('transform', tr);
-
-    sg.selectAll('rect').data(colors).enter().append('rect').attr('y', function (d, i) {
+    sg.selectAll('rect').data(colors).enter().append('rect')
+      .attr('y', function (d, i) {
         return i * hRect;
     }).attr('fill', function (d, i) {
         return colors[i];
@@ -184,8 +186,9 @@ function draw_legend() {
         return label;
     }).attr('class', function (d, i) {
         return 'text-' + i;
-    }).attr('x', wRect + offsetText).attr('y', function (d, i) {
-        return i * hRect + (hRect + hRect * offsetYFactor);
+    }).attr('x', wRect + offsetText)
+      .attr('y', function (d, i) {
+        return i * hRect+ (hRect + hRect * offsetYFactor);
     });
 
     //Draw label for end of extent.
@@ -195,6 +198,15 @@ function draw_legend() {
         return text;
 
     }).attr('x', wRect + offsetText).attr('y', offsetText * offsetYFactor * 2);
+
+    sg.append('text').text(function () {
+        //var text = formatNum(max_population);
+        var text = 'Population Density';
+        return text;
+
+    }).attr('x', 0).attr('y', function(){
+        return (colors.length+1) * hRect;
+    });
 }
 
 function redraw() {
@@ -241,10 +253,11 @@ function throttle() {
     throttleTimer = window.setTimeout(function () {
         redraw();
     }, 200);
+    //resize the window after 200 ms
 }
 
 function click() {
-    projection.invert(d3.mouse(this));
+    projection.invert(d3.mouse(this));           //??????what is it doing here
     //console.log(latlon);
 }
 

@@ -2,6 +2,8 @@
  * Created by Crazy Frog on 11/7/2015.
  */
 
+d3.select("#time_slider").style("background-color", d3.hsl(208, .100, .97));
+
 var slider_margin = {top: 20, right: 25, bottom: 20, left: 20},
     slider_width = document.getElementById("time_slider").offsetWidth - slider_margin.right - slider_margin.left;
     slider_height =100;
@@ -17,7 +19,7 @@ var brush = d3.svg.brush()
     .on("brush", brushed);
 
 var svg = d3.select("#time_slider")
-    .attr("z-index", 20).
+    .attr("z-index", 50).
     append("svg")
     .attr("width", slider_width + slider_margin.left + slider_margin.right)
     .attr("height", slider_height  +slider_margin.top+slider_margin.bottom)
@@ -61,13 +63,6 @@ function animate_time() {
         .call(brush.event);
 }
 
-function update(value){
-    cur_year = Math.round(value);
-    d3.select("#time_slider").style("background-color", d3.hsl(value, .8, .8));
-
-    redraw();
-}
-
 function brushed() {
     var value = brush.extent()[0];
 
@@ -78,5 +73,5 @@ function brushed() {
 
     handle.attr("cx", x(value));
 
-    update(value);
+    redraw();
 }
