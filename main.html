@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html>
 <head>
     <meta charset="UTF-8">
     <title>FCL Explantory Visualization</title>
@@ -12,57 +13,58 @@
 
 <body>
 
-<script>
-    var start_year = 1964,
-            end_year = 2014;
+<!--<script>
 
-    var cur_year = start_year;
+    /*handles the user input and select corresponding dislay methods accordingly
+    function newInput(inputType){
 
-    this.world_topo, this.population, this.country_size;
+        remove_extraLayer_allChild();
+        switch(inputType){
+            case 1: var category = document.getElementById("categories").value;
+                if(category=='population density'){
+                    draw_legend();
+                    load_popData();
+                }
 
-    d3.json("data/topo/world-topo.json", function (error, world) {
-        this.world_topo = topojson.feature(world, world.objects.countries).features;
 
-        load_country_size();
-    });
 
-    function load_country_size(){
-        d3.csv("data/fitted/country_size.csv", function (error, data) {
-            this.country_size = data;
+                break;
 
-            load_population();
-        });
-    }
+            default: alert('Incorrect input type!');
 
-    function load_population() {
-        d3.csv("data/fitted/population.csv", function (error, data) {
-            this.population = data;
+        }
+    }*/
 
-            draw(this.world_topo, this.population, this.country_size);
-            animate_time();
-        });
-    }
-
-</script>
+</script>-->
 
 <div id = "info">
     <div id="info_text">
-        <h2 align="center">      FCL Explantory Visualization </h2>
-        <p>    &emsp;The map shows the world population growth, together with FCL projects and researchers.</p>
-        <p>    &emsp;contact: Zeng Wei (<a href="mailto:zeng@arch.ethz.ch">zeng@arch.ethz.ch</a>)</p>
+        <h3 align="center">      FCL Explantory Visualization </h3>
+        <p>    &emsp;The map shows the world population growth, together with FCL projects and researchers.<br>&emsp;contact: Zeng Wei (<a href="mailto:zeng@arch.ethz.ch">zeng@arch.ethz.ch</a>)</p>
     </div>
     <div id="fcl_logo" align="center"><p></p>
         <a href="http://www.fcl.ethz.ch"><img src="res/fcl_logo.png"  alt="FCL Logo"></a>
     </div>
 </div>
 
-<div id="map_container">
+<div id="mapView">
+    <div id="menuBar" style="float:left;">
+        Categories:
+        <select id="categories" onchange="newInput(1)">
+            <option value="population density">Population Density</option>
+            <option value="saab">Saab</option>
+            <option value="fiat">Fiat</option>
+        </select>
 
+    </div>
+
+    <div id="map_container"></div>
 </div>
 
-<div id="time_slider"></div>
+
 
 <script src="js/map/world_map.js"></script>
+<script src="js/map/population_density_display.js"></script>
 <script src="js/slider/timer_slider.js"></script>
 
 </body>

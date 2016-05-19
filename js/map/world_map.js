@@ -4,12 +4,18 @@
  * Proprietary and confidential
  * Written by Zeng Wei (zeng@arch.ethz.ch)
  */
-d3.select(window).on("resize", throttle);
+
+//d3.select(window).on("resize", throttle);
+
+var projection, path, svg, g, extraLayer;  //extraLayer
+
+this.world_topo;
+
+
 
 var map_width = document.getElementById("map_container").offsetWidth;
-var map_height = window.innerHeight - 300;
 
-var projection, path, svg, g;
+var map_height = window.innerHeight - 300;
 
 var graticule = d3.geo.graticule();
 
@@ -17,9 +23,6 @@ var tooltip = d3.select("#map_container").append("div").attr("class", "tooltip h
 
 var zoom = d3.behavior.zoom().scaleExtent([1, 100]).on("zoom", move);
 
-//var color_split = [1000000000, 500000000, 200000000, 100000000, 50000000, 10000000, 5000000, 0];
-var color_split = [500, 400, 300, 200, 100, 50, 10, 0];
-var colors = ["#08306B", "#08519C", "#2171B5", "#4292C6", "#6BAED6", "#9ECAE1", "#C6DBEF", "#DEEBF7"];
 
 setup(map_width, map_height);
 
@@ -35,12 +38,20 @@ function setup(width, height) {
         .attr("height", height)
         .call(zoom)
         .on("click", click)
-        .append("g");         // ??????? why 2 times
+        .append("g");
 
     g = svg.append("g");
-}
 
-function draw(world_topo, population, world_country_size) {
+    extraLayer = svg.append("g")
+        .attr("id", "extra_layer"); // append a extra_layer to #map_container.svg.g
+
+
+    d3.json("data/topo/world-topo.json", function (error, world) {
+        this.world_topo = topojson.feature(world, world.objects.countries).features;
+    });
+    console.log("world_topo"+ this.world_topo);
+    /*draw(this.world_topo);*/
+    //function draw(world_topo, population, world_country_size) {
     svg.append("path").datum(graticule).attr("class", "graticule").attr("d", path);
 
     g.append("path").datum({type: "LineString", coordinates: [[-180, 0], [-90, 0], [0, 0], [90, 0], [180, 0]]})
@@ -57,28 +68,11 @@ function draw(world_topo, population, world_country_size) {
         .attr("title", function (d, i) {
             return d.properties.name;
         })
-        .attr("stroke","black")
-        .attr("stroke-width",0.1)
-        .attr("fill",function (d,i) {
-            //'#DEEBF7'
-         return d.properties.color;}
-                /*var name = d.properties.name;
-            var country_properties = find_country_population(population, name);
-            var country_size = find_country_size(world_country_size, name);
-
-            if (country_properties.length > 0 && country_size.length > 0) {
-                var year_pop = country_properties[0][cur_year];
-                var c_size = country_size[0][cur_year];
-                for (var i = 0; i < color_split.length; i++) {
-                    if (year_pop / c_size > color_split[i])
-                        return colors[i];
-                }
-                return colors[1];
-            } else {
-                return colors[colors.length - 1];
+        .attr("fill",
+            function (d, j) {
+                return d.properties.color;
             }
-        }*/
-    );
+        );
 
     var offsetL = document.getElementById("map_container").offsetLeft + 20;
     var offsetT = document.getElementById("map_container").offsetTop + 10;
@@ -89,135 +83,124 @@ function draw(world_topo, population, world_country_size) {
         });
 
         var name = d.properties.name;
-        var country_properties = find_country_population(population, name);
-        var year_pop = country_properties[0][cur_year];
-        var country_size = find_country_size(world_country_size, name);
-        var cur_country_size = country_size[0][cur_year];
 
         tooltip.classed("hidden", false)
             .attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
-            .html(d.properties.name + " | Population:" + formatNum(year_pop)+"| Size:"+cur_country_size+"|Density:"+(year_pop/cur_country_size));
+            .html(d.properties.name);
     }).on("mouseout", function (d, i) {
         tooltip.classed("hidden", true);
     });
 
-    //console.log('new!');
-    d3.csv("data/fitted/country-capitals.csv", function (err, capitals) {
+
+    d3.csv("data/country-capitals.csv", function (err, capitals) {
         capitals.forEach(function (i) {
             addpoint(i.CapitalLongitude, i.CapitalLatitude, i.CapitalName);
-            //console.log(i.CountryName + ':  '+i.CapitalName);
+        });
+    });
+
+}
+
+/*
+function setup() {
+    
+    this.width = map_width;
+    this.height = map_height;
+    
+    projection = d3.geo.mercator()
+        .translate([(width / 2), (height / 2)])
+        .scale(width / 2 / Math.PI);
+
+    path = d3.geo.path().projection(projection);
+
+    svg = d3.select("#map_container").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .call(zoom)
+        .on("click", click);
+        //.append("g");         // ??????? why 2 times
+    
+    g = svg.append("g");
+
+    extraLayer = svg.append("g")
+        .attr("id","extra_layer"); // append a extra_layer to #map_container.svg.g
+
+    d3.json("data/topo/world-topo.json", function (error, world) {
+        this.world_topo = topojson.feature(world, world.objects.countries).features;
+    });
+
+    console.log("world_topo: "+ this.world_topo);
+    
+    draw(this.world_topo);
+}
+
+function draw(world_topo) {
+    
+    
+    //set up coordinate system and graticule
+    svg.append("path").datum(graticule).attr("class", "graticule").attr("d", path);
+
+    g.append("path").datum({type: "LineString", coordinates: [[-180, 0], [-90, 0], [0, 0], [90, 0], [180, 0]]})
+        .attr("class", "equator")
+        .attr("d", path);
+
+    //draw up countries, assign colors specified
+    var country = g.selectAll(".country").data(this.world_topo);
+    
+    country.enter().insert("path")
+        .attr("class", "country")
+        .attr("d", path)
+        .attr("id", function (d, i) {
+            return d.id;
+        })
+        .attr("title", function (d, i) {
+            return d.properties.name;
+        })
+        .attr("stroke","black")
+        .attr("stroke-width",0.1)
+        .attr("fill",function (d,i) {
+         return d.properties.color;}
+    );
+
+    
+    //setup tooltips
+    var offsetL = document.getElementById("map_container").offsetLeft + 20;
+    var offsetT = document.getElementById("map_container").offsetTop + 10;
+
+    country.on("mousemove", function (d, i) {
+        var mouse = d3.mouse(svg.node()).map(function (d) {
+            return parseInt(d);
+        });
+
+        var name = d.properties.name;
+
+
+        tooltip.classed("hidden", false)
+            .attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
+            .html(d.properties.name);
+    }).on("mouseout", function (d, i) {
+        tooltip.classed("hidden", true);
+    });
+
+    console.log(1);
+    /*draw capital dots
+    d3.csv("data/fitted/country-capitals.csv", function (err, capitals) {
+        capitals.forEach(function (i) {
+            addpoint(i.CapitalLongitude, i.CapitalLatitude, i.CountryName);
+
 
         });
 
     });
 
-    draw_legend();
+
+}*/
+
+/*remove  all children of the extra layers*/
+function remove_extraLayer_allChild(){
+
+    while (extraLayer.firstChild) extraLayer.removeChild(extraLayer.firstChild);
 }
 
-function find_country_population(population, country_name) {
-    var m = population.filter(function (f) {
-        //return f.country == country_id;
-        return f.Country_Name == country_name;
-    });
-
-    return m;
-}
-
-function find_country_size(country_size, country_name){
-    var m = country_size.filter(function (f){
-        return f.Country_Name == country_name;
-    });
-
-    return m;
-}
-
-/*
- Add color legend
- */
-function draw_legend() {
-    d3.selectAll(".color_legend").remove();
-    //d3.selectAll("#color_legend").append("g").attr("class", "color_legend").html(legend);
-
-
-    var wFactor = 10,
-        hFactor = 2;
-
-    var wBox = map_width / wFactor,
-        hBox = map_height / hFactor;
-    //console.log('map_width  '+map_width +'   map_height'+map_height);
-
-
-    var wRect = wBox / (wFactor * 0.75),
-        offsetText = wRect / 2,
-        offsetY = map_height - hBox * 1.2,//0.9
-        tr = 'translate(' + offsetText + ',' + offsetText * 3 + ')';
-
-    var steps = colors.length,
-        hLegend = hBox - hBox / (hFactor * 1.8),
-        hRect = hLegend / steps,
-        offsetYFactor = hFactor / hRect;
-
-    var legend = g.append('g').
-        attr('class', 'color_legend').
-        attr('width', wBox).attr('height', hBox)
-        .attr('transform', 'translate(0,' + offsetY + ')');
-
-
-    var sg = legend.append('g')
-        .attr('transform', tr);
-
-    sg.selectAll('rect').data(colors).enter().append('rect')
-      .attr('y', function (d, i) {
-        return i * hRect;
-    }).attr('fill', function (d, i) {
-        return colors[i];
-    }).attr('width', wRect).attr('height', hRect);
-
-    //var max_population = 1398790000;
-
-    var max_population = 1000;
-
-    // Draw color scale labels.
-    sg.selectAll('text').data(colors).enter().append('text').text(function (d, i) {
-        // The last element in the colors list corresponds to the lower threshold.
-        //var label = formatNum(color_split[i]);
-
-        var label = color_split[i];
-        return label;
-    }).attr('class', function (d, i) {
-        return 'text-' + i;
-    }).attr('x', wRect + offsetText)
-      .attr('y', function (d, i) {
-        return i * hRect+ (hRect + hRect * offsetYFactor);
-    });
-
-    //Draw label for end of extent.
-    sg.append('text').text(function () {
-        //var text = formatNum(max_population);
-        var text = max_population;
-        return text;
-
-    }).attr('x', wRect + offsetText).attr('y', offsetText * offsetYFactor * 2);
-
-    sg.append('text').text(function () {
-        //var text = formatNum(max_population);
-        var text = 'Population Density';
-        return text;
-
-    }).attr('x', 0).attr('y', function(){
-        return (colors.length+1) * hRect;
-    });
-}
-
-function redraw() {
-    map_width = document.getElementById("map_container").offsetWidth;
-    map_height = window.innerHeight - 300;
-
-    d3.select("svg").remove();
-    setup(map_width, map_height);
-
-    draw(this.world_topo, this.population, this.country_size);
-}
 
 function move() {
     var t = d3.event.translate;
@@ -242,23 +225,12 @@ function move() {
     d3.selectAll(".country").style("stroke-map_width", 1.5 / s);
     d3.selectAll(".text").style("font-size", 20 / s);
     d3.selectAll(".point").attr("r", 3 / s);
-
-    draw_legend();
-}
-
-var throttleTimer;
-
-function throttle() {
-    window.clearTimeout(throttleTimer);
-    throttleTimer = window.setTimeout(function () {
-        redraw();
-    }, 200);
-    //resize the window after 200 ms
+    
 }
 
 function click() {
     projection.invert(d3.mouse(this));           //??????what is it doing here
-    //console.log(latlon);
+
 }
 
 //function to add points and text to the map (used in plotting capitals)
@@ -285,10 +257,35 @@ function addpoint(lat, lon, text) {
     }
 }
 
-function formatNum(num) {
-    var format = d3.format(',.02f');
+/*
+var throttleTimer;
 
-    var label = format(num / 1000000) + "M";
+ function throttle() {
+ window.clearTimeout(throttleTimer);
+ throttleTimer = window.setTimeout(function () {
+     var map_width = document.getElementById("map_container").offsetWidth;
 
-    return label;
-}
+     var map_height = window.innerHeight - 300;
+ setup(map_width,map_height);
+ }, 200);
+ //resize the window after 200 ms
+ }
+--------------
+ d3.select(window).on("resize", throttle);
+
+ var map_width = document.getElementById("map_container").offsetWidth;
+ var map_height = window.innerHeight - 300;
+
+ var projection, path, svg, g;
+
+ var graticule = d3.geo.graticule();
+
+ var tooltip = d3.select("#map_container").append("div").attr("class", "tooltip hidden");
+
+ var zoom = d3.behavior.zoom().scaleExtent([1, 100]).on("zoom", move);
+
+ //var color_split = [1000000000, 500000000, 200000000, 100000000, 50000000, 10000000, 5000000, 0];
+ var color_split = [500, 400, 300, 200, 100, 50, 10, 0];
+ var colors = ["#08306B", "#08519C", "#2171B5", "#4292C6", "#6BAED6", "#9ECAE1", "#C6DBEF", "#DEEBF7"];
+*/
+
