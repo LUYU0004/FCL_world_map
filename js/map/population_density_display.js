@@ -3,36 +3,25 @@
  */
 
 
-var start_year = 1964,
-    end_year = 2014;
-
-var cur_year = start_year;
-
+var cur_year = 1964;
 //var color_split = [1000000000, 500000000, 200000000, 100000000, 50000000, 10000000, 5000000, 0];
 var color_split = [500, 400, 300, 200, 100, 50, 10, 0];
 var colors = ["#08306B", "#08519C", "#2171B5", "#4292C6", "#6BAED6", "#9ECAE1", "#C6DBEF", "#DEEBF7"];
 
 
-var world_country_size, population;
-
 /*load_countrySize_and_population */
-function load_popData(){
-    d3.csv("data/fitted/country_size.csv", function (error, data) {
-        country_size = data;
+function load_popData(population, world_country_size){
 
-    });
+    draw_legend();
+    draw_time_slider();
 
-    d3.csv("data/fitted/population.csv", function (error, data) {
-        population = data;
-    });
-        
-    display_PopDensity();
+    display_PopDensity(population, world_country_size);
     animate_time();
 }
 
 
 /*create or update population density on map*/
-function display_PopDensity(){
+function display_PopDensity(population, world_country_size){
 
 
     /*modify colors of each countries based on population density*/
@@ -85,6 +74,10 @@ function display_PopDensity(){
 
 }
 
+function update_curYear(curY){
+    cur_year = curY;
+}
+
 /*
  Add color legend to extra_layer
  */
@@ -98,7 +91,6 @@ function draw_legend() {
 
     var wBox = map_width / wFactor,
         hBox = map_height / hFactor;
-    //console.log('map_width  '+map_width +'   map_height'+map_height);
 
 
     var wRect = wBox / (wFactor * 0.75),
@@ -111,13 +103,13 @@ function draw_legend() {
         hRect = hLegend / steps,
         offsetYFactor = hFactor / hRect;
 
-    var legend = extraLayer.append('g')    //add the legend to extra_layer
+    var legend = d3.select("#extra_info").append("svg").append('g')    //add the legend to extra_info.svg.g
         .attr('class', 'color_legend')
         .attr('width', wBox)
         .attr('height', hBox)
         .attr('transform', 'translate(0,' + offsetY + ')');
 
-
+    console.log("color_legend"+legend);
     var sg = legend.append('g')
         .attr('transform', tr);
 
@@ -161,8 +153,21 @@ function draw_legend() {
     });
 }
 
+function draw_time_slider(){
+    
+    var extra = d3.select("#extra_info");
+
+    console.log("extra_info  "+ extra);
+        var time = extra.append("div")
+        .attr("class","time_slider");
+
+    console.log("time_slider: "+ d3.selectAll(".time_slider"));
+
+
+}
 
 function find_country_population(population, country_name) {
+
     var m = population.filter(function (f) {
         //return f.country == country_id;
         return f.Country_Name == country_name;

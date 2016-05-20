@@ -7,29 +7,39 @@
 
 #info #info_text {
     float: left;
-    width: 57%;
+    width: 55%;
     background: #cccccc;
-    padding: 1px;
-    margin-right: 8px;
-    height:120px;
+    padding: 10px;
+    margin-right: 10px;
+    height:140px;
 }
 
 #info #fcl_logo {
     background: #FFFf00;
     float: left;
-    width: 510px;
-    height: 120px;
-    padding: 1px;
+    width: 40.5%;
+    height:140px;
+    padding: 10px;
 }
+/*
+#map_container {
+    margin: 5px 5px 0px 0px;
+    padding:2px;
+    border: 1px solid #d0d0d0;
+    border-radius:5px;
+    height: 50%;
+    overflow:hidden;
+    z-index: 0;
+}
+*/
 
-#mapView {
+#content_holder {
     margin: 5px 5px 0px 0px;
     padding:2px;
     border: 1px solid #d0d0d0;
     border-radius:5px;
     height: 500px;
-    width: 100%;
-    overflow:hidden;
+    /*overflow:hidden;*/
     position: relative;
 }
 
@@ -39,7 +49,7 @@
     left: 0;
     width : 100%;
     height: 10%;
-    z-index: 1;
+    z-index: 10;
 
 }
 
@@ -48,11 +58,21 @@
     top: 0;
     left: 0;
     width : 100%;
-    height: 100%;
+    height: 170%;
 }
 
-#color_legend {
+#extra_info {
     position: absolute;
+    top: 90%;
+    left: 0;
+    width : 100%;
+    height: 100%;
+    z-index: 20;
+}
+
+
+
+.color_legend {
     top: 550px;
     left: 30px;
     margin: 5px 5px 0px 0px;
@@ -61,17 +81,19 @@
     border-radius:5px;
     width:200px;
     height: 300px;
-    z-index: 3;
+    z-index: 30;
+    /*position: absolute;
+    z-index: 1;*/
 }
 
-#time_slider {
+.time_slider {
     margin: 5px 5px 0px 0px;
     padding:2px;
     border: 1px solid #d0d0d0;
     border-radius:5px;
     height: 100px;
     overflow:hidden;
-    z-index: 1;
+    z-index: 40;
 }
 
 .hidden {
@@ -92,7 +114,7 @@ div.tooltip {
 .graticule {
     fill: none;
     stroke: #bbb;
-    stroke-width: 1px;/*.*/
+    stroke-width: .5px;
     stroke-opacity: .5;
 }
 
@@ -101,3 +123,10 @@ div.tooltip {
     stroke-width: 1px;
 }
 
+.legend-bg {
+    fill: #fff;
+    fill-opacity: 0.8; }
+
+.legend-bar {
+    stroke: #333;
+    stroke-width: 1px; }
