@@ -1,3 +1,8 @@
+/*#what {
+    width:100%;
+
+}
+
 #info {
     width: 100%;
     padding: 0px 0px 0px 0px;
@@ -7,7 +12,7 @@
 
 #info #info_text {
     float: left;
-    width: 55%;
+    width: 45%;
     background: #cccccc;
     padding: 10px;
     margin-right: 10px;
@@ -16,63 +21,44 @@
 
 #info #fcl_logo {
     background: #FFFf00;
-    float: left;
-    width: 40.5%;
-    height:140px;
+    float: right;
+    width: 45%;
     padding: 10px;
 }
-/*
-#map_container {
-    margin: 5px 5px 0px 0px;
-    padding:2px;
-    border: 1px solid #d0d0d0;
-    border-radius:5px;
-    height: 50%;
-    overflow:hidden;
-    z-index: 0;
-}
 */
-
-#content_holder {
+#content_holder{
     margin: 5px 5px 0px 0px;
     padding:2px;
     border: 1px solid #d0d0d0;
     border-radius:5px;
-    height: 500px;
-    /*overflow:hidden;*/
+    height: 550px;
+    overflow:hidden;
     position: relative;
 }
 
-#menuBar{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width : 100%;
-    height: 10%;
-    z-index: 10;
-
-}
 
 #map_container {
+    top:0;
+    left:0;
+    width:100%;
+    height: 100%;
+    overflow:hidden;
+    z-index: 0;
     position: absolute;
-    top: 0;
-    left: 0;
-    width : 100%;
-    height: 170%;
 }
 
 #extra_info {
+    top:0;
+    left:0;
+    width: 500px;
+    height: 550px;
+    overflow:hidden;
+    z-index: 2;
     position: absolute;
-    top: 90%;
-    left: 0;
-    width : 100%;
-    height: 100%;
-    z-index: 20;
 }
 
-
-
 .color_legend {
+    position: absolute;
     top: 550px;
     left: 30px;
     margin: 5px 5px 0px 0px;
@@ -81,19 +67,20 @@
     border-radius:5px;
     width:200px;
     height: 300px;
-    z-index: 30;
-    /*position: absolute;
-    z-index: 1;*/
+    /*z-index: 1;*/
 }
 
-.time_slider {
+#time_slider {
     margin: 5px 5px 0px 0px;
     padding:2px;
     border: 1px solid #d0d0d0;
     border-radius:5px;
-    height: 100px;
+    width:99.1%;
+    height: 50px;
     overflow:hidden;
-    z-index: 40;
+    top: 95%;
+    left:1%;
+    /*z-index: 1;*/
 }
 
 .hidden {

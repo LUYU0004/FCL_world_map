@@ -2,13 +2,9 @@
  * Created by Crazy Frog on 11/7/2015.
  */
 
-var start_year = 1964,
-    end_year = 2014;
-
-var cur_year = start_year;
-
-var slider_margin = {top: 20, right: 25, bottom: 20, left: 20},
-    slider_width = document.getElementById("extra_info").offsetWidth - slider_margin.right - slider_margin.left;
+var slider_margin = {top: 10, right: 25, bottom: 10, left: 20},
+    slider_width = d3.select("#time_slider").offsetWidth - slider_margin.right - slider_margin.left;
+        //document.getElementById("time_slider").offsetWidth - slider_margin.right - slider_margin.left;
     slider_height =100;
 
 var year_range = d3.scale.linear().domain([start_year, end_year]);
@@ -21,7 +17,7 @@ var brush = d3.svg.brush()
     .extent([start_year, start_year])
     .on("brush", brushed);
 
-var svg = d3.selectAll(".time_slider")
+var svg = d3.select("#time_slider")
     .attr("z-index", 20).
     append("svg")
     .attr("width", slider_width + slider_margin.left + slider_margin.right)
@@ -58,7 +54,6 @@ var handle = slider.append("circle")
     .attr("r", 9);
 
 function animate_time() {
-
     slider
         .call(brush.event)
         .transition() // gratuitous intro!
@@ -67,14 +62,11 @@ function animate_time() {
         .call(brush.event);
 }
 
-
 function update(value){
     cur_year = Math.round(value);
-    d3.selectAll(".time_slider").style("background-color", d3.hsl(214, .41, .78));
-    
-    console.log("cur_year"+cur_year);
-    update_curYear(cur_year);
-    display_PopDensity();
+    d3.select("#time_slider").style("background-color", d3.hsl(value, .8, .8));
+
+    redraw();
 }
 
 function brushed() {

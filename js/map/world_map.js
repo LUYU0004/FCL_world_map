@@ -21,17 +21,14 @@ var zoom = d3.behavior.zoom().scaleExtent([1, 100]).on("zoom", move);
 var color_split = [500, 400, 300, 200, 100, 50, 10, 0];
 var colors = ["#08306B", "#08519C", "#2171B5", "#4292C6", "#6BAED6", "#9ECAE1", "#C6DBEF", "#DEEBF7"];
 
-//setup(map_width, map_height);
+//draw_time_slider();
+setup(map_width, map_height);
+
 
 function setup(width, height) {
-
     projection = d3.geo.mercator()
         .translate([(width / 2), (height / 2)])
-        //.center()
-        //.rotate( [71.057,0] )
-        .center( [0, 42.313] )
-        .scale(width /2/ Math.PI);
-
+        .scale(width / 2 / Math.PI);
     path = d3.geo.path().projection(projection);
 
     svg = d3.select("#map_container").append("svg")
@@ -44,14 +41,10 @@ function setup(width, height) {
     g = svg.append("g");
 }
 
-function draw_worldmap(world_topo) {
-
-    removeAllChild();
-    setup(map_width, map_height);
-
+function draw(world_topo, population, world_country_size) {
     svg.append("path").datum(graticule).attr("class", "graticule").attr("d", path);
 
-    svg.append("path").datum({type: "LineString", coordinates: [[-180, 0], [-90, 0], [0, 0], [90, 0], [180, 0]]})
+    g.append("path").datum({type: "LineString", coordinates: [[-180, 0], [-90, 0], [0, 0], [90, 0], [180, 0]]})
         .attr("class", "equator")
         .attr("d", path);
 
@@ -67,34 +60,43 @@ function draw_worldmap(world_topo) {
         })
         .attr("fill",
         function (d, j) {
-            return d.properties.color;
+            var name = d.properties.name;
+            var country_properties = find_country_population(population, name);
+            var country_size = find_country_size(world_country_size, name);
+
+            if (country_properties.length > 0 && country_size.length > 0) {
+                var year_pop = country_properties[0][cur_year];
+                var c_size = country_size[0][cur_year];
+                for (var i = 0; i < color_split.length; i++) {
+                    if (year_pop / c_size > color_split[i])
+                        return colors[i];
+                }
+                return colors[1];
+            } else {
+                return colors[colors.length - 1];
+            }
         }
     );
 
     var offsetL = document.getElementById("map_container").offsetLeft + 20;
     var offsetT = document.getElementById("map_container").offsetTop + 10;
 
-
     country.on("mousemove", function (d, i) {
         var mouse = d3.mouse(svg.node()).map(function (d) {
-            console.log("mouse "+mouse);
             return parseInt(d);
         });
-        
 
         var name = d.properties.name;
-        //var country_properties = find_country_population(population, name);
-        //var year_pop = country_properties[0][cur_year];
-        //var country_size = find_country_size(world_country_size, name);
-        //var cur_country_size = country_size[0][cur_year];
+        var country_properties = find_country_population(population, name);
+        var year_pop = country_properties[0][cur_year];
+        var country_size = find_country_size(world_country_size, name);
+        var cur_country_size = country_size[0][cur_year];
 
         tooltip.classed("hidden", false)
-            //.attr("style", "left:" + (mouse[0] +10)+ "px;top:" + (mouse[1]+10)  + "px")
             .attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
-            .html(d.properties.name); 
+            .html(d.properties.name + " | Population:" + formatNum(year_pop)+"| Size:"+cur_country_size+"|Density:"+(year_pop/cur_country_size));
     }).on("mouseout", function (d, i) {
         tooltip.classed("hidden", true);
-
     });
 
     d3.csv("data/fitted/country-capitals.csv", function (err, capitals) {
@@ -103,8 +105,7 @@ function draw_worldmap(world_topo) {
         });
 
     });
-
-    //draw_legend();
+    draw_legend();
 }
 
 function find_country_population(population, country_name) {
@@ -124,9 +125,20 @@ function find_country_size(country_size, country_name){
     return m;
 }
 
+function draw_time_slider(){
+    
+    var body = d3.selectAll("body")
+    var div =     body.append("div")
+        .attr("id","time_slider")
+        //.attr("class","time_slider")
+        .attr("class","extra_info");
+        //.html('time_slider');
+    
+}
+
 /*
  Add color legend
- 
+ */
 function draw_legend() {
     d3.selectAll(".color_legend").remove();
     //d3.selectAll("#color_legend").append("g").attr("class", "color_legend").html(legend);
@@ -150,8 +162,8 @@ function draw_legend() {
         hRect = hLegend / steps,
         offsetYFactor = hFactor / hRect;
 
-    var legend = g.append('g').
-        attr('class', 'color_legend').
+    var legend = g.append("g").attr("class","extra_info").append('g')
+        .attr('class', 'color_legend').
         attr('width', wBox).attr('height', hBox)
         .attr('transform', 'translate(0,' + offsetY + ')');
 
@@ -198,14 +210,14 @@ function draw_legend() {
 }
 
 function redraw() {
-    map_width = document.getElementById("map_container").offsetWidth;
+    map_width = document.getElementById("content_holder").offsetWidth;
     map_height = window.innerHeight - 300;
 
     d3.select("svg").remove();
     setup(map_width, map_height);
 
     draw(this.world_topo, this.population, this.country_size);
-}*/
+}
 
 function move() {
     var t = d3.event.translate;
@@ -232,6 +244,7 @@ function move() {
     d3.selectAll(".point").attr("r", 3 / s);
 
     draw_legend();
+    
 }
 
 var throttleTimer;
@@ -239,7 +252,7 @@ var throttleTimer;
 function throttle() {
     window.clearTimeout(throttleTimer);
     throttleTimer = window.setTimeout(function () {
-        draw_worldmap(this.world_topo);
+        redraw();
     }, 200);
 }
 
@@ -278,18 +291,4 @@ function formatNum(num) {
     var label = format(num / 1000000) + "M";
 
     return label;
-}
-
-function removeAllChild(){
-
-    var extra_info = document.getElementById("extra_info");
-    while (extra_info.firstChild) {
-        extra_info.removeChild(extra_info.firstChild);
-    }
-
-    var map_container = document.getElementById("map_container");
-    while (map_container.firstChild) {
-        map_container .removeChild(map_container .firstChild);
-    }
-
 }
