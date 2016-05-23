@@ -1,8 +1,10 @@
 /**
- * Created by yuhao on 18/5/16.
+ * Created by yuhao on 23/5/16.
  */
 
-var population, world_country_size;
+
+var country_co2_emission, world_country_size;
+
 var index = 1;
 var count = 0;
 
@@ -11,10 +13,10 @@ var color_split = [500, 400, 300, 200, 100, 50, 10, 0];
 var colors = ["#08306B", "#08519C", "#2171B5", "#4292C6", "#6BAED6", "#9ECAE1", "#C6DBEF", "#DEEBF7"];
 
 
-/*load_countrySize_and_population */
-function load_popData(_population, _world_country_size){
-    
-    population = _population;
+/*load_countrySize_and_country_co2_emission */
+function load_co2Data(_country_co2_emission, _world_country_size){
+
+    country_co2_emission = _country_co2_emission;
     world_country_size = _world_country_size;
 
     draw_legend();
@@ -28,7 +30,7 @@ function load_popData(_population, _world_country_size){
 
 
 /*create or update population density on map*/
-function display_PopDensity(cur_year){
+function display_co2Density(cur_year){
 
 
     /*modify colors of each countries based on population density*/
@@ -36,11 +38,11 @@ function display_PopDensity(cur_year){
 
     countries.attr("fill", function (d,i) {
         var name = d.properties.name;
-        var country_properties = find_country_population(population, name);
+        var country_properties = find_country_co2_emission(country_co2_emission, name);
         var country_size = find_country_size(world_country_size, name);
 
         if (country_properties.length > 0 && country_size.length > 0) {
-            var year_pop = country_properties[0][cur_year];
+            var year_co2 = country_properties[0][cur_year];
             var c_size = country_size[0][cur_year];
             for (var index = 0; index < color_split.length; index++) {
                 if (year_pop / c_size > color_split[index])
@@ -65,14 +67,14 @@ function display_PopDensity(cur_year){
     country.on("mouseout",null);
 
     if(index ==1){
-        population.forEach(function(d){
+        country_co2_emission.forEach(function(d){
             count++;
             console.log(count+d.Country_Name);
 
             var it=find_Dif_countryName(country,d.Country_Name);
             if(it != null)
-                
-                console.log("can not find: "+ it);
+
+                console.log("!!!!!!!!!!!!can not find: "+ it);
         });
 
         index++;
@@ -86,14 +88,14 @@ function display_PopDensity(cur_year){
 
         var name = d.properties.name;
 
-        var country_properties = find_country_population(population, name);
-        var year_pop = country_properties[0][cur_year];
+        var country_properties = find_country_co2_emission(country_co2_emission, name);
+        var year_co2 = country_properties[0][cur_year];
         var country_size = find_country_size(world_country_size, name);
         var cur_country_size = country_size[0][cur_year];
 
         tooltip.classed("hidden", false)
             .attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
-            .html(d.properties.name + " | Population:" + formatNum(year_pop)+"| Size:"+cur_country_size+"|Density:"+(year_pop/cur_country_size));
+            .html(d.properties.name + " | country_co2_emission:" + formatNum(year_pop)+"| Size:"+cur_country_size+"|Density:"+(year_pop/cur_country_size));
     }).on("mouseout", function (d, i) {
         tooltip.classed("hidden", true);
     });
@@ -133,7 +135,7 @@ function draw_legend() {
         .attr('width', wBox)
         .attr('height', hBox)
         .attr('transform', 'translate(0,' + offsetY + ')');
-    
+
     var sg = legend.append('g')
         .attr('transform', tr);
 
@@ -144,9 +146,9 @@ function draw_legend() {
         return colors[i];
     }).attr('width', wRect).attr('height', hRect);
 
-    //var max_population = 1398790000;
 
-    var max_population = 1000;
+
+    var max_country_co2_emission = 1000;
 
     // Draw color scale labels.
     sg.selectAll('text').data(colors).enter().append('text').text(function (d, i) {
@@ -163,14 +165,14 @@ function draw_legend() {
 
     //Draw label for end of extent.
     sg.append('text').text(function () {
-        //var text = formatNum(max_population);
-        return max_population;
+
+        return max_country_co2_emission;
 
     }).attr('x', wRect + offsetText).attr('y', offsetText * offsetYFactor * 2);
 
     sg.append('text').text(function () {
-        //var text = formatNum(max_population);
-        return 'Population Density';
+        //var text = formatNum(max_country_co2_emission);
+        return 'Country CO2 Emission Density';
 
     }).attr('x', 0).attr('y', function(){
         return (colors.length+1) * hRect;
@@ -178,20 +180,20 @@ function draw_legend() {
 }
 
 function draw_time_slider(){
-    
+
     var body = d3.select("#content_holder");
-    
+
     var time_slider = body.append("div")
         .classed("extra_info",true)
         .attr('id','time_slider')
         .attr("width","100%");
-        //.attr("class","extra_info");
+    //.attr("class","extra_info");
 
 }
 
-function find_country_population(population, country_name) {
+function find_country_co2_emission(country_co2_emission, country_name) {
 
-    var m= population.filter(function (f) {
+    var m= country_co2_emission.filter(function (f) {
         //return f.country == country_id;
         return f.Country_Name == country_name;
     });

@@ -13,20 +13,47 @@
 <body>
 
 <script>
-    var start_year = 1964,
-            end_year = 2014;
+    //var start_year = 1964,
+      //      end_year = 2014;
 
-    var cur_year = start_year;
+    //var cur_year = start_year;
 
-    this.world_topo, this.population, this.country_size;
+    this.world_topo, this.population, this.world_country_size;//,this.population, this.country_size;
 
     d3.json("data/topo/world-topo.json", function (error, world) {
         this.world_topo = topojson.feature(world, world.objects.countries).features;
 
-        load_country_size();
+        draw_worldmap(this.world_topo);
     });
 
-    function load_country_size(){
+    d3.csv("data/fitted/country_size.csv", function (error, data) {
+        this.world_country_size = data;
+
+    });
+
+    d3.csv("data/fitted/population.csv", function (error, data) {
+        this.population = data;
+        //console.log("population: "+ this.population);
+    });
+
+    d3.csv("data/fitted/population.csv", function (error, data) {
+        this.population = data;
+        //console.log("population: "+ this.population);
+    });
+
+    function newInput(){
+        var category = document.getElementById("categories").value;
+
+        switch(category){
+            case "population_density":  load_popData(this.population,this.world_country_size);
+                                        break;
+            case "CO2_Emission":
+            default: draw_worldmap(this.world_topo);
+        }
+    }
+
+
+    /*function load_country_size(){
         d3.csv("data/fitted/country_size.csv", function (error, data) {
             this.country_size = data;
 
@@ -38,33 +65,51 @@
         d3.csv("data/fitted/population.csv", function (error, data) {
             this.population = data;
 
-
-            draw(this.world_topo, this.population, this.country_size);
+            display_pop(this.world_topo, this.population, this.country_size);
             animate_time();
         });
     }
-
+*/
 </script>
-
 <!--
 <div id = "info">
     <div id="info_text">
-        <h2> FCL Explantory Visualization </h2>
-        <p>The map shows the world population growth, together with FCL projects and researchers.</p>  <p>contact: Zeng Wei (<a href="mailto:zeng@arch.ethz.ch">zeng@arch.ethz.ch</a>)</p>
+        <h2 align="center"> FCL Explantory Visualization </h2>
+        <p>&emsp;The map shows the world population growth, together with FCL projects and researchers.</p>
+        <p>&emsp;contact: Zeng Wei (<a href="mailto:zeng@arch.ethz.ch">zeng@arch.ethz.ch</a>)</p>
     </div>
-    <div id="fcl_logo">
+    <div id="fcl_logo" align="center">
+        <br>
         <a href="http://www.fcl.ethz.ch"><img src="res/fcl_logo.png"  alt="FCL Logo"></a>
     </div>
 </div>
 -->
+
 <div id="content_holder">
-    <div id="map_container">
+    <div id="menuBar" style="float:left;">
+        Categories:
+        <select id="categories" onchange="newInput()">
+            <option value=""></option>
+            <option value="population_density">Population Density</option>
+            <option value="CO2_Emission">CO2 Emission</option>
+            <option value="fiat">Fiat</option>
+        </select>
+        <br><br>
+        <button onclick="draw_worldmap(this.world_topo)">redraw world map</button>
+
     </div>
+    <div id="map_container"></div>
+
 </div>
 
-<div id="time_slider"></div>
+
+
+
 <script src="js/map/world_map.js"></script>
+<script src="js/map/population_density_display.js"></script>
 <script src="js/slider/timer_slider.js"></script>
+
+
 
 </body>
 </html>

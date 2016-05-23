@@ -7,7 +7,7 @@
 d3.select(window).on("resize", throttle);
 
 var map_width = document.getElementById("map_container").offsetWidth;
-var map_height = window.innerHeight - 300;
+var map_height = window.innerHeight;
 
 var projection, path, svg, g;
 
@@ -21,19 +21,23 @@ var zoom = d3.behavior.zoom().scaleExtent([1, 100]).on("zoom", move);
 var color_split = [500, 400, 300, 200, 100, 50, 10, 0];
 var colors = ["#08306B", "#08519C", "#2171B5", "#4292C6", "#6BAED6", "#9ECAE1", "#C6DBEF", "#DEEBF7"];
 
-//draw_time_slider();
-setup(map_width, map_height);
-
+//setup(map_width, map_height);
 
 function setup(width, height) {
+
     projection = d3.geo.mercator()
         .translate([(width / 2), (height / 2)])
-        .scale(width / 2 / Math.PI);
+        //.center()
+        //.rotate( [71.057,0] )
+        .center( [0, 42.313] )
+        .scale(width /2/ Math.PI);
+
     path = d3.geo.path().projection(projection);
+    
 
     svg = d3.select("#map_container").append("svg")
-        .attr("width", width)
-        .attr("height", height)
+        .attr("width",width)
+        .attr("height",height)
         .call(zoom)
         .on("click", click)
         .append("g");
@@ -41,10 +45,14 @@ function setup(width, height) {
     g = svg.append("g");
 }
 
-function draw(world_topo, population, world_country_size) {
+function draw_worldmap(world_topo) {
+
+    removeAllChild();
+    setup(map_width, map_height);
+
     svg.append("path").datum(graticule).attr("class", "graticule").attr("d", path);
 
-    g.append("path").datum({type: "LineString", coordinates: [[-180, 0], [-90, 0], [0, 0], [90, 0], [180, 0]]})
+    svg.append("path").datum({type: "LineString", coordinates: [[-180, 0], [-90, 0], [0, 0], [90, 0], [180, 0]]})
         .attr("class", "equator")
         .attr("d", path);
 
@@ -60,41 +68,25 @@ function draw(world_topo, population, world_country_size) {
         })
         .attr("fill",
         function (d, j) {
-            var name = d.properties.name;
-            var country_properties = find_country_population(population, name);
-            var country_size = find_country_size(world_country_size, name);
-
-            if (country_properties.length > 0 && country_size.length > 0) {
-                var year_pop = country_properties[0][cur_year];
-                var c_size = country_size[0][cur_year];
-                for (var i = 0; i < color_split.length; i++) {
-                    if (year_pop / c_size > color_split[i])
-                        return colors[i];
-                }
-                return colors[1];
-            } else {
-                return colors[colors.length - 1];
-            }
+            return d.properties.color;
         }
     );
 
     var offsetL = document.getElementById("map_container").offsetLeft + 20;
     var offsetT = document.getElementById("map_container").offsetTop + 10;
 
+    
     country.on("mousemove", function (d, i) {
         var mouse = d3.mouse(svg.node()).map(function (d) {
+            //console.log("mouse "+ d);
             return parseInt(d);
         });
 
-        var name = d.properties.name;
-        var country_properties = find_country_population(population, name);
-        var year_pop = country_properties[0][cur_year];
-        var country_size = find_country_size(world_country_size, name);
-        var cur_country_size = country_size[0][cur_year];
-
         tooltip.classed("hidden", false)
             .attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
-            .html(d.properties.name + " | Population:" + formatNum(year_pop)+"| Size:"+cur_country_size+"|Density:"+(year_pop/cur_country_size));
+            .html(d.properties.name);
+        
+        //console.log("name: "+ d.properties.name);
     }).on("mouseout", function (d, i) {
         tooltip.classed("hidden", true);
     });
@@ -105,7 +97,7 @@ function draw(world_topo, population, world_country_size) {
         });
 
     });
-    draw_legend();
+
 }
 
 function find_country_population(population, country_name) {
@@ -125,99 +117,6 @@ function find_country_size(country_size, country_name){
     return m;
 }
 
-function draw_time_slider(){
-    
-    var body = d3.selectAll("body")
-    var div =     body.append("div")
-        .attr("id","time_slider")
-        //.attr("class","time_slider")
-        .attr("class","extra_info");
-        //.html('time_slider');
-    
-}
-
-/*
- Add color legend
- */
-function draw_legend() {
-    d3.selectAll(".color_legend").remove();
-    //d3.selectAll("#color_legend").append("g").attr("class", "color_legend").html(legend);
-
-    var wBox = undefined,
-        hBox = undefined;
-
-    var wFactor = 10,
-        hFactor = 2;
-
-    wBox = map_width / wFactor;
-    hBox = map_height / hFactor;
-
-    var wRect = wBox / (wFactor * 0.75),
-        hLegend = hBox - hBox / (hFactor * 1.8),
-        offsetText = wRect / 2,
-        offsetY = map_height - hBox * 0.9,
-        tr = 'translate(' + offsetText + ',' + offsetText * 3 + ')';
-
-    var steps = colors.length,
-        hRect = hLegend / steps,
-        offsetYFactor = hFactor / hRect;
-
-    var legend = g.append("g").attr("class","extra_info").append('g')
-        .attr('class', 'color_legend').
-        attr('width', wBox).attr('height', hBox)
-        .attr('transform', 'translate(0,' + offsetY + ')');
-
-    legend.append('rect').
-        style('fill', '#ffffff')
-        .attr('class', 'legend-bg')
-        .attr('width', wBox).attr('height', hBox);
-
-    // Draw a rectangle around the color scale to add a border.
-    legend.append('rect').attr('class', 'legend-bar').attr('width', wRect).attr('height', hLegend).attr('transform', tr);
-
-    var sg = legend.append('g').attr('transform', tr);
-
-    sg.selectAll('rect').data(colors).enter().append('rect').attr('y', function (d, i) {
-        return i * hRect;
-    }).attr('fill', function (d, i) {
-        return colors[i];
-    }).attr('width', wRect).attr('height', hRect);
-
-    //var max_population = 1398790000;
-
-    var max_population = 1000;
-
-    // Draw color scale labels.
-    sg.selectAll('text').data(colors).enter().append('text').text(function (d, i) {
-        // The last element in the colors list corresponds to the lower threshold.
-        //var label = formatNum(color_split[i]);
-
-        var label = color_split[i];
-        return label;
-    }).attr('class', function (d, i) {
-        return 'text-' + i;
-    }).attr('x', wRect + offsetText).attr('y', function (d, i) {
-        return i * hRect + (hRect + hRect * offsetYFactor);
-    });
-
-    //Draw label for end of extent.
-    sg.append('text').text(function () {
-        //var text = formatNum(max_population);
-        var text = max_population;
-        return text;
-
-    }).attr('x', wRect + offsetText).attr('y', offsetText * offsetYFactor * 2);
-}
-
-function redraw() {
-    map_width = document.getElementById("content_holder").offsetWidth;
-    map_height = window.innerHeight - 300;
-
-    d3.select("svg").remove();
-    setup(map_width, map_height);
-
-    draw(this.world_topo, this.population, this.country_size);
-}
 
 function move() {
     var t = d3.event.translate;
@@ -243,8 +142,6 @@ function move() {
     d3.selectAll(".text").style("font-size", 20 / s);
     d3.selectAll(".point").attr("r", 3 / s);
 
-    draw_legend();
-    
 }
 
 var throttleTimer;
@@ -252,7 +149,7 @@ var throttleTimer;
 function throttle() {
     window.clearTimeout(throttleTimer);
     throttleTimer = window.setTimeout(function () {
-        redraw();
+        draw_worldmap(this.world_topo);
     }, 200);
 }
 
@@ -291,4 +188,17 @@ function formatNum(num) {
     var label = format(num / 1000000) + "M";
 
     return label;
+}
+
+function removeAllChild(){
+
+    d3.selectAll(".extra_info").remove();
+
+
+    var map_container = document.getElementById("map_container");
+    while (map_container.firstChild) {
+        map_container .removeChild(map_container .firstChild);
+    }
+
+
 }
