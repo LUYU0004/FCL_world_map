@@ -13,38 +13,38 @@ d3.json("data/topo/world-topo.json", function (error, world) {
     draw_worldmap(this.world_topo);
 });
 
+
+
 d3.select(window).on("resize", throttle);
 
-var map_width = document.getElementById("map_container").offsetWidth;
-var map_height = window.innerHeight;
+var map_width , map_height;
 
-var projection, path, svg, g;
-
-var graticule = d3.geo.graticule();
-
-var tooltip = d3.select("#map_container").append("div").attr("class", "tooltip hidden");
+var projection, path, svg, g, graticule, tooltip;
 
 var zoom = d3.behavior.zoom().scaleExtent([1, 100]).on("zoom", move);
 
 
+function setup() {
 
-//setup(map_width, map_height);
+    tooltip = d3.select("#map_container").append("div").attr("class", "tooltip hidden");
+    map_width = document.getElementById("map_container").offsetWidth;
+    map_height = window.innerHeight;
 
-function setup(width, height) {
-
+    graticule = d3.geo.graticule();
+    
     projection = d3.geo.mercator()
-        .translate([(width / 2), (height / 2)])
+        .translate([(map_width / 2), (map_height / 2)])
         //.center()
         //.rotate( [71.057,0] )
         .center( [0, 42.313] )
-        .scale(width /2/ Math.PI);
+        .scale(map_width /2/ Math.PI);
 
     path = d3.geo.path().projection(projection);
     
 
     svg = d3.select("#map_container").append("svg")
-        .attr("width",width)
-        .attr("height",height)
+        .attr("width",map_width )
+        .attr("height",map_height)
         .call(zoom)
         .on("click", click)
         .append("g");
@@ -55,7 +55,7 @@ function setup(width, height) {
 function draw_worldmap() {
 
     removeAllChild();
-    setup(map_width, map_height);
+    setup();
 
     svg.append("path").datum(graticule).attr("class", "graticule").attr("d", path);
 
@@ -98,30 +98,20 @@ function draw_worldmap() {
         tooltip.classed("hidden", true);
     });
 
-    d3.csv("data/fitted/country-capitals.csv", function (err, capitals) {
+    /*d3.csv("data/fitted/country-capitals.csv", function (err, capitals) {
         capitals.forEach(function (i) {
+            console.log(i.CapitalName+"  long:"+i.CapitalLongitude+" lat: "+i.CapitalLatitude, );
             addpoint(i.CapitalLongitude, i.CapitalLatitude, i.CapitalName);
         });
 
+    });*/
+
+    d3.csv("data/fitted/Projects.csv", function (err, projects) {
+        projects.forEach(function (i) {
+            addpoint(i.Longitude,i.Latitude,i.FCL_Project+i.Case_study);
+        });
     });
 
-}
-
-function find_country_population(population, country_name) {
-    var m = population.filter(function (f) {
-        //return f.country == country_id;
-        return f.Country_Name == country_name;
-    });
-
-    return m;
-}
-
-function find_country_size(country_size, country_name){
-    var m = country_size.filter(function (f){
-        return f.Country_Name == country_name;
-    });
-
-    return m;
 }
 
 
@@ -148,7 +138,7 @@ function move() {
     d3.selectAll(".country").style("stroke-map_width", 1.5 / s);
     d3.selectAll(".text").style("font-size", 20 / s);
     d3.selectAll(".point").attr("r", 3 / s);
-    
+
 
 }
 
@@ -172,6 +162,7 @@ function addpoint(lat, lon, text) {
     var x = projection([lat, lon])[0];
     var y = projection([lat, lon])[1];
 
+    console.log("x:"+x+"   y:"+y);
     gpoint.append("svg:circle")
         .attr("cx", x)
         .attr("cy", y)
@@ -187,6 +178,7 @@ function addpoint(lat, lon, text) {
             .attr("class", "text")
             .style("font-size", 20)
             .text(text);
+
     }
 }
 
@@ -202,10 +194,9 @@ function removeAllChild(){
 
     d3.selectAll(".extra_info").remove();
 
-
     var map_container = document.getElementById("map_container");
     while (map_container.firstChild) {
-        map_container .removeChild(map_container .firstChild);
+        map_container .removeChild(map_container.firstChild);
     }
 
 

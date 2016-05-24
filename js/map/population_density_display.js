@@ -23,17 +23,15 @@ function load_DData(_category){
                                             catNo = 1;
                                             max_property=1000;
                                             draw_legend(max_property);
-                                            d3.selectAll(".extra_info").attr("d.fixed",true);
                                             read_popData();
-                                    break;
-        case "CO2 Emission (tons per person)":
-            color_split = [50, 20, 10, 5, 1, 0.1, 0];//1964-2011
-            catNo = 2;
-            max_property=100;
-            draw_legend(max_property);
-            read_co2Data();
-
-                                 break;
+                                            break;
+        
+        case "CO2 Emission (tons per person)": color_split = [50, 20, 10, 5, 1, 0.1, 0];//1964-2011
+                                                catNo = 2;
+                                                max_property=100;
+                                                draw_legend(max_property);
+                                                read_co2Data();
+                                                break;
         default: break;
     }
 
@@ -83,23 +81,19 @@ function display_Density(cur_year){
 
     var country = d3.selectAll(".country");
 
-    var tooltip = d3.select("#map_container").selectAll(".tooltip hidden");
-
     //clear the previous event listeners to avoid overflooding
-    country.on("mousemove",null);
-    country.on("mouseout",null);
-
-
+    d3.selectAll("div.tooltip").remove(); //div.tooltip.hidden
+    tooltip = d3.select("#map_container").append("div").attr("class","tooltip hidden");
+    /*
     //!!!!!!!!!!!!!!!!
     if(index ==1){
         property.forEach(function(d){
             count++;
             var it = find_Dif_countryName(country,d.Country_Name);
-                console.log(count+"can not find: "+ it);
         });
 
         index++;
-    }
+    }*/
 
     //add new event listeners
     country.on("mousemove", function (d, i) {
@@ -120,7 +114,6 @@ function display_Density(cur_year){
     }).on("mouseout", function (d, i) {
         tooltip.classed("hidden", true);
     });
-
 
 }
 
@@ -226,7 +219,6 @@ function find_Dif_countryName(country,country_name) {
         //return f.country == country_id;
         return f.Country_Name == country_name;
     });
-    console.log("m"+m);
     return m;
 }
 
@@ -279,7 +271,7 @@ function read_population(){
 }
 
 function read_co2Data(){
-    d3.csv("data/raw/CO2 emissions (kt)/en.atm.co2e.kt_Indicator_en_csv_v2(edited).csv", function (error, data) {
+    d3.csv("data/fitted/en.atm.co2e.kt_Indicator_en_csv_v2(edited).csv", function (error, data) {
         property = data;
         read_population(catNo);
     });
