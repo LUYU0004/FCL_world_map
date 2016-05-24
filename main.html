@@ -13,85 +13,26 @@
 <body>
 
 <script>
-    //var start_year = 1964,
-      //      end_year = 2014;
-
-    //var cur_year = start_year;
-
-    this.world_topo, this.population, this.world_country_size;//,this.population, this.country_size;
-
-    d3.json("data/topo/world-topo.json", function (error, world) {
-        this.world_topo = topojson.feature(world, world.objects.countries).features;
-
-        draw_worldmap(this.world_topo);
-    });
-
-    d3.csv("data/fitted/country_size.csv", function (error, data) {
-        this.world_country_size = data;
-
-    });
-
-    d3.csv("data/fitted/population.csv", function (error, data) {
-        this.population = data;
-        //console.log("population: "+ this.population);
-    });
-
-    d3.csv("data/fitted/population.csv", function (error, data) {
-        this.population = data;
-        //console.log("population: "+ this.population);
-    });
 
     function newInput(){
         var category = document.getElementById("categories").value;
 
-        switch(category){
-            case "population_density":  load_popData(this.population,this.world_country_size);
-                                        break;
-            case "CO2_Emission":
-            default: draw_worldmap(this.world_topo);
+        if(category ){
+            load_DData(category);
+        }else{
+            draw_worldmap(this.world_topo);
         }
     }
 
-
-    /*function load_country_size(){
-        d3.csv("data/fitted/country_size.csv", function (error, data) {
-            this.country_size = data;
-
-            load_population();
-        });
-    }
-
-    function load_population() {
-        d3.csv("data/fitted/population.csv", function (error, data) {
-            this.population = data;
-
-            display_pop(this.world_topo, this.population, this.country_size);
-            animate_time();
-        });
-    }
-*/
 </script>
-<!--
-<div id = "info">
-    <div id="info_text">
-        <h2 align="center"> FCL Explantory Visualization </h2>
-        <p>&emsp;The map shows the world population growth, together with FCL projects and researchers.</p>
-        <p>&emsp;contact: Zeng Wei (<a href="mailto:zeng@arch.ethz.ch">zeng@arch.ethz.ch</a>)</p>
-    </div>
-    <div id="fcl_logo" align="center">
-        <br>
-        <a href="http://www.fcl.ethz.ch"><img src="res/fcl_logo.png"  alt="FCL Logo"></a>
-    </div>
-</div>
--->
 
 <div id="content_holder">
     <div id="menuBar" style="float:left;">
         Categories:
         <select id="categories" onchange="newInput()">
             <option value=""></option>
-            <option value="population_density">Population Density</option>
-            <option value="CO2_Emission">CO2 Emission</option>
+            <option value="Population Density">Population Density</option>
+            <option value="CO2 Emission (tons per person)">CO2 Emission</option>
             <option value="fiat">Fiat</option>
         </select>
         <br><br>

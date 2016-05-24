@@ -6,10 +6,10 @@
 var start_year, end_year, cur_year;
 var handle, brush, x,slider;
 
-function setup_slider(){
+function setup_slider(start_y, end_y){
 
-    start_year = 1964,
-        end_year = 2014;
+    start_year = start_y;
+        end_year = end_y;
 
     cur_year = start_year;
 
@@ -86,7 +86,7 @@ function animate_time() {
 function update(value){
     cur_year = Math.round(value);
 
-    display_PopDensity(cur_year);
+    display_Density(cur_year);
 }
 
 function brushed() {

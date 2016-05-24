@@ -4,6 +4,15 @@
  * Proprietary and confidential
  * Written by Zeng Wei (zeng@arch.ethz.ch)
  */
+
+var world_topo;
+
+d3.json("data/topo/world-topo.json", function (error, world) {
+    world_topo = topojson.feature(world, world.objects.countries).features;
+
+    draw_worldmap(this.world_topo);
+});
+
 d3.select(window).on("resize", throttle);
 
 var map_width = document.getElementById("map_container").offsetWidth;
@@ -17,9 +26,7 @@ var tooltip = d3.select("#map_container").append("div").attr("class", "tooltip h
 
 var zoom = d3.behavior.zoom().scaleExtent([1, 100]).on("zoom", move);
 
-//var color_split = [1000000000, 500000000, 200000000, 100000000, 50000000, 10000000, 5000000, 0];
-var color_split = [500, 400, 300, 200, 100, 50, 10, 0];
-var colors = ["#08306B", "#08519C", "#2171B5", "#4292C6", "#6BAED6", "#9ECAE1", "#C6DBEF", "#DEEBF7"];
+
 
 //setup(map_width, map_height);
 
@@ -45,7 +52,7 @@ function setup(width, height) {
     g = svg.append("g");
 }
 
-function draw_worldmap(world_topo) {
+function draw_worldmap() {
 
     removeAllChild();
     setup(map_width, map_height);
@@ -141,6 +148,7 @@ function move() {
     d3.selectAll(".country").style("stroke-map_width", 1.5 / s);
     d3.selectAll(".text").style("font-size", 20 / s);
     d3.selectAll(".point").attr("r", 3 / s);
+    
 
 }
 
