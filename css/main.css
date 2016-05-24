@@ -52,10 +52,10 @@
     width:75%;
     height: 50px;
     top: 0;
-    right: 0%;
+    right: 0;
     overflow:hidden;
     z-index: 10;
-    position: fixed;
+    position: absolute;
 }
 
 
