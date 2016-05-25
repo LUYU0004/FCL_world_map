@@ -14,6 +14,7 @@
 
 <script>
 
+
     function newInput(){
         var category = document.getElementById("categories").value;
 
@@ -33,18 +34,24 @@
             <option value=""></option>
             <option value="Population Density">Population Density</option>
             <option value="CO2 Emission">CO2 Emission</option>
-            <option value="fiat">Fiat</option>
         </select>
-        <br><br>
-        <button onclick="draw_worldmap(this.world_topo)">redraw world map</button>
 
+        <div><img id="fcl_logo" src="res/fcl_logo.png" alt="fcl_logo"></div>
     </div>
-    <div id="map_container"></div>
 
+    <div id="map_container">
+    </div>
+
+</div>
+<div style="height:100px;width:100px;background-color: transparent">
+    <div style="height:100px;width:50px;background-color: red;float: left;">what</div>
+    <div style="height:100px;width:50px;background-color: green;float:right;" >do</div>
 </div>
 
 
-
+<script>
+document.getElementById("content_holder").style.height=  window.innerHeight+'px';
+</script>
 
 <script src="js/map/world_map.js"></script>
 <script src="js/map/population_density_display.js"></script>

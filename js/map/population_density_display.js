@@ -7,6 +7,7 @@ var property, world_country_size,category,catNo;
 var color_split;
 var colors = ["#08306B", "#08519C", "#2171B5", "#4292C6", "#6BAED6", "#9ECAE1", "#C6DBEF", "#DEEBF7"];
 
+var status =0; //play(1) or stop(0 ) for the time_slider
 
 /*load_countrySize_and_property */
 function load_DData(_category){
@@ -188,14 +189,78 @@ function draw_legend(max_property) {
 function draw_time_slider(){
 
     d3.select("#time_slider").remove();
+
     var body = d3.select("#content_holder");
     
     var time_slider = body.append("div")
         .classed("extra_info",true)
-        .attr('id','time_slider')
-        .attr("width","100%");
+        .attr('id','time_slider');
+
+    var playBtn_Image = new Image();
+    playBtn_Image.src = "img/Play_button.png";
+    var stopBtn_Image = new Image();
+    stopBtn_Image.src = "img/stop_button.png";
+    var replayBtn_Image = new Image();
+    replayBtn_Image.src = 'img/replay_button.png';
+
+    var replay = false;
+    var play_stop_btn = body.append("a")
+        .classed("extra_info",true)
+        .attr("href","#");
+
+
+
+
+    play_stop_btn.append("img")
+        .attr("id", "play_stopBtn")
+        .attr("src","img/Play_button.png")
+        .attr("alt","click");
+
+
+    play_stop_btn
+        .on("mouseover", function () {
+            d3.select("#play_stopBtn").style('borderColor','gold');
+        }).on("mouseout",function () {
+            d3.select("#play_stopBtn").style('borderColor', 'transparent');
+        }).on('click',function(){
+
+            if(status ==0){
+                d3.select("#play_stopBtn").attr('src' ,stopBtn_Image.src);
+                status = 1;
+                animate_time();
+            }else{
+                d3.select("#play_stopBtn").attr('src' ,playBtn_Image.src);
+                status = 0;
+                stop_animateTime();
+            }
+    });
+ 
+ var replay_btn = body.append("a")
+ .classed("extra_info",true)
+ .attr("href","#");
+
+ replay_btn.append("img")
+ .attr("id", "replay_Btn")
+ .attr("src","img/replay_button.png")
+ .attr("alt","click");
+
+    replay_btn
+        .on("mouseover", function () {
+            d3.select("#replay_Btn").style('borderColor','gold');
+        }).on("mouseout",function () {
+        d3.select("#replay_Btn").style('borderColor', 'transparent');
+    }).on('click',function(){
+        console.log("replay!!!");
+        cur_year = start_year;
+        status =0;
+        stop_animateTime();
+        status = 1;
+        animate_time();
+
+    });
 
 }
+
 
 function find_country_property(country_name) {
 
@@ -246,13 +311,13 @@ function read_population(){
         //console.log("property"+property);
         display_Density(start_year);
         setup_slider(start_year, end_year);//1964-2014
-        animate_time();
+        //animate_time();
 
     });
 }
 
 function read_co2Data(){
-    d3.csv("data/fitted/en.atm.co2e.kt_Indicator_en_csv_v2(edited).csv", function (error, data) {
+    d3.csv("data/raw/CO2 emissions (kt)/en.atm.co2e.kt_Indicator_en_csv_v2(edited).csv", function (error, data) {
         property = data;
         read_population();
     });

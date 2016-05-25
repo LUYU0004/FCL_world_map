@@ -1,19 +1,19 @@
 
 #content_holder {
-    margin: 5px 5px 0px 0px;
+    /*margin: 5px 5px 0px 0px;
     padding:2px;
     border: 2px solid #d0d0d0;
     border-radius:5px;
-    height: 700px;
+    height: 700px;*/
     overflow:scroll;
     position: relative;
 }
 
 #menuBar{
     position: absolute;
-    top: 2%;
-    left: 10px;
-    width : 20%;
+    top: 0;
+    left: 0;
+    width : 98%;
     height: 10%;
     z-index: 20;
 
@@ -51,11 +51,36 @@
     border-radius:5px;*/
     width:75%;
     height: 50px;
-    top: 0;
-    right: 0;
+    bottom: 4%;
+    right: 2%;
     overflow:hidden;
     z-index: 10;
     position: absolute;
+}
+
+#play_stopBtn {
+
+    width:20px;
+    height: 20px;
+    bottom:5%;
+    right: 4%;
+    z-index: 10;
+    position:absolute;
+    border:2px;
+    border-color: transparent;
+
+}
+
+#replay_Btn {
+    width:30px;
+    height: 30px;
+    bottom:4.5%;
+    right: 1%;
+    z-index: 10;
+    position:absolute;
+    border:2px;
+    border-color: lightseagreen;
+
 }
 
 
@@ -72,6 +97,20 @@ div.tooltip {
     box-shadow: 0px 0px 2px 0px #a6a6a6;
     opacity: 0.9;
     position: absolute;
+    z-index: 50;
+    height:120px;
+}
+
+#tooltip_pic {
+    height: 120px;
+    width: 80px;
+    float: left;
+}
+
+#tooltip_text {
+    height:120px;
+    width: 200px;
+    float: right;
 }
 
 .graticule {
@@ -93,3 +132,17 @@ div.tooltip {
 .legend-bar {
     stroke: #333;
     stroke-width: 1px; }
+
+
+#fcl_logo {
+    /*margin: 5px 5px 0px 0px;
+padding:2px;
+border: 1px solid #d0d0d0;
+border-radius:5px;*/
+    width:20%;
+    height: 40%;
+    top: 0;
+    right:0;
+    overflow:hidden;
+    position: absolute;
+}

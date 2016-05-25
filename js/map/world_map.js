@@ -82,10 +82,9 @@ function draw_worldmap() {
         })
         .attr("title", function (d, i) {
             return d.properties.name;
-        })
-        .attr("fill",
-        function (d, j) {
-            return d.properties.color;
+        }).attr("fill",
+        function () {
+            return "#DEEBF7";
         }
     );
 
@@ -108,12 +107,14 @@ function draw_worldmap() {
 
     d3.csv("data/fitted/Projects.csv", function (err, projects) {
         projects.forEach(function (i) {
-            var title = "No."+i.No+" | FCL Project: "+i.FCL_Project+" \n| Case Study: "+i.Case_study;
-            var description = "\nTitle: "+i.Title+" \n| Description:"+i.Description
-                                +"\n| Coordinate: "+ i.Latitude+"° N, "+ i.Longitude+"° E";
-            addpoint(i.Longitude,i.Latitude, title,description);
+            var title = "<b>"+i.FCL_Project+"  "+i.Case_study+"</b>";
+            var text = "<br><p>"+i.Title+"</p>"+"<p>Coordinate: "+ i.Latitude+"° N, "+ i.Longitude+"°E <br>"
+                        +i.Description+"</p>";
+            addpoint(i.Longitude,i.Latitude,title, title+text);
         });
     });
+    document.getElementById("categories").value = "Population Density";
+    newInput();
 
 }
 
@@ -160,7 +161,7 @@ function click() {
 }
 
 //function to add points and text to the map (used in plotting capitals)
-function addpoint(lat, lon, title, text) {
+function addpoint(lat, lon, title,text) {
     var gpoint = g.append("g").attr("class", "gpoint");
     var x = projection([lat, lon])[0];
     var y = projection([lat, lon])[1];
@@ -175,7 +176,6 @@ function addpoint(lat, lon, title, text) {
         .on("mouseover", function () {return tooltip.attr("style","visibility: visible");})
         .on("mousemove", function() {
             var mouse = d3.mouse(svg.node()).map(function (d) {
-                console.log("mouse",mouse);
                 return parseInt(d);
             });
 
@@ -184,7 +184,13 @@ function addpoint(lat, lon, title, text) {
         }).on("mouseout", function () {
             return tooltip.attr("style","visibility: hidden");
         }).on("click",function () {
-            return tooltip.html(text);
+            tooltip.html("<div id='tooltip_holder'><img id='tooltip_pic' src='res/fcl_logo.png'></div>" +
+                "<div id='tooltip_text'>"+text+"</div></div>");
+                var pic_width = d3.select("#tooltip_pic").node().getBoundingClientRect().width;
+                var text_width = d3.select("#tooltip_text").node().getBoundingClientRect().width;
+                var tooltip_width= pic_width +text_width;
+                console.log("toop_pic.height="+pic_width+" tool_text.width"+text_width+"  tool.width="+tooltip_width);
+            d3.select("#tooltip_holder").attr("style","width:"+tooltip_width+";height:"+d3.select("#tooltip_text").node().getBoundingClientRect().height);
         });
 
     /*
