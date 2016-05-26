@@ -98,13 +98,11 @@ div.tooltip {
     opacity: 0.9;
     position: absolute;
     z-index: 50;
-    height:120px;
 }
-
+/*
 #tooltip_pic {
-    height: 120px;
+    height: 110px;
     width: 80px;
-    float: left;
 }
 
 #tooltip_text {
@@ -113,6 +111,13 @@ div.tooltip {
     float: right;
 }
 
+
+#pic_holder {
+    height: 120px;
+    width: 80px;
+    float: left;
+}
+*/
 .graticule {
     fill: none;
     stroke: #bbb;

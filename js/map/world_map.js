@@ -108,7 +108,7 @@ function draw_worldmap() {
     d3.csv("data/fitted/Projects.csv", function (err, projects) {
         projects.forEach(function (i) {
             var title = "<b>"+i.FCL_Project+"  "+i.Case_study+"</b>";
-            var text = "<br><p>"+i.Title+"</p>"+"<p>Coordinate: "+ i.Latitude+"° N, "+ i.Longitude+"°E <br>"
+            var text = "<br><p>"+i.Title+"</p>"+"<p style='font-size: 12px;'>Coordinate: "+ i.Latitude+"° N, "+ i.Longitude+"°E <br>"
                         +i.Description+"</p>";
             addpoint(i.Longitude,i.Latitude,title, title+text);
         });
@@ -178,19 +178,58 @@ function addpoint(lat, lon, title,text) {
             var mouse = d3.mouse(svg.node()).map(function (d) {
                 return parseInt(d);
             });
+                return tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
+                    .html(title);
 
-            return tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
-                .html(title);
+
         }).on("mouseout", function () {
             return tooltip.attr("style","visibility: hidden");
         }).on("click",function () {
-            tooltip.html("<div id='tooltip_holder'><img id='tooltip_pic' src='res/fcl_logo.png'></div>" +
-                "<div id='tooltip_text'>"+text+"</div></div>");
-                var pic_width = d3.select("#tooltip_pic").node().getBoundingClientRect().width;
-                var text_width = d3.select("#tooltip_text").node().getBoundingClientRect().width;
-                var tooltip_width= pic_width +text_width;
-                console.log("toop_pic.height="+pic_width+" tool_text.width"+text_width+"  tool.width="+tooltip_width);
-            d3.select("#tooltip_holder").attr("style","width:"+tooltip_width+";height:"+d3.select("#tooltip_text").node().getBoundingClientRect().height);
+
+        tooltip.html("<div id='tooltip_holder' style='vertical-align: middle'><span id='pic_holder' style" +
+            "='height: 100px;width: 80px;float: left;'><img id='tooltip_pic' src='res/fcl_logo.png' style='width: 80px;height: 100px;'></span>" +
+            "<div id='tooltip_text' style='float: right;padding-left: 15px;padding-top: 10px;padding-right:10px;vertical-align: middle;'>"+text+"</div></div>");
+
+        var mouse = d3.mouse(svg.node()).map(function (d) {
+            return parseInt(d);
+        });
+        var left = mouse[0]+offsetL;
+        var top = mouse[1]+offsetT;
+        //var offsetH = offsetL;
+
+        if(mouse[0] > (window.innerWidth/2)){ // mouse is on the right half of the window
+            var offsetH =  offsetL;
+            var pic_holder_width = d3.select("#pic_holder").node().getBoundingClientRect().width +offsetH;
+
+            offsetH = pic_holder_width+ d3.select("#tooltip_text").node().getBoundingClientRect().width ;
+            left = mouse[0] -offsetH;
+
+            console.log("left="+left+" mouse[0]="+mouse[0]+" offsetH="+offsetH+" pic_bolder_width = "+d3.select("#pic_holder").node().getBoundingClientRect().width+
+                " tool_text.width="+ (offsetH-pic_holder_width)+" offsetL="+offsetL);
+
+            //selection.node().getBoundingClientRect()
+        };
+
+        if(mouse[1]>(window.innerHeight/2)){
+            var text_height = d3.select("#tooltip_text").node().getBoundingClientRect().height;
+            console.log(d3.select("#tooltip_text").node().getBoundingClientRect().right+"  / offsetHeight = "+ text_height);
+
+            var offsetV= text_height+ offsetT;
+            console.log("mouse[1]="+mouse[1]+"  offsetV="+ offsetV+ "| offsetT="+offsetT+"  text_height="+text_height);
+            top = mouse[1] - offsetV;
+            console.log("top"+top);
+        }
+
+        tooltip.attr("style", "left:" +  left+ "px;top:"+top+"px;");
+        console.log("right:"+d3.select("#tooltip_holder").style("right"));
+
+        if(d3.select("#tooltip_text").node().getBoundingClientRect().right > (window.innerWidth-10) ){
+            tooltip.attr("style","left:auto;right:10px;");
+        }
+        if(d3.select("#pic_holder").node().getBoundingClientRect().top <10){
+            tooltip.attr("style","top:10px;");
+        }
+
         });
 
     /*
