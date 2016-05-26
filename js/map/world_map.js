@@ -190,7 +190,7 @@ function addpoint(lat, lon, title,text) {
             "='height: 100px;width: 80px;float: left;'><img id='tooltip_pic' src='res/fcl_logo.png' style='width: 80px;height: 100px;'></span>" +
             "<div id='tooltip_text' style='float: right;padding-left: 15px;padding-top: 10px;padding-right:10px;vertical-align: middle;'>"+text+"</div></div>");
 
-        var mouse = d3.mouse(svg.node()).map(function (d) {
+        /*var mouse = d3.mouse(svg.node()).map(function (d) {
             return parseInt(d);
         });
         var left = mouse[0]+offsetL;
@@ -204,9 +204,6 @@ function addpoint(lat, lon, title,text) {
 
             offsetH = pic_holder_width+ d3.select("#tooltip_text").node().getBoundingClientRect().width ;
             left = mouse[0] -offsetH;
-
-            console.log("left="+left+" mouse[0]="+mouse[0]+" offsetH="+offsetH+" pic_bolder_width = "+d3.select("#pic_holder").node().getBoundingClientRect().width+
-                " tool_text.width="+ (offsetH-pic_holder_width)+" offsetL="+offsetL);
 
             //selection.node().getBoundingClientRect()
         };
@@ -230,7 +227,7 @@ function addpoint(lat, lon, title,text) {
         }
         if(d3.select("#pic_holder").node().getBoundingClientRect().top <10){
             tooltip.attr("style","top:10px;");
-        }
+        }*/
 
         });
 

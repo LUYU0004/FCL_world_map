@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5cd72448-d8fc-45b4-afc0-c979ee3734fe" name="Default" comment="improvements on outlook">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Task Specification/weekly schedule.docx" />
+    <list default="true" id="5cd72448-d8fc-45b4-afc0-c979ee3734fe" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/map/world_map.js" afterPath="$PROJECT_DIR$/js/map/world_map.js" />
     </list>
@@ -25,11 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="main.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="47" column="90" selection-start-line="47" selection-start-column="90" selection-end-line="47" selection-end-column="90" />
+            <state relative-caret-position="150">
+              <caret line="31" column="8" selection-start-line="31" selection-start-column="8" selection-end-line="31" selection-end-column="8" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#body#0;n#!!top" expanded="true" />
@@ -76,17 +75,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="world_map.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="world_map.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/map/world_map.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="267">
-              <caret line="227" column="101" selection-start-line="227" selection-start-column="101" selection-end-line="227" selection-end-column="101" />
+            <state relative-caret-position="1557">
+              <caret line="243" column="7" selection-start-line="243" selection-start-column="7" selection-end-line="243" selection-end-column="7" />
               <folding>
-                <marker date="1464234894000" expanded="true" signature="3209:3225" ph="..." />
-                <marker date="1464234894000" expanded="true" signature="5506:5528" ph="..." />
-                <marker date="1464234894000" expanded="true" signature="5576:5614" ph="..." />
-                <marker date="1464234894000" expanded="true" signature="5668:5694" ph="..." />
-                <marker date="1464234894000" expanded="true" signature="5750:5842" ph="..." />
+                <marker date="1464242095000" expanded="true" signature="3209:3225" ph="..." />
+                <marker date="1464242095000" expanded="true" signature="5506:5528" ph="..." />
+                <marker date="1464242095000" expanded="true" signature="5576:5614" ph="..." />
+                <marker date="1464242095000" expanded="true" signature="5668:5694" ph="..." />
+                <marker date="1464242095000" expanded="true" signature="5750:5842" ph="..." />
               </folding>
             </state>
           </provider>
@@ -129,9 +128,9 @@
         <option value="$PROJECT_DIR$/data/raw/CO2 emissions (kt)/Metadata_Indicator_en.atm.co2e.kt_Indicator_en_csv_v2.csv" />
         <option value="$PROJECT_DIR$/js/slider/timer_slider.js" />
         <option value="$PROJECT_DIR$/js/map/population_density_display.js" />
-        <option value="$PROJECT_DIR$/main.html" />
         <option value="$PROJECT_DIR$/css/main.css" />
         <option value="$PROJECT_DIR$/js/map/world_map.js" />
+        <option value="$PROJECT_DIR$/main.html" />
       </list>
     </option>
   </component>
@@ -480,7 +479,7 @@
       <workItem from="1463657765053" duration="1395000" />
       <workItem from="1463708272846" duration="18742000" />
       <workItem from="1463965126249" duration="43234000" />
-      <workItem from="1464078335823" duration="44788000" />
+      <workItem from="1464078335823" duration="49374000" />
     </task>
     <task id="LOCAL-00001" summary="Minor adjustments&#10;&#10;(1) logo display adjustment&#10;(2) Clear redundant rect in world_map.js&#10;    - class = legend_bg, legend_bar">
       <created>1463544024303</created>
@@ -545,17 +544,24 @@
       <option name="project" value="LOCAL" />
       <updated>1464234415546</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="improvements on outlook">
+      <created>1464235005513</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1464235005513</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="184512000" />
+    <option name="totallyTimeSpent" value="189098000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="773" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.225" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.225" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39488637" sideWeight="0.5125" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32954547" sideWeight="0.49765626" order="1" side_tool="false" content_ui="tabs" />
@@ -976,25 +982,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.html">
+    <entry file="file://$PROJECT_DIR$/js/map/world_map.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="47" column="90" selection-start-line="47" selection-start-column="90" selection-end-line="47" selection-end-column="90" />
+        <state relative-caret-position="1557">
+          <caret line="243" column="7" selection-start-line="243" selection-start-column="7" selection-end-line="243" selection-end-column="7" />
           <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#body#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#div#0;n#div#1;n#body#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#1;n#body#0;n#!!top" expanded="true" />
+            <marker date="1464242095000" expanded="true" signature="3209:3225" ph="..." />
+            <marker date="1464242095000" expanded="true" signature="5506:5528" ph="..." />
+            <marker date="1464242095000" expanded="true" signature="5576:5614" ph="..." />
+            <marker date="1464242095000" expanded="true" signature="5668:5694" ph="..." />
+            <marker date="1464242095000" expanded="true" signature="5750:5842" ph="..." />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/slider/timer_slider.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1515">
-          <caret line="101" column="17" selection-start-line="101" selection-start-column="17" selection-end-line="101" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1006,16 +1004,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/map/world_map.js">
+    <entry file="file://$PROJECT_DIR$/js/slider/timer_slider.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="267">
-          <caret line="227" column="101" selection-start-line="227" selection-start-column="101" selection-end-line="227" selection-end-column="101" />
+        <state relative-caret-position="1515">
+          <caret line="101" column="17" selection-start-line="101" selection-start-column="17" selection-end-line="101" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="31" column="8" selection-start-line="31" selection-start-column="8" selection-end-line="31" selection-end-column="8" />
           <folding>
-            <marker date="1464234894000" expanded="true" signature="3209:3225" ph="..." />
-            <marker date="1464234894000" expanded="true" signature="5506:5528" ph="..." />
-            <marker date="1464234894000" expanded="true" signature="5576:5614" ph="..." />
-            <marker date="1464234894000" expanded="true" signature="5668:5694" ph="..." />
-            <marker date="1464234894000" expanded="true" signature="5750:5842" ph="..." />
+            <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#body#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#0;n#div#0;n#div#1;n#body#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#1;n#body#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
