@@ -197,6 +197,7 @@ function addpoint(lat, lon, title,text) {
         var top = mouse[1]+offsetT;
         //var offsetH = offsetL;
 
+
         if(mouse[0] > (window.innerWidth/2)){ // mouse is on the right half of the window
             var offsetH =  offsetL;
             var pic_holder_width = d3.select("#pic_holder").node().getBoundingClientRect().width +offsetH;
@@ -224,7 +225,8 @@ function addpoint(lat, lon, title,text) {
         console.log("right:"+d3.select("#tooltip_holder").style("right"));
 
         if(d3.select("#tooltip_text").node().getBoundingClientRect().right > (window.innerWidth-10) ){
-            tooltip.attr("style","left:auto;right:10px;");
+            console.log("left="+(d3.select("#tooltip_text").node().getBoundingClientRect().right-500));
+            tooltip.attr("style","left:"+(d3.select("#tooltip_text").node().getBoundingClientRect().right-500)+";right:10px;");
         }
         if(d3.select("#pic_holder").node().getBoundingClientRect().top <10){
             tooltip.attr("style","top:10px;");
