@@ -16,7 +16,20 @@
 
 
     function newInput(){
-        var category = document.getElementById("categories").value;
+
+        if(this.id){
+            switch(this.id){
+                case 'pop_densityBtn': category = "Population Density";
+                    break;
+                case 'co2_emissionBtn': category = "CO2 Emission";
+                    break;
+                default: break;
+            }
+
+            d3.selectAll(".navg_button").classed("selectedBtn",false);
+            d3.select(this).classed("selectedBtn",true);
+        }
+
 
         if(category){
             load_DData(category);
@@ -29,12 +42,10 @@
 
 <div id="content_holder">
     <div id="menuBar" style="float:left;">
-        Categories:
-        <select id="categories" onchange="newInput()">
-            <option value=""></option>
-            <option value="Population Density">Population Density</option>
-            <option value="CO2 Emission">CO2 Emission</option>
-        </select>
+        <div id="navg_bar">
+            <div class="navg_button" id="pop_densityBtn">Population Density</div>
+            <div class="navg_button" id="co2_emissionBtn">CO2 Emission Per Capita</div>
+        </div>
 
         <div><img id="fcl_logo" src="res/fcl_logo.png" alt="fcl_logo"></div>
     </div>
@@ -43,14 +54,12 @@
     </div>
 
 </div>
-<div style="height:100px;width:100px;background-color: transparent">
-    <div style="height:100px;width:50px;background-color: red;float: left;"><img src="res/fcl_logo.png" style="height:100px;width:50px"></div>
-    <div style="height:100px;width:50px;background-color: green;float:right;" >do.........</div>
-</div>
 
 
 <script>
 document.getElementById("content_holder").style.height=  window.innerHeight+'px';
+document.getElementById('pop_densityBtn').addEventListener("click", newInput);
+document.getElementById('co2_emissionBtn').addEventListener("click", newInput);
 </script>
 
 <script src="js/map/world_map.js"></script>

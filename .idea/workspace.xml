@@ -3,7 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="5cd72448-d8fc-45b4-afc0-c979ee3734fe" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/main.css" afterPath="$PROJECT_DIR$/css/main.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/map/population_density_display.js" afterPath="$PROJECT_DIR$/js/map/population_density_display.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/map/world_map.js" afterPath="$PROJECT_DIR$/js/map/world_map.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.html" afterPath="$PROJECT_DIR$/main.html" />
     </list>
     <ignored path="FCL Explantory Visualization.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -24,32 +27,27 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="31" column="8" selection-start-line="31" selection-start-column="8" selection-end-line="31" selection-end-column="8" />
+            <state relative-caret-position="450">
+              <caret line="55" column="6" selection-start-line="55" selection-start-column="6" selection-end-line="55" selection-end-column="6" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#body#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#img#0;n#div#0;n#div#1;n#body#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#div#1;n#body#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="population_density_display.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="population_density_display.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/map/population_density_display.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-243">
-              <caret line="258" column="0" selection-start-line="258" selection-start-column="0" selection-end-line="258" selection-end-column="0" />
+            <state relative-caret-position="274">
+              <caret line="139" column="25" selection-start-line="139" selection-start-column="25" selection-end-line="139" selection-end-column="25" />
               <folding>
                 <element signature="e#0#39#0" expanded="false" />
                 <element signature="e#1282#1328#0" expanded="false" />
                 <element signature="e#1517#1580#0" expanded="false" />
-                <element signature="e#4337#4376#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -68,8 +66,8 @@
       <file leaf-file-name="main.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/css/main.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="142" column="9" selection-start-line="142" selection-start-column="6" selection-end-line="142" selection-end-column="9" />
+            <state relative-caret-position="251">
+              <caret line="99" column="23" selection-start-line="99" selection-start-column="23" selection-end-line="99" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -78,15 +76,25 @@
       <file leaf-file-name="world_map.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/map/world_map.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1557">
-              <caret line="243" column="7" selection-start-line="243" selection-start-column="7" selection-end-line="243" selection-end-column="7" />
+            <state relative-caret-position="207">
+              <caret line="145" column="43" selection-start-line="145" selection-start-column="43" selection-end-line="145" selection-end-column="43" />
               <folding>
-                <marker date="1464242095000" expanded="true" signature="3209:3225" ph="..." />
-                <marker date="1464242095000" expanded="true" signature="5506:5528" ph="..." />
-                <marker date="1464242095000" expanded="true" signature="5576:5614" ph="..." />
-                <marker date="1464242095000" expanded="true" signature="5668:5694" ph="..." />
-                <marker date="1464242095000" expanded="true" signature="5750:5842" ph="..." />
+                <marker date="1464255377000" expanded="true" signature="3209:3225" ph="..." />
+                <marker date="1464255377000" expanded="true" signature="5624:5646" ph="..." />
+                <marker date="1464255377000" expanded="true" signature="5711:5771" ph="..." />
+                <marker date="1464255377000" expanded="true" signature="5842:5868" ph="..." />
+                <marker date="1464255377000" expanded="true" signature="5924:6016" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DHTML.js" pinned="false" current-in-tab="false">
+        <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/DHTML.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="148">
+              <caret line="1707" column="0" selection-start-line="1707" selection-start-column="0" selection-end-line="1707" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -127,10 +135,10 @@
         <option value="$PROJECT_DIR$/data/raw/CO2 emissions (kt)/en.atm.co2e.kt_Indicator_en_csv_v2(edited).csv" />
         <option value="$PROJECT_DIR$/data/raw/CO2 emissions (kt)/Metadata_Indicator_en.atm.co2e.kt_Indicator_en_csv_v2.csv" />
         <option value="$PROJECT_DIR$/js/slider/timer_slider.js" />
-        <option value="$PROJECT_DIR$/js/map/population_density_display.js" />
+        <option value="$PROJECT_DIR$/main.html" />
         <option value="$PROJECT_DIR$/css/main.css" />
         <option value="$PROJECT_DIR$/js/map/world_map.js" />
-        <option value="$PROJECT_DIR$/main.html" />
+        <option value="$PROJECT_DIR$/js/map/population_density_display.js" />
       </list>
     </option>
   </component>
@@ -479,7 +487,7 @@
       <workItem from="1463657765053" duration="1395000" />
       <workItem from="1463708272846" duration="18742000" />
       <workItem from="1463965126249" duration="43234000" />
-      <workItem from="1464078335823" duration="49374000" />
+      <workItem from="1464078335823" duration="60858000" />
     </task>
     <task id="LOCAL-00001" summary="Minor adjustments&#10;&#10;(1) logo display adjustment&#10;(2) Clear redundant rect in world_map.js&#10;    - class = legend_bg, legend_bar">
       <created>1463544024303</created>
@@ -551,11 +559,18 @@
       <option name="project" value="LOCAL" />
       <updated>1464235005513</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Backup for adding slide buttons">
+      <created>1464242673838</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1464242673838</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="189098000" />
+    <option name="totallyTimeSpent" value="200582000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="773" extended-state="6" />
@@ -626,7 +641,8 @@
     <MESSAGE value="add in CO2 emission layer" />
     <MESSAGE value="(1) add in project locations&#10;(2)improve on tooltips&#10;" />
     <MESSAGE value="improvements on outlook" />
-    <option name="LAST_COMMIT_MESSAGE" value="improvements on outlook" />
+    <MESSAGE value="Backup for adding slide buttons" />
+    <option name="LAST_COMMIT_MESSAGE" value="Backup for adding slide buttons" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -885,14 +901,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/DHTML.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="148">
-          <caret line="55" column="10" selection-start-line="55" selection-start-column="10" selection-end-line="55" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/00_Sample_GraphicDesigns/LSEUrbanAge_InteractiveTool/Screen Shot 2016-03-07 at 11.58.27 am.png">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -969,41 +977,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/map/population_density_display.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-243">
-          <caret line="258" column="0" selection-start-line="258" selection-start-column="0" selection-end-line="258" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#39#0" expanded="false" />
-            <element signature="e#1282#1328#0" expanded="false" />
-            <element signature="e#1517#1580#0" expanded="false" />
-            <element signature="e#4337#4376#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/map/world_map.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1557">
-          <caret line="243" column="7" selection-start-line="243" selection-start-column="7" selection-end-line="243" selection-end-column="7" />
-          <folding>
-            <marker date="1464242095000" expanded="true" signature="3209:3225" ph="..." />
-            <marker date="1464242095000" expanded="true" signature="5506:5528" ph="..." />
-            <marker date="1464242095000" expanded="true" signature="5576:5614" ph="..." />
-            <marker date="1464242095000" expanded="true" signature="5668:5694" ph="..." />
-            <marker date="1464242095000" expanded="true" signature="5750:5842" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/css/main.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="142" column="9" selection-start-line="142" selection-start-column="6" selection-end-line="142" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/slider/timer_slider.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1515">
@@ -1012,16 +985,54 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/DHTML.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="148">
+          <caret line="1707" column="0" selection-start-line="1707" selection-start-column="0" selection-end-line="1707" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="31" column="8" selection-start-line="31" selection-start-column="8" selection-end-line="31" selection-end-column="8" />
+        <state relative-caret-position="450">
+          <caret line="55" column="6" selection-start-line="55" selection-start-column="6" selection-end-line="55" selection-end-column="6" />
           <folding>
             <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#body#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#div#0;n#div#1;n#body#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#1;n#body#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/main.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="251">
+          <caret line="99" column="23" selection-start-line="99" selection-start-column="23" selection-end-line="99" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/map/world_map.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="145" column="43" selection-start-line="145" selection-start-column="43" selection-end-line="145" selection-end-column="43" />
+          <folding>
+            <marker date="1464255377000" expanded="true" signature="3209:3225" ph="..." />
+            <marker date="1464255377000" expanded="true" signature="5624:5646" ph="..." />
+            <marker date="1464255377000" expanded="true" signature="5711:5771" ph="..." />
+            <marker date="1464255377000" expanded="true" signature="5842:5868" ph="..." />
+            <marker date="1464255377000" expanded="true" signature="5924:6016" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/map/population_density_display.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="139" column="25" selection-start-line="139" selection-start-column="25" selection-end-line="139" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#39#0" expanded="false" />
+            <element signature="e#1282#1328#0" expanded="false" />
+            <element signature="e#1517#1580#0" expanded="false" />
           </folding>
         </state>
       </provider>

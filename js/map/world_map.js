@@ -28,7 +28,7 @@ var zoom = d3.behavior.zoom().scaleExtent([1, 100]).on("zoom", move);
 
 function setup() {
 
-    offsetL = document.getElementById("map_container").offsetLeft + 20;
+    offsetL = document.getElementById("map_container").offsetLeft + 10;
     offsetT = document.getElementById("map_container").offsetTop + 10;
 
     tooltip = d3.select("#map_container").append("div").attr("class", "tooltip")
@@ -113,9 +113,11 @@ function draw_worldmap() {
             addpoint(i.Longitude,i.Latitude,title, title+text);
         });
     });
-    document.getElementById("categories").value = "Population Density";
+    //document.getElementById("categories").value = "Population Density";
+    //newInput();
+    d3.select("#pop_densityBtn").classed("selectedBtn",true);
+    category = "Population Density";
     newInput();
-
 }
 
 
@@ -186,9 +188,65 @@ function addpoint(lat, lon, title,text) {
             return tooltip.attr("style","visibility: hidden");
         }).on("click",function () {
 
-        tooltip.html("<div id='tooltip_holder' style='vertical-align: middle'><span id='pic_holder' style" +
-            "='height: 100px;width: 80px;float: left;'><img id='tooltip_pic' src='res/fcl_logo.png' style='width: 80px;height: 100px;'></span>" +
+        tooltip.html("<div id='tooltip_holder' style='vertical-align: middle'><span id='pic_holder' class='Centerer' style" +
+            "='height: 100px;width: 80px;float: left;vertical-align: middle'><img id='tooltip_pic' class='Centered' src='res/fcl_logo.png' style='width: 80px;height: 100px;'></span>" +
             "<div id='tooltip_text' style='float: right;padding-left: 15px;padding-top: 10px;padding-right:10px;vertical-align: middle;'>"+text+"</div></div>");
+
+        var mouse = d3.mouse(svg.node()).map(function (d) {
+            return parseInt(d);
+        });
+
+        var left = mouse[0] + offsetL;
+        var top = mouse[1] + offsetT;
+        var window_margin = 16;
+        var buffer = 5;
+
+        var text_right = d3.select("#tooltip_text").node().getBoundingClientRect().right;
+        var window_right = window.innerWidth - window_margin - buffer;
+
+        if(text_right > window_right){
+            console.log("text_right="+text_right+"  window_right = "+window_right);
+
+            d3.select("#tooltip_text").attr("style","width:500px;float: right;padding-left: 15px;padding-top: 10px;padding-right:10px;vertical-align: middle;");
+
+            var max_tooltipHolder_Width = d3.select("#pic_holder").node().getBoundingClientRect().width+d3.select("#tooltip_text").node().getBoundingClientRect().width;
+
+            left = mouse[0]-max_tooltipHolder_Width-offsetL  ;
+
+        }
+
+        var text_top = d3.select("#tooltip_text").node().getBoundingClientRect().top;
+        console.log("text_top="+text_top+"  wind+margin="+(window_margin+buffer));
+        var text_height = d3.select("#tooltip_text").node().getBoundingClientRect().height;
+
+        if(text_top <(window_margin+buffer)){
+            top = mouse[1]-text_height;
+
+            console.log("1  mouse[1]="+mouse[1]+"  top="+top);
+        }else{
+            var text_bottom = d3.select("#tooltip_text").node().getBoundingClientRect().bottom;
+            console.log("2  mouse[1]="+mouse[1]+"  text_bottom="+text_bottom);
+            if(text_bottom> (window.innerHeight-window_margin)){
+                top = mouse[1]-text_height-offsetT;
+                console.log("top="+top);
+            }
+        }
+
+        tooltip.attr("style","width:"+ max_tooltipHolder_Width
+            +"px; left:"+ left+"px;top:"+top+"px;");
+
+        /*console.log("mouse[1]  = "+mouse[1] );
+        var box_left = d3.select("#tooltip_holder").node().getBoundingClientRect().left;
+        var box_right  = d3.select("#tooltip_holder").node().getBoundingClientRect().right;
+
+        var pic_left = d3.select("#pic_holder").node().getBoundingClientRect().left;
+
+        var text_left = d3.select("#tooltip_text").node().getBoundingClientRect().left;
+
+        var text_width = d3.select("#tooltip_text").node().getBoundingClientRect().width;
+        console.log("window_bottom"+window.innerHeight+"box_top="+d3.select("#tooltip_holder").node().getBoundingClientRect().bottom+"  box_bottom = "+d3.select("#tooltip_holder").node().getBoundingClientRect().bottom);
+        console.log("box_height ="+d3.select("#tooltip_holder").node().getBoundingClientRect().height);
+        console.log("  text_height = "+d3.select("#tooltip_text").node().getBoundingClientRect().height);*/
 
         /*var mouse = d3.mouse(svg.node()).map(function (d) {
             return parseInt(d);

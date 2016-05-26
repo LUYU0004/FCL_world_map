@@ -137,20 +137,40 @@ function draw_legend(max_property) {
         hRect = hLegend / steps,
         offsetYFactor = hFactor / hRect;
 
+    var label_height = 15;
+
     var legend = svg.append('g')    //add the legend to extra_info.svg.g
         .classed("extra_info",true)
         .attr('class', 'color_legend')
         .attr('width', wBox)
         .attr('height', hBox)
         .attr('transform', 'translate(0,' + offsetY + ')');
-    
+
+    //draw dot legend
+    var dot_legend = legend.append('g')
+        .attr('class','dot_legend');
+
+    dot_legend.append('svg:circle')
+        .attr("cx", 5)
+        .attr("cy", function () {
+            return (color_split.length+3) * hRect;
+        })
+        .attr("class", "point")
+        .style("fill", "red")
+        .attr("r", 4);
+
+    dot_legend.append('text').text("indicates FCL project locations.")
+        .attr('x', 15).attr('y', function(){
+        return (color_split.length+3) * hRect;
+    });
+
     var sg = legend.append('g')
         .attr('transform', tr);
 
     var partial_colors = colors.slice(0, color_split.length);
     sg.selectAll('rect').data(partial_colors ).enter().append('rect')
         .attr('y', function (d, i) {
-            return i * hRect;
+            return i * hRect+label_height;
         }).attr('fill', function (d, i) {
         return colors[i];
     }).attr('width', wRect).attr('height', hRect);
@@ -167,7 +187,7 @@ function draw_legend(max_property) {
         return 'text-' + i;
     }).attr('x', wRect + offsetText)
         .attr('y', function (d, i) {
-            return i * hRect+ (hRect + hRect * offsetYFactor);
+            return i * hRect+ (hRect + hRect * offsetYFactor)+label_height;
         });
 
     //Draw label for end of extent.
@@ -175,15 +195,17 @@ function draw_legend(max_property) {
         //var text = formatNum(max_population);
         return max_property;
 
-    }).attr('x', wRect + offsetText).attr('y', offsetText * offsetYFactor * 2);
+    }).attr('x', wRect + offsetText).attr('y', offsetText * offsetYFactor * 2+label_height);
 
     sg.append('text').text(function () {
         //var text = formatNum(max_population);
         return category;
 
-    }).attr('x', 0).attr('y', function(){
-        return (color_split.length+1) * hRect;
+    }).attr('x', 2).attr('y', function(){
+        return 0;//(color_split.length+1) * hRect;
     });
+
+
 }
 
 function draw_time_slider(){
@@ -255,6 +277,7 @@ function draw_time_slider(){
         status =0;
         stop_animateTime();
         status = 1;
+        d3.select("#play_stopBtn").attr("src",stopBtn_Image.src);
         animate_time();
 
     });
