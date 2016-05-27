@@ -90,6 +90,13 @@ function display_Density(cur_year){
         var cur_country_size = country_size[0][cur_year];
         
         if (country_properties.length > 0 && country_size.length > 0) {
+
+            tooltip
+                .html("<div id='tooltip_country'>|<b>"+d.properties.name + "</b><br>|<b>" + category + ":</b>"
+                    + formatNum(year_property) + "<br>|<b>Size:</b>" + cur_country_size + "<br>|<b>Density:</b>"
+                    + density+density_unit+"</div>");
+
+
             var formatted_property = formatNum(year_property);
             var density = year_property / cur_country_size * densityMultiplier;
             var density_unit;
@@ -102,11 +109,52 @@ function display_Density(cur_year){
                         break;
                 default: break;
             }
-            if(mouse[0]>d3.select("window"))
-            return tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
-                .html("|<b>"+d.properties.name + "</b><br>|<b>" + category + ":</b>" + formatNum(year_property) + "<br>|<b>Size:</b>" + cur_country_size + "<br>|<b>Density:</b>" + density+density_unit);
 
-        }else{return tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
+
+             var left = mouse[0] + offsetL;
+             var top = mouse[1] + offsetT;
+             var window_margin = 16;
+             var buffer = 5;
+
+             var tooltip_right = d3.select("#tooltip_country").node().getBoundingClientRect().width + left;//d3.select("#tooltip_country").node().getBoundingClientRect().right;
+             var window_right = window.innerWidth - window_margin - buffer;
+
+             if(tooltip_right > window_right){
+                //console.log("0 tooltip_right="+tooltip_right+"  window_right = "+window_right);
+
+                //d3.select("#tooltip_text").attr("style","width:500px;float: right;padding-left: 15px;padding-top: 10px;padding-right:10px;vertical-align: middle;");
+
+                var tooltip_Width = 275;//d3.select("#tooltip_country").node().getBoundingClientRect();
+
+                left = mouse[0]-tooltip_Width-offsetL  ;
+
+             }
+
+            var tooltip_height = d3.select("#tooltip_country").node().getBoundingClientRect().height;
+             /*var tooltip_top = top+ tooltip_height;//d3.select("#tooltip_country").node().getBoundingClientRect().top;
+             //onsole.log("tooltip_top="+tooltip_top+"  wind+margin="+(window_margin+buffer));
+
+
+             if(tooltip_top <(window_margin+buffer)){
+                top = mouse[1]-tooltip_height;
+
+                console.log("1  mouse[1]="+mouse[1]+"  top="+top);
+             }else{
+             */
+                var tooltip_bottom = top+tooltip_height;//d3.select("#tooltip_country").node().getBoundingClientRect().bottom;
+
+                 if(tooltip_bottom> (window.innerHeight-window_margin)){
+                     console.log("2  mouse[1]="+mouse[1]+"  tooltip_bottom="+tooltip_bottom);
+                    top = mouse[1]-tooltip_height-offsetT;
+                    console.log("top="+top);
+             }
+
+             tooltip.attr("style","width:"+ tooltip_Width
+             +"px; left:"+ left+"px;top:"+top+"px;visibility: visible;");
+
+         //tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
+
+        }else{tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
             .html(d.properties.name);}
     });
 
