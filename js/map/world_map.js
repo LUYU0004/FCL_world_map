@@ -193,14 +193,14 @@ function addpoint(lat, lon, title,text, No) {
 
         tooltip.html("<div id='tooltip_holder' style='vertical-align: middle'><span id='pic_holder' class='Centerer' style" +
             "='height: 100px;width: 80px;float: left;vertical-align: middle'><img id='tooltip_pic' class='Centered' src='res/fcl_logo.png' style='width: 80px;height: 100px;'></span>" +
-            "<div id='tooltip_text' style='float: right;padding-left: 15px;padding-top: 10px;padding-right:10px;vertical-align: middle;'>"+text+"</div></div>");
+            "<div id='tooltip_text' style='float: right;padding-left: 10px;padding-top: 10px;padding-right:10px;vertical-align: middle;'>"+text+"</div></div>");
 
-        d3.select("#tooltip_text").attr("style","border:1px solid #010101;float: right;padding-left: 15px;padding-top: 10px;padding-right:10px;vertical-align: middle;");
+        d3.select("#tooltip_text").attr("style","float: right;padding-left: 15px;padding-top: 10px;padding-right:10px;vertical-align: middle;");
 
         //add in picture for the project
         var project_img = new Image();
         project_img.src = "img/project_img/"+No+"_fcl_vis.jpg";
-        console.log("project_img.src = "+project_img.src);
+        //console.log("project_img.src = "+project_img.src);
         d3.select("#tooltip_pic").attr("src",project_img.src);
 
         var mouse = d3.mouse(svg.node()).map(function (d) {
@@ -211,17 +211,21 @@ function addpoint(lat, lon, title,text, No) {
         var top = mouse[1] + offsetT;
         var window_margin = 16;
         var buffer = 5;
-        var paddingH = 30;
+        var paddingH = 10;
         var paddingV = 10;
 
-        var max_text_width= 400;
+        var max_text_width= 250;
 
-        var pic_width =d3.select("#pic_holder").node().getBoundingClientRect().width;
+        var pic_height =d3.select("#tooltip_text").node().getBoundingClientRect().height;
+        var pic_width =  pic_width = pic_height/1.25 ;
+
+
         var text_width= d3.select("#tooltip_text").node().getBoundingClientRect().width;
 
-        if(text_width <=max_text_width){
+        if(text_width <max_text_width){
             text_width = d3.select("#tooltip_text").node().getBoundingClientRect().width;
         }else{
+            paddingH = 30;
             text_width= max_text_width;
         }
 
@@ -247,43 +251,48 @@ function addpoint(lat, lon, title,text, No) {
                 top = mouse[1]-tooltip_height-offsetT-paddingV;
             }
 
+        d3.select("#pic_holder").attr("style","width:"+pic_width+"px; height:"+pic_height+"px;float: left;vertical-align: middle;");
+        d3.select("#tooltip_pic").attr("style","width:"+pic_width+"px; height:"+pic_height+"px");
+
         tooltip.attr("style","width:"+ max_tooltipHolder_Width
             +"px; left:"+ left+"px;top:"+top+"px;visibility: visible;");
 
-        console.log("text_width1="+ text_width);
-        console.log(" top = "+d3.select("#tooltip_holder").node().getBoundingClientRect().top
-            +" left = "+ d3.select("#tooltip_holder").node().getBoundingClientRect().left);
 
         if(text_width != d3.select("#tooltip_text").node().getBoundingClientRect().width){
-
+            paddingH = 10;
             left = mouse[0] + offsetL;
             top = mouse[1] + offsetT;
 
-            if(text_width <=max_text_width){
+            if(text_width <max_text_width){
                 text_width = d3.select("#tooltip_text").node().getBoundingClientRect().width;
             }else{
+                paddingH = 30;
                 text_width= max_text_width;
             }
 
-            max_tooltipHolder_Width = pic_width+ text_width + paddingH;
-            left = mouse[0]-max_tooltipHolder_Width-offsetL  ;
 
-
-            d3.select("#tooltip_text").attr("style","width:"+text_width+"px;float:right;border:1px solid #010101;padding-left: 15px;padding-top: 10px;padding-right:10px;vertical-align: middle;");
-
+            d3.select("#tooltip_text").attr("style","width:"+text_width+"px;float:right;padding-left: 15px;padding-top: 10px;padding-right:10px;vertical-align: middle;");
 
             tooltip_height = d3.select("#tooltip_text").node().getBoundingClientRect().height;
             tooltip_bottom = top+ tooltip_height + paddingV;
 
+            //restyle the pic to align it vertically with text portion
+            pic_height =tooltip_height;
+            pic_width = tooltip_height/1.25 ;
+
+            d3.select("#pic_holder").attr("style","width:"+pic_width+"px; height:"+pic_height+"px;float: left;vertical-align: middle;");
+            d3.select("#tooltip_pic").attr("style","width:"+pic_width+"px; height:"+pic_height+"px");
+
+
+            max_tooltipHolder_Width = pic_width+ text_width + paddingH;
+            left = mouse[0]-max_tooltipHolder_Width-offsetL  ;
+
             if(tooltip_bottom> (window.innerHeight-window_margin)) {
                 top = mouse[1] - tooltip_height - offsetT-paddingV;
             }
+
             tooltip.attr("style","width:"+ max_tooltipHolder_Width
                 +"px; left:"+ left+"px;top:"+top+"px;visibility: visible;");
-
-            console.log("text_width2="+ text_width);
-            console.log(" top = "+d3.select("#tooltip_holder").node().getBoundingClientRect().top
-                +" left = "+ d3.select("#tooltip_holder").node().getBoundingClientRect().left);
         }
 
         });

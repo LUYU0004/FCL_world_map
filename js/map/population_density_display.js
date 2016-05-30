@@ -121,11 +121,8 @@ function display_Density(cur_year){
              var window_right = window.innerWidth - window_margin - buffer;
 
              if(tooltip_right > window_right){
-                //console.log("0 tooltip_right="+tooltip_right+"  window_right = "+window_right);
 
-                //d3.select("#tooltip_text").attr("style","width:500px;float: right;padding-left: 15px;padding-top: 10px;padding-right:10px;vertical-align: middle;");
-
-                var tooltip_Width = 275;//d3.select("#tooltip_country").node().getBoundingClientRect();
+                var tooltip_Width = 275;
 
                 left = mouse[0]-tooltip_Width-offsetL  ;
 
