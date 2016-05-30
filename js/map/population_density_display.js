@@ -88,27 +88,28 @@ function display_Density(cur_year){
         var year_property = country_properties[0][cur_year];
         var country_size = find_country_size(name);
         var cur_country_size = country_size[0][cur_year];
+
         
         if (country_properties.length > 0 && country_size.length > 0) {
-
-            tooltip
-                .html("<div id='tooltip_country'>|<b>"+d.properties.name + "</b><br>|<b>" + category + ":</b>"
-                    + formatNum(year_property) + "<br>|<b>Size:</b>" + cur_country_size + "<br>|<b>Density:</b>"
-                    + density+density_unit+"</div>");
-
 
             var formatted_property = formatNum(year_property);
             var density = year_property / cur_country_size * densityMultiplier;
             var density_unit;
             switch(catNo){
                 case 1: cur_country_size = cur_country_size + ' (sq.km)';
-                        density_unit = ' people per (sq.km)';
-                        break;
+                    density_unit = ' people per (sq.km)';
+                    break;
                 case 2: cur_country_size = cur_country_size +' people';
-                        density_unit = ' tons per person';
-                        break;
+                    density_unit = ' tons per person';
+                    break;
                 default: break;
             }
+
+            tooltip
+                .html("<div id='tooltip_country'>|<b>"+d.properties.name + "</b><br>|<b>" + category + ":</b>"
+                    + formatNum(year_property) + "<br>|<b>Size:</b>" + cur_country_size + "<br>|<b>Density:</b>"
+                    + density+density_unit+"</div>");
+
 
 
              var left = mouse[0] + offsetL;
@@ -131,22 +132,13 @@ function display_Density(cur_year){
              }
 
             var tooltip_height = d3.select("#tooltip_country").node().getBoundingClientRect().height;
-             /*var tooltip_top = top+ tooltip_height;//d3.select("#tooltip_country").node().getBoundingClientRect().top;
-             //onsole.log("tooltip_top="+tooltip_top+"  wind+margin="+(window_margin+buffer));
 
-
-             if(tooltip_top <(window_margin+buffer)){
-                top = mouse[1]-tooltip_height;
-
-                console.log("1  mouse[1]="+mouse[1]+"  top="+top);
-             }else{
-             */
                 var tooltip_bottom = top+tooltip_height;//d3.select("#tooltip_country").node().getBoundingClientRect().bottom;
 
                  if(tooltip_bottom> (window.innerHeight-window_margin)){
-                     console.log("2  mouse[1]="+mouse[1]+"  tooltip_bottom="+tooltip_bottom);
+                     //console.log("2  mouse[1]="+mouse[1]+"  tooltip_bottom="+tooltip_bottom);
                     top = mouse[1]-tooltip_height-offsetT;
-                    console.log("top="+top);
+                    //console.log("top="+top);
              }
 
              tooltip.attr("style","width:"+ tooltip_Width

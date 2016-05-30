@@ -22,3 +22,10 @@
 .node--leaf {
     pointer-events: none;
 }
+
+#zoomable_circles{
+    position:absolute;;
+    bottom: 15%;
+    right: 5%;
+    border: 1px solid #d0d0d0;
+}

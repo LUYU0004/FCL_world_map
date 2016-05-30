@@ -59,7 +59,7 @@ function setup() {
         .on("click", click)
         .append("g");
 
-    g = svg.append("g");
+    g = svg.append("g").attr("id","country_holder");
 }
 
 function draw_worldmap() {
@@ -112,13 +112,14 @@ function draw_worldmap() {
             var title = "<b>"+i.FCL_Project+"  "+i.Case_study+"</b>";
             var text = "<br><p>"+i.Title+"</p>"+"<p style='font-size: 12px;'>Coordinate: "+ i.Latitude+"° N, "+ i.Longitude+"°E <br>"
                         +i.Description+"</p>";
-            addpoint(i.Longitude,i.Latitude,title, title+text);
+            addpoint(i.Longitude,i.Latitude,title, title+text,i.No);
         });
     });
     //document.getElementById("categories").value = "Population Density";
     //newInput();
     d3.select("#pop_densityBtn").classed("selectedBtn",true);
     category = "Population Density";
+    //setup_circles();
     newInput();
 }
 
@@ -165,7 +166,7 @@ function click() {
 }
 
 //function to add points and text to the map (used in plotting capitals)
-function addpoint(lat, lon, title,text) {
+function addpoint(lat, lon, title,text, No) {
     var gpoint = g.append("g").attr("class", "gpoint");
     var x = projection([lat, lon])[0];
     var y = projection([lat, lon])[1];
@@ -195,6 +196,13 @@ function addpoint(lat, lon, title,text) {
             "<div id='tooltip_text' style='float: right;padding-left: 15px;padding-top: 10px;padding-right:10px;vertical-align: middle;'>"+text+"</div></div>");
 
         d3.select("#tooltip_text").attr("style","border:1px solid #010101;float: right;padding-left: 15px;padding-top: 10px;padding-right:10px;vertical-align: middle;");
+
+        //add in picture for the project
+        var project_img = new Image();
+        project_img.src = "img/project_img/"+No+"_fcl_vis.jpg";
+        console.log("project_img.src = "+project_img.src);
+        d3.select("#tooltip_pic").attr("src",project_img.src);
+
         var mouse = d3.mouse(svg.node()).map(function (d) {
             return parseInt(d);
         });
@@ -203,7 +211,7 @@ function addpoint(lat, lon, title,text) {
         var top = mouse[1] + offsetT;
         var window_margin = 16;
         var buffer = 5;
-        var paddingH = 35;
+        var paddingH = 30;
         var paddingV = 10;
 
         var max_text_width= 400;

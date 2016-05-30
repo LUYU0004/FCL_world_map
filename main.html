@@ -1,10 +1,12 @@
 <!DOCTYPE html>
+<html>
 <head>
     <meta charset="UTF-8">
     <title>FCL Explantory Visualization</title>
 
     <link rel="stylesheet" href="css/main.css"/>
     <link rel="stylesheet" href="css/slider.css"/>
+    <link rel="stylesheet" href="css/zoomable_circles.css"/>
 
     <script src="//d3js.org/d3.v3.min.js"></script>
     <script src="js/lib/topojson.v1.min.js"></script>
@@ -34,7 +36,7 @@
         if(category){
             load_DData(category);
         }else{
-            draw_worldmap(this.world_topo);
+            alert("Invalid Choice!");
         }
     }
 
@@ -65,7 +67,7 @@ document.getElementById('co2_emissionBtn').addEventListener("click", newInput);
 <script src="js/map/world_map.js"></script>
 <script src="js/map/population_density_display.js"></script>
 <script src="js/slider/timer_slider.js"></script>
-
+<script src="js/map/zoomable_circles.js"></script>
 
 
 </body>

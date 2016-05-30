@@ -4,44 +4,67 @@
 
 
 var margin = 20,
-    diameter = 960;
-var color, pack, svg;
+    diameter = 500;
+var  node,circle,focus,view; //svg
+var cg_g;
 
 function setup_circles(){
 
-    console.log("circles setup finished!");
-    color = d3.scale.linear()
+    var color = d3.scale.linear()
         .domain([-1, 5])
         .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
         .interpolate(d3.interpolateHcl);
 
-    pack = d3.layout.pack()
+    var pack = d3.layout.pack()
         .padding(2)
         .size([diameter - margin, diameter - margin])
-        .value(function(d) { return d.size; })
-
+        .value(function(d) { return d.size;});
+/*
     svg = d3.select("body").append("svg")
         .attr("z-index",50)///////////////////
         .attr("width", diameter)
         .attr("height", diameter)
         .append("g")
         .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+*/
+    var cg = d3.select("#content_holder").append("div")//g.append("g")
+        .attr("id","zoomable_circles")
+        .classed("extra_info",true)
+        .append("svg")
+        .attr("width", diameter)
+        .attr("height", diameter);
 
-    d3.json("flare.json", function(error, root) {
+        cg_g = cg.append("g")
+            .attr("class","circle_holder")
+        .attr("transform", "translate(" + diameter / 2  + "," + diameter / 2 + ")")
+            .attr("style","border: 1px solid #d0d0d0;");
+            //+ diameter /2 + "," + diameter / 2 + ")");
+
+    
+    d3.json("data/flare.json", function(error, root) {
+
         if (error) throw error;
 
-        var focus = root,
-            nodes = pack.nodes(root),
-            view;
+        //console.log("root = "+root);
+        focus = root;
+        var nodes = pack.nodes(root);
+            //view;
 
-        var circle = svg.selectAll("circle")
+        circle = cg_g.selectAll("circle")  //svg
             .data(nodes)
-            .enter().append("circle")
-            .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
+            .enter()
+            .append("circle")
+            .attr("class", function(d) {
+                //console.log("d = "+d);
+                //console.log("d.parent = "+d.parent);
+                return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
             .style("fill", function(d) { return d.children ? color(d.depth) : null; })
-            .on("click", function(d) { if (focus !== d) zoom(d), d3.event.stopPropagation(); });
+            .on("click", function(d) {
+                console.log("onclick!!   focus.x = "+ focus.name +" d.x = "+d.name);
+                if (focus !== d) zoom_Circles(d), d3.event.stopPropagation();
+                                        });
 
-        var text = svg.selectAll("text")
+        var text = cg_g.selectAll("text")
             .data(nodes)
             .enter().append("text")
             .attr("class", "label")
@@ -49,11 +72,15 @@ function setup_circles(){
             .style("display", function(d) { return d.parent === root ? "inline" : "none"; })
             .text(function(d) { return d.name; });
 
-        var node = svg.selectAll("circle,text");
+        node = cg_g.selectAll("circle,text"); //svg
 
-        d3.select("body")
-            .style("background", color(-1))
-            .on("click", function() { zoom(root); });
+        //d3.select("body")
+
+        cg
+        .style("background", color(-1))
+            .on("click", function() {
+                console.log("zoom root!")
+                zoom_Circles(root); });
 
 
         zoomTo([root.x, root.y, root.r * 2 + margin]);
@@ -64,16 +91,21 @@ function setup_circles(){
     
 }
 
-function zoom(d) {
+function zoom_Circles(d) {
 
-    console.log("zoom("+d+")");
-    var focus0 = focus; focus = d;
+    console.log("zoom_Circles("+d.name+")");
+    //var focus0 = focus;
+    focus = d;
 
     var transition = d3.transition()
         .duration(d3.event.altKey ? 7500 : 750)
-        .tween("zoom", function(d) {
+        .tween("zoom_Circles", function(d) {
             var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
-            return function(t) { zoomTo(i(t)); };
+           console.log("zoom_Circles():  view = "+view+"focus.x= "+ focus.x + "  focus.y = "+focus.y);
+            //console.log("tween : d ->"+d);
+            return function(t) {
+                //console.log("t->"+t);
+                zoomTo(i(t)); };
         });
 
     transition.selectAll("text")
@@ -84,8 +116,12 @@ function zoom(d) {
 }
 
 function zoomTo(v) {
-    console.log("Zoomto("+v+")");
-    var k = diameter / v[2]; view = v;
-    node.attr("transform", function(d) { return "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")"; });
+    console.log("zoomTo("+v+")");
+    var k = diameter / v[2];
+    view = v;
+    node.attr("transform", function(d) {
+        //console.log("translate to "+(d.x - v[0]) * k + " , "+(d.y - v[1]) * k);
+        return "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")"; });
+
     circle.attr("r", function(d) { return d.r * k; });
 }
