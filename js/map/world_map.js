@@ -211,7 +211,7 @@ function addpoint(lat, lon, title,text, No) {
         var top = mouse[1] + offsetT;
         var window_margin = 16;
         var buffer = 5;
-        var paddingH = 10;
+        var paddingH = 15;
         var paddingV = 10;
 
         var max_text_width= 250;
@@ -259,7 +259,7 @@ function addpoint(lat, lon, title,text, No) {
 
 
         if(text_width != d3.select("#tooltip_text").node().getBoundingClientRect().width){
-            paddingH = 10;
+            paddingH = 25;
             left = mouse[0] + offsetL;
             top = mouse[1] + offsetT;
 
