@@ -108,11 +108,14 @@ function draw_worldmap() {
     
 
     d3.csv("data/fitted/Projects.csv", function (err, projects) {
+
+        var tier_status = generate_DistMatrix(projects);
+
         projects.forEach(function (i) {
             var title = "<b>"+i.FCL_Project+"  "+i.Case_study+"</b>";
             var text = "<br><p>"+i.Title+"</p>"+"<p style='font-size: 12px;'>Coordinate: "+ i.Latitude+"° N, "+ i.Longitude+"°E <br>"
                         +i.Description+"</p>";
-            addpoint(i.Longitude,i.Latitude,title, title+text,i.No);
+            addpoint(tier_status,i.Longitude,i.Latitude,title, title+text,i.No);
         });
     });
     //document.getElementById("categories").value = "Population Density";
@@ -166,17 +169,21 @@ function click() {
 }
 
 //function to add points and text to the map (used in plotting capitals)
-function addpoint(lat, lon, title,text, No) {
+function addpoint(tier_status,lat, lon, title,text, No) {
     var gpoint = g.append("g").attr("class", "gpoint");
     var x = projection([lat, lon])[0];
     var y = projection([lat, lon])[1];
+    var color_scheme = ["#CCFF99","#00FF00","#0000FF","#FFFF00","#00FFFF" ,
+                        "#FF00FF","#C0C0C0","#FFFFFF","#780000 ","996633"];
 
     //console.log("x:"+x+"   y:"+y);
     gpoint.append("svg:circle")
         .attr("cx", x)
         .attr("cy", y)
         .attr("class", "point")
-        .style("fill", "red")
+        .style("fill", function () {
+            return color_scheme[tier_status[No-1]-1];
+        })
         .attr("r", 4)
         .on("mouseover", function () {return tooltip.attr("style","visibility: visible");})
         .on("mousemove", function() {
@@ -297,7 +304,169 @@ function addpoint(lat, lon, title,text, No) {
 
         });
 
+    /*var obj = {"nissan": "sentra", "color": "green"};
+
+    localStorage.setItem('myStorage', JSON.stringify(obj));
+    //And to retrieve the object later
+
+    obj = JSON.parse(localStorage.getItem('myStorage'));
+*/
 }
+
+
+/*calculate distance between any two project locations*/
+function generate_DistMatrix(projects){
+
+    var projectNo = 0;
+    var positionA = [];
+    var positionB = [];
+    var matrix = [];
+    var distance;
+    var distance_Multiplier = 1000; // km to m??
+
+    projects.forEach(function (pointA) {
+        positionA = [];
+        positionA.push(pointA.Longitude, pointA.Latitude);
+        //console.log(pointA.No); //+'  project position  = '+positionA);
+        matrix.push([]);
+        projectNo++;
+
+        projects.forEach(function(pointB){
+            positionB = [];
+            positionB.push(pointB.Longitude, pointB.Latitude);
+
+            distance = d3.geo.distance(positionA, positionB)* distance_Multiplier;
+            matrix[pointA.No-1].push(distance);
+            //console.log("matrix["+(pointA.No-1)+']'+'['+(pointB.No-1)+  '] = '+distance);
+
+        })
+    });
+
+    var tier1_range = 150;
+    //projectNo = 5;
+    console.log(matrix);
+    return find_tier1(projectNo, matrix,tier1_range);
+
+}
+
+/*find tier1- distance <= 200;
+        tier2- distance < */
+
+
+
+function find_tier1(projectNo, matrix, tier_range){
+
+    var clusterIndex = 0;
+    var tier_status=[];// 1 indicates the corresponding project is included in tier1 already
+    var check_status = []; //1 indicates checked alr for neighbours
+
+    for (var j=0;j<projectNo;j++){
+        tier_status.push(0);
+        check_status.push(0);
+
+    }
+
+    for(var index =0;index<projectNo;index++){
+
+        if(check_status[index]==0){
+
+            var value;
+
+            for(var i=0; i<projectNo;i++){
+                value = matrix[index][i];
+                if(value<=tier_range && index !=i){ //index != i  to avoid same project distance
+                    if(i<index && tier_status[i] != 0 ){
+                        tier_status[index] = tier_status[i];
+
+                        console.log("tier_status["+(index+1) +"] = "+tier_status[i]+"  tier_status["+(i+1)+"]="+tier_status[i]);
+
+                    }else{
+                        if(tier_status[index] ==  0 ) {
+                            clusterIndex++;
+
+                            tier_status[index] = clusterIndex;
+                            tier_status[i] = clusterIndex;
+                            console.log("tier_status["+(index+1) +"] = "+clusterIndex+  "  i="+i);
+                        }
+                    }
+                }
+            }
+
+            check_status[index]=1;
+
+        }
+    }
+
+    console.log("tier1_status = "+tier_status);
+    return tier_status;
+
+}
+
+/*to find the neighbours that with distance under certain defined range of tiers*/
+function find_neighbours(input){
+    var projectNo = input[0];
+    var index = input[1];
+    var matrix = input[2];
+    var clusterIndex = input[3];
+    var tier_status = input[4];
+
+   // var res = 0;
+
+    var tier_range = input[4];
+    var value;
+
+    for(var i=index; i<projectNo;i++){
+        value = matrix[index][i];
+        if(value<=tier_range && index !=i){ //index != i  to avoid same project distance
+           // console.log("clusterIndex = "+clusterIndex);
+            //res = 1;
+            //console.log("matrix["+index+']['+i+'] = '+matrix[index][i]);
+            if(tier_status[index] ==0 ){
+                clusterIndex++;
+                //console.log("clusterIndex = "+clusterIndex);
+            }
+            tier_status[index]=clusterIndex;
+            tier_status[i] = clusterIndex;
+        }
+    }
+
+    return clusterIndex;
+}
+/*
+function print_2D_ARR(){
+    var read_status = [];
+    var distance_matrix = [['a','b'],['c','d']];
+    distance_matrix.push(['e','f']);
+    //console.log(arr);
+}
+
+function draw_project_circles(){
+
+    var distance_matrix=[];
+    //var coloumns = {'columns':[]};
+    var columns = [];
+    var item = {};
+
+    for()
+
+
+        function createJSON() {
+        jsonObj = [];
+        $("input[class=email]").each(function() {
+
+            var id = $(this).attr("title");
+            var email = $(this).val();
+
+            item = {}
+            item ["title"] = id;
+            item ["email"] = email;
+
+            jsonObj.push(item);
+        });
+
+        console.log(jsonObj);
+    }
+}*/
 
 function formatNum(num) {
     var format = d3.format(',.02f');

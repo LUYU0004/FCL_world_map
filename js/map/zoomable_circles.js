@@ -27,7 +27,7 @@ function setup_circles(){
         .append("g")
         .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
 */
-    var cg = d3.select("#content_holder").append("div")//g.append("g")
+    var cg = d3.select( "#content_holder").append("div")//g.append("g")
         .attr("id","zoomable_circles")
         .classed("extra_info",true)
         .append("svg")
@@ -75,14 +75,14 @@ function setup_circles(){
         node = cg_g.selectAll("circle,text"); //svg
 
         //d3.select("body")
-
+/*
         cg
         .style("background", color(-1))
             .on("click", function() {
                 console.log("zoom root!")
                 zoom_Circles(root); });
 
-
+*/
         zoomTo([root.x, root.y, root.r * 2 + margin]);
         
     });
