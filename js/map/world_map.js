@@ -109,7 +109,7 @@ function draw_worldmap() {
 
     d3.csv("data/fitted/Projects.csv", function (err, projects) {
 
-        var tier_status = generate_DistMatrix(projects);
+         var tier_status = generate_DistMatrix(projects);
 
         projects.forEach(function (i) {
             var title = "<b>"+i.FCL_Project+"  "+i.Case_study+"</b>";
@@ -174,7 +174,7 @@ function addpoint(tier_status,lat, lon, title,text, No) {
     var x = projection([lat, lon])[0];
     var y = projection([lat, lon])[1];
     var color_scheme = ["#CCFF99","#00FF00","#0000FF","#FFFF00","#00FFFF" ,
-                        "#FF00FF","#C0C0C0","#FFFFFF","#780000 ","996633"];
+                        "#FF00FF","#C0C0C0","#FFFFF1","#780000 ","996633"];
 
     //console.log("x:"+x+"   y:"+y);
     gpoint.append("svg:circle")
@@ -344,65 +344,106 @@ function generate_DistMatrix(projects){
 
     var tier1_range = 150;
     //projectNo = 5;
-    console.log(matrix);
+    //console.log(matrix);
     return find_tier1(projectNo, matrix,tier1_range);
 
 }
 
 /*find tier1- distance <= 200;
         tier2- distance < */
-
-
-
+// 55 projects, index 0-54
 function find_tier1(projectNo, matrix, tier_range){
 
-    var clusterIndex = 0;
     var tier_status=[];// 1 indicates the corresponding project is included in tier1 already
     var check_status = []; //1 indicates checked alr for neighbours
+    var stack = [];
+    var neighbours = [];
+    var value;
 
+
+    //to create a neighbour matrix holding neighbours to each project
+    for(var index =0;index<projectNo;index++){
+
+        neighbours.push([]);
+        for(var i=0; i<projectNo;i++){
+            value = matrix[index][i];
+            if(value<=tier_range && index !=i){ //index != i  to avoid same project distance
+                neighbours[index].push(i);
+            }
+        }
+    }
+    //console.log("neighbours [0] = "+neighbours[0]);
+
+    //to classify projects into cluster
     for (var j=0;j<projectNo;j++){
         tier_status.push(0);
         check_status.push(0);
 
     }
 
-    for(var index =0;index<projectNo;index++){
 
+   var first_ofstack;
+    var stack_length = 0;
+    var neighbour_length;
+    var neighbour_No;
+    var looptime = 0;
+    var clusterIndex = 1;
+    var clusterNumber = [];
+
+    clusterNumber.push(0,0);
+    for(index = 0;index<projectNo;index++){
         if(check_status[index]==0){
+            if(looptime>1) {clusterIndex++; clusterNumber.push(0);}
+            looptime =0;
+            stack.push(index);
+            stack_length++;
 
-            var value;
-
-            for(var i=0; i<projectNo;i++){
-                value = matrix[index][i];
-                if(value<=tier_range && index !=i){ //index != i  to avoid same project distance
-                    if(i<index && tier_status[i] != 0 ){
-                        tier_status[index] = tier_status[i];
-
-                        console.log("tier_status["+(index+1) +"] = "+tier_status[i]+"  tier_status["+(i+1)+"]="+tier_status[i]);
-
-                    }else{
-                        if(tier_status[index] ==  0 ) {
-                            clusterIndex++;
-
-                            tier_status[index] = clusterIndex;
-                            tier_status[i] = clusterIndex;
-                            console.log("tier_status["+(index+1) +"] = "+clusterIndex+  "  i="+i);
+            //console.log("Enter while ,   clusterIndex = "+ clusterIndex);
+            while(stack_length > 0){
+                looptime++;
+                first_ofstack = stack.shift();
+                /*if(index <3 ){
+                    console.log("first of stack = "+ first_ofstack);
+                }*/
+                stack_length--;
+                if(check_status[first_ofstack] ==0){
+                    check_status[first_ofstack] = 1;
+                    neighbour_length =neighbours[first_ofstack].length;
+                    //console.log("check project index = "+first_ofstack+"  neighbour_length = "+ neighbour_length);
+                    if( neighbour_length> 0){
+                        if(tier_status[first_ofstack]==0) {
+                            tier_status[first_ofstack] = clusterIndex;
+                            clusterNumber[clusterIndex]++;
                         }
+                        //console.log("tier_status["+first_ofstack+"] ="+clusterIndex);
+                        for(i=0;i<neighbour_length;i++){
+                         neighbour_No = neighbours[first_ofstack][i];
+                         stack.push(neighbour_No);
+                         stack_length++;
+                            if(tier_status[first_ofstack]==0) {
+                                tier_status[neighbour_No] = clusterIndex;
+                                clusterNumber[clusterIndex]++;}
+                         }
+                        //if(index<3) console.log(" push neighbours onto stack ,   stack="+stack);
                     }
                 }
+
             }
 
-            check_status[index]=1;
-
         }
+
     }
 
-    console.log("tier1_status = "+tier_status);
+    console.log(tier_status);
+    console.log(clusterNumber);
+
+
     return tier_status;
 
 }
 
 /*to find the neighbours that with distance under certain defined range of tiers*/
+/*
 function find_neighbours(input){
     var projectNo = input[0];
     var index = input[1];
@@ -417,21 +458,24 @@ function find_neighbours(input){
 
     for(var i=index; i<projectNo;i++){
         value = matrix[index][i];
-        if(value<=tier_range && index !=i){ //index != i  to avoid same project distance
-           // console.log("clusterIndex = "+clusterIndex);
-            //res = 1;
-            //console.log("matrix["+index+']['+i+'] = '+matrix[index][i]);
-            if(tier_status[index] ==0 ){
-                clusterIndex++;
-                //console.log("clusterIndex = "+clusterIndex);
-            }
-            tier_status[index]=clusterIndex;
-            tier_status[i] = clusterIndex;
-        }
+        if(i<index && tier_status[i] != 0 ){
+         tier_status[index] = tier_status[i];
+
+         console.log("tier_status["+(index+1) +"] = "+tier_status[i]+"  tier_status["+(i+1)+"]="+tier_status[i]);
+
+         }else{
+         if(tier_status[index] ==  0 ) {
+         clusterIndex++;
+
+         tier_status[index] = clusterIndex;
+         tier_status[i] = clusterIndex;
+         console.log("tier_status["+(index+1) +"] = "+clusterIndex+  "  i="+i);
+         }
+         }
     }
 
     return clusterIndex;
-}
+}*/
 /*
 function print_2D_ARR(){
     var read_status = [];
