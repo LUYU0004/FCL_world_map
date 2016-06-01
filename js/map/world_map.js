@@ -5,6 +5,8 @@
  * Written by Zeng Wei (zeng@arch.ethz.ch)
  */
 
+window.SC = {};
+SC.projectNo =0;
 var world_topo;
 
 d3.json("data/topo/world-topo.json", function (error, world) {
@@ -109,14 +111,46 @@ function draw_worldmap() {
 
     d3.csv("data/fitted/Projects.csv", function (err, projects) {
 
-         var tier_status = generate_DistMatrix(projects);
+         var tier1 = generate_DistMatrix(projects);
+        var tier_status = tier1[0];  //index 0-54 indicates 55 projects
+        var clusterNumber = tier1[1];  //index zero with nothing
+        var clusters = tier1[2];    //index zero shows the number of projects not belonging to any cluster
+        var average_longtitude = [];  // index 1 to number of clusters
+        var average_latitude  =[];
+        var clusterIndex;
+
+        //initialize the arrays
+        for(var i=0;i< clusterNumber.length;i++){
+            average_latitude.push(0);
+            average_longtitude.push(0);
+        }
 
         projects.forEach(function (i) {
             var title = "<b>"+i.FCL_Project+"  "+i.Case_study+"</b>";
             var text = "<br><p>"+i.Title+"</p>"+"<p style='font-size: 12px;'>Coordinate: "+ i.Latitude+"° N, "+ i.Longitude+"°E <br>"
                         +i.Description+"</p>";
-            addpoint(tier_status,i.Longitude,i.Latitude,title, title+text,i.No);
+            clusterIndex = tier_status[i.No-1];
+
+            average_longtitude[clusterIndex] = average_longtitude[clusterIndex] + Number(i.Longitude);
+            average_latitude[clusterIndex] =average_latitude[clusterIndex] + Number(i.Latitude);
+
+            addpoint((tier_status[i.No-1]-1),i.Longitude,i.Latitude,title, title+text);
         });
+
+        //draw circles
+        var title;
+        var text;
+        var number;
+        for(i=1;i< clusterNumber.length;i++){
+            number = clusterNumber[i];
+            average_longtitude[i] = average_longtitude[i]/number;
+            average_latitude[i] = average_latitude[i] / number;
+            console.log("average_latitude["+i+"] = "+ average_latitude[i]+"   ,   ");
+            title = "<b>Cluster "+i+"</b>";
+            text = title +"" +
+                "<br><br>Project Number:"+clusterNumber[i];
+            addpoint(1,average_longtitude[i],average_latitude[i],title, text, number);
+        }
     });
     //document.getElementById("categories").value = "Population Density";
     //newInput();
@@ -169,7 +203,11 @@ function click() {
 }
 
 //function to add points and text to the map (used in plotting capitals)
-function addpoint(tier_status,lat, lon, title,text, No) {
+function addpoint(color_status, lat, lon, title,text, radius) {
+
+    if(radius == undefined) radius = 1;
+
+
     var gpoint = g.append("g").attr("class", "gpoint");
     var x = projection([lat, lon])[0];
     var y = projection([lat, lon])[1];
@@ -182,9 +220,9 @@ function addpoint(tier_status,lat, lon, title,text, No) {
         .attr("cy", y)
         .attr("class", "point")
         .style("fill", function () {
-            return color_scheme[tier_status[No-1]-1];
+            return color_scheme[color_status];
         })
-        .attr("r", 4)
+        .attr("r", 4*radius)
         .on("mouseover", function () {return tooltip.attr("style","visibility: visible");})
         .on("mousemove", function() {
             var mouse = d3.mouse(svg.node()).map(function (d) {
@@ -304,20 +342,13 @@ function addpoint(tier_status,lat, lon, title,text, No) {
 
         });
 
-    /*var obj = {"nissan": "sentra", "color": "green"};
-
-    localStorage.setItem('myStorage', JSON.stringify(obj));
-    //And to retrieve the object later
-
-    obj = JSON.parse(localStorage.getItem('myStorage'));
-*/
 }
 
 
 /*calculate distance between any two project locations*/
 function generate_DistMatrix(projects){
+    SC.projectNo =0;
 
-    var projectNo = 0;
     var positionA = [];
     var positionB = [];
     var matrix = [];
@@ -327,9 +358,8 @@ function generate_DistMatrix(projects){
     projects.forEach(function (pointA) {
         positionA = [];
         positionA.push(pointA.Longitude, pointA.Latitude);
-        //console.log(pointA.No); //+'  project position  = '+positionA);
         matrix.push([]);
-        projectNo++;
+        SC.projectNo++;
 
         projects.forEach(function(pointB){
             positionB = [];
@@ -337,22 +367,19 @@ function generate_DistMatrix(projects){
 
             distance = d3.geo.distance(positionA, positionB)* distance_Multiplier;
             matrix[pointA.No-1].push(distance);
-            //console.log("matrix["+(pointA.No-1)+']'+'['+(pointB.No-1)+  '] = '+distance);
-
         })
     });
 
     var tier1_range = 150;
-    //projectNo = 5;
-    //console.log(matrix);
-    return find_tier1(projectNo, matrix,tier1_range);
+
+    return find_tier1( matrix,tier1_range);
 
 }
 
 /*find tier1- distance <= 200;
         tier2- distance < */
 // 55 projects, index 0-54
-function find_tier1(projectNo, matrix, tier_range){
+function find_tier1(matrix, tier_range){
 
     var tier_status=[];// 1 indicates the corresponding project is included in tier1 already
     var check_status = []; //1 indicates checked alr for neighbours
@@ -362,20 +389,19 @@ function find_tier1(projectNo, matrix, tier_range){
 
 
     //to create a neighbour matrix holding neighbours to each project
-    for(var index =0;index<projectNo;index++){
+    for(var index =0;index<SC.projectNo;index++){
 
         neighbours.push([]);
-        for(var i=0; i<projectNo;i++){
+        for(var i=0; i<SC.projectNo;i++){
             value = matrix[index][i];
             if(value<=tier_range && index !=i){ //index != i  to avoid same project distance
                 neighbours[index].push(i);
             }
         }
     }
-    //console.log("neighbours [0] = "+neighbours[0]);
 
     //to classify projects into cluster
-    for (var j=0;j<projectNo;j++){
+    for (var j=0;j<SC.projectNo;j++){
         tier_status.push(0);
         check_status.push(0);
 
@@ -391,31 +417,28 @@ function find_tier1(projectNo, matrix, tier_range){
     var clusterNumber = [];
 
     clusterNumber.push(0,0);
-    for(index = 0;index<projectNo;index++){
+    for(index = 0;index<SC.projectNo;index++){
         if(check_status[index]==0){
             if(looptime>1) {clusterIndex++; clusterNumber.push(0);}
             looptime =0;
             stack.push(index);
             stack_length++;
 
-            //console.log("Enter while ,   clusterIndex = "+ clusterIndex);
             while(stack_length > 0){
                 looptime++;
                 first_ofstack = stack.shift();
-                /*if(index <3 ){
-                    console.log("first of stack = "+ first_ofstack);
-                }*/
                 stack_length--;
+
                 if(check_status[first_ofstack] ==0){
                     check_status[first_ofstack] = 1;
                     neighbour_length =neighbours[first_ofstack].length;
-                    //console.log("check project index = "+first_ofstack+"  neighbour_length = "+ neighbour_length);
+
                     if( neighbour_length> 0){
                         if(tier_status[first_ofstack]==0) {
                             tier_status[first_ofstack] = clusterIndex;
                             clusterNumber[clusterIndex]++;
                         }
-                        //console.log("tier_status["+first_ofstack+"] ="+clusterIndex);
+
                         for(i=0;i<neighbour_length;i++){
                          neighbour_No = neighbours[first_ofstack][i];
                          stack.push(neighbour_No);
@@ -424,7 +447,7 @@ function find_tier1(projectNo, matrix, tier_range){
                                 tier_status[neighbour_No] = clusterIndex;
                                 clusterNumber[clusterIndex]++;}
                          }
-                        //if(index<3) console.log(" push neighbours onto stack ,   stack="+stack);
+
                     }
                 }
 
@@ -434,83 +457,33 @@ function find_tier1(projectNo, matrix, tier_range){
 
     }
 
-    console.log(tier_status);
-    console.log(clusterNumber);
+    var clusters = [];
+
+    for(i=0;i<clusterNumber.length;i++){
+        clusters.push([]);
+    }
+
+    //sort projects in tier1_status according to cluster number, clusters[0] collects all projects with no cluster
+    for(i=0;i< SC.projectNo;i++){
+        index = tier_status[i];
+        clusters[index].push(i+1); //represents actual project numbers, from 1 to 55
+    }
 
 
-    return tier_status;
+    var output = [];
+    output.push(tier_status, clusterNumber,clusters);
+
+    return output;
 
 }
 
-/*to find the neighbours that with distance under certain defined range of tiers*/
-/*
-function find_neighbours(input){
-    var projectNo = input[0];
-    var index = input[1];
-    var matrix = input[2];
-    var clusterIndex = input[3];
-    var tier_status = input[4];
+function draw_zoomable_circles(projects){
+    var tier1_status = tier[0];
+    var clusterNumber = tier[1]; //clusterNumber[0] stands for nothing
 
-   // var res = 0;
+    console.log(clusters);
 
-    var tier_range = input[4];
-    var value;
-
-    for(var i=index; i<projectNo;i++){
-        value = matrix[index][i];
-        if(i<index && tier_status[i] != 0 ){
-         tier_status[index] = tier_status[i];
-
-         console.log("tier_status["+(index+1) +"] = "+tier_status[i]+"  tier_status["+(i+1)+"]="+tier_status[i]);
-
-         }else{
-         if(tier_status[index] ==  0 ) {
-         clusterIndex++;
-
-         tier_status[index] = clusterIndex;
-         tier_status[i] = clusterIndex;
-         console.log("tier_status["+(index+1) +"] = "+clusterIndex+  "  i="+i);
-         }
-         }
-    }
-
-    return clusterIndex;
-}*/
-/*
-function print_2D_ARR(){
-    var read_status = [];
-    var distance_matrix = [['a','b'],['c','d']];
-    distance_matrix.push(['e','f']);
-    //console.log(arr);
 }
-
-function draw_project_circles(){
-
-    var distance_matrix=[];
-    //var coloumns = {'columns':[]};
-    var columns = [];
-    var item = {};
-
-    for()
-
-
-        function createJSON() {
-        jsonObj = [];
-        $("input[class=email]").each(function() {
-
-            var id = $(this).attr("title");
-            var email = $(this).val();
-
-            item = {}
-            item ["title"] = id;
-            item ["email"] = email;
-
-            jsonObj.push(item);
-        });
-
-        console.log(jsonObj);
-    }
-}*/
 
 function formatNum(num) {
     var format = d3.format(',.02f');
