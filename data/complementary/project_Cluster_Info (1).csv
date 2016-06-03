@@ -1,0 +1,17 @@
+TierNo,Name,ClusterNo,ProjectNo,Longtitude,Latitude,Projects_Included,Title,Text,CountriesIncluded
+1,Europe Cluster,1,9,5.959,51.02822222222222,1 2 3 5 11 14 18 19 20,<b>Cluster 1</b>,<b>Cluster 1</b><br><br>Radius = 45<br>Project Number:  9,Netherlands|Germany|United Kingdom|France
+1,China Cluster,2,2,121.4993465,31.207005000000002,8 47,<b>Cluster 2</b>,<b>Cluster 2</b><br><br>Radius = 10<br>Project Number:  2,China
+1,Japan Cluster,3,2,139.74650000000003,35.67,9 10,<b>Cluster 3</b>,<b>Cluster 3</b><br><br>Radius = 10<br>Project Number:  2,Japan
+1,United States Cluster,4,2,-75.3125,39.999,12 13,<b>Cluster 4</b>,<b>Cluster 4</b><br><br>Radius = 10<br>Project Number:  2,United States
+1,Philippines Cluster,5,2,121.0183295,14.58234,16 53,<b>Cluster 5</b>,<b>Cluster 5</b><br><br>Radius = 10<br>Project Number:  2,Philippines
+1,South East Asia Cluster,6,23,105.33433000000002,-0.8500764347826086,17 25 27 28 29 30 31 32 33 34 35 36 37 39 40 41 42 43 44 51 52 54 55,<b>Cluster 6</b>,<b>Cluster 6</b><br><br>Radius = 115<br>Project Number:  23,Singapore|Indonesia|Malaysia
+1,South Africa Cluster,7,2,28.0715,-26.063499999999998,22 23,<b>Cluster 7</b>,<b>Cluster 7</b><br><br>Radius = 10<br>Project Number:  2,South Africa
+1,Bangladesh Cluster,,8,2,89.38312450000001,23.195692,45 46,<b>Cluster 8</b>,<b>Cluster 8</b><br><br>Radius = 10<br>Project Number:  2,Bangladesh
+
+
+
+
+
+
+
+

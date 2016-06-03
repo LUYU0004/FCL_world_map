@@ -31,8 +31,8 @@ function setup_circles(){
         .attr("id","zoomable_circles")
         .classed("extra_info",true)
         .append("svg")
-        .attr("width", diameter)
-        .attr("height", diameter);
+        .attr("width", '100%')//diameter
+        .attr("height", '100%');
 
         cg_g = cg.append("g")
             .attr("class","circle_holder")
@@ -55,9 +55,9 @@ function setup_circles(){
             .enter()
             .append("circle")
             .attr("class", function(d) {
-                //console.log("d = "+d);
-                //console.log("d.parent = "+d.parent);
-                return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
+                var res = d.parent ? d.children ? "node" : "node node--leaf" : "node node--root";
+
+                return res; })
             .style("fill", function(d) { return d.children ? color(d.depth) : null; })
             .on("click", function(d) {
                 console.log("onclick!!   focus.x = "+ focus.name +" d.x = "+d.name);
@@ -74,14 +74,16 @@ function setup_circles(){
 
         node = cg_g.selectAll("circle,text"); //svg
 
-        //d3.select("body")
-/*
-        cg
+        /*d3.select("body")
+
+        console.log("node_root = "+node_root);
+
         .style("background", color(-1))
             .on("click", function() {
                 console.log("zoom root!")
                 zoom_Circles(root); });
 
+        console.log("cg = "+cg);
 */
         zoomTo([root.x, root.y, root.r * 2 + margin]);
         
@@ -104,7 +106,7 @@ function zoom_Circles(d) {
            console.log("zoom_Circles():  view = "+view+"focus.x= "+ focus.x + "  focus.y = "+focus.y);
             //console.log("tween : d ->"+d);
             return function(t) {
-                //console.log("t->"+t);
+                console.log("t->"+t);
                 zoomTo(i(t)); };
         });
 
