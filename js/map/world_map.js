@@ -170,7 +170,7 @@ function draw_worldmap() {
         var country_index ;
         var country_no;
 
-        //list the 2D arrays of countries in each tier 1 cluster
+        //list the 2D arrays -- countries in each tier 1 cluster
         for(i=1; i< clusters.length;i++){
             cluster_countries.push([]);
             cluster_length = clusters[i].length;
@@ -188,6 +188,7 @@ function draw_worldmap() {
                     country_no++;
                     cluster_countries[i].push(the_country);
                     countryObj[the_country] = {};
+                    countryObj[the_country]['Name'] = the_country;
                     countryObj[the_country]['ProjectsIncluded']=country_index;
                     countryObj[the_country]['ProjectNumber'] = 1;
                     countryObj[the_country]['total_Lat'] = lat_list[country_index];
@@ -208,16 +209,236 @@ function draw_worldmap() {
             country_tiers.push(countryObj);
             countryObj = {};
         }
-        console.log(country_tiers);
 
         /*using (1) project_Cluster_info(1).csv ---providing tier1 clusters, can be deemed as continent lvl
                         ,organized tgr if distance less than tier1_range = 100
         *       (2) country_tiers array --providing country-lvl cluster
         * purpose: to generate a 3-tier classfication json file to store parent-children relationship for zoomable circles*/
 
-
+         // to store the whole array, each object of it is a cluster {"name":"", "children":[]} or real project{"name":"", "size":1 }*/
+      
+      /* SC.clustersCollection = [];
         
+        var tier1_cluster = {};  //root of each zoomable circle  
+        //TierNo,Name,ClusterNo,ProjectCount,Longtitude,Latitude,Projects_Included,Title,Text,children --may tier2 or project
 
+        var tier2_cluster ={};
+        //TierNo,Name,ClusterNo,ProjectCount,Longtitude,Latitude,Projects_Included,Title,Text,children - with projects
+
+        var project_object = {}; //real-project,
+        //TierNo,ProjectIndex,FCL_Project,Case Study,Longtitude,Latitude,Title,Text,Country,City
+
+        d3.csv("data/complementary/project_Cluster_Info (1).csv", function (err, tier1s) {
+
+            //add in the points not in any clusters, clusters[0]
+            for (j = 0; j < clusters[0].length; j++) {
+                // TierNo,ProjectIndex,FCL_Project,Case Study,Longtitude,Latitude,Title,Text,Country,City
+                project_object["tierNo"] = 3;
+                project_object["project_Index"] = clusters[0][j]; // add in projects accordingly, 1-55
+                project_object["size"] = 1;
+
+                var projectInfo = projects.filter(function (d) {
+                    return Number(d.No) == Number(clusters[0][j]);
+                });
+
+                if (projectInfo.length > 0) {
+                    //FCL_Project,Case_study,Latitude,Longitude,Title,Description,Image_Credit,City,Country
+                    project_object["fcl_project"] = projectInfo[0].FCL_Project;
+                    project_object["case_study"] = projectInfo[0].Case_study;
+                    project_object["latitude"] = projectInfo[0].Latitude;
+                    project_object["longtitude"] = projectInfo[0].Longitude;
+                    project_object["name"] = projectInfo[0].Title;
+                    project_object["text"] = projectInfo[0].Description;
+                    project_object["country"] = projectInfo[0].Country;
+                    project_object["city"] = projectInfo[0].City;
+
+                }
+                SC.clustersCollection.push(project_object);
+                projectInfo = [];
+                project_object = {};
+            }
+
+
+
+
+        //add in projects in any clusters
+            var clusterIndex = clusterCount; //9
+            var tier1_cluster_length ;
+            var tier1_children;
+            var tier1_children_proNo;
+            var tier1_children_name;
+
+            tier1s.forEach(function (t1_cluster) {
+
+
+                var t1_clusterNo = t1_cluster.ClusterNo;
+                var t1_clusterName = t1_cluster.Name;
+                var projectsIncluded;
+
+                if(t1_clusterName == undefined) return;
+
+                tier1_cluster_length = country_tiers[t1_clusterNo-1]["country_no"];
+
+
+                if (tier1_cluster_length==1) {  // if only 1 country included, add in tier2 cluster as children to root
+                    clusterIndex++;
+
+                    var tier2_name = Object.keys(country_tiers[t1_clusterNo - 1])[0]
+                    var tier2  = country_tiers[t1_clusterNo - 1][tier2_name];
+                    var tier2_proNo  =  tier2 ["ProjectNumber"];
+                    projectsIncluded =  tier2 ["ProjectsIncluded"].split(" ");
+
+
+                    tier2_cluster["tierNo"] = 2;
+                    tier2_cluster["name"] = tier2_name;
+                    tier2_cluster["clusterNo"] = clusterIndex;
+                    tier2_cluster["projectCount"] = tier2_proNo ;
+                    tier2_cluster["aver_longtitude"] =  tier2 ["total_Long"] / tier2_proNo ;
+                    tier2_cluster["aver_latitude"] =  tier2 ["total_Lat"] / tier2_proNo ;
+                    tier2_cluster["projects_Included"] = projectsIncluded;
+                    tier2_cluster["title"] = tier2_name;
+                    tier2_cluster["text"] = tier2_name + "<br>ProjectNo = " + tier2_proNo ;
+                    tier2_cluster["children"] = [];
+
+                    for (j = 0; j < tier2_proNo ; j++) {
+                        // TierNo,ProjectIndex,FCL_Project,Case Study,Longtitude,Latitude,Title,Text,Country,City
+                        project_object["tierNo"] = 3;
+                        project_object["project_Index"] = projectsIncluded[j]; // add in ptojects accordingly, 1-55
+                        project_object["size"] = 1;
+
+                        projectInfo = projects.filter(function (d) {
+                            return Number(d.No) == Number(projectsIncluded[j]);
+                        });
+
+                        if (projectInfo.length > 0) {
+                            //FCL_Project,Case_study,Latitude,Longitude,Title,Description,Image_Credit,City,Country
+                            project_object["fcl_project"] = projectInfo[0].FCL_Project
+                            project_object["case_study"] = projectInfo[0].Case_study;
+                            project_object["latitude"] = projectInfo[0].Latitude;
+                            project_object["longtitude"] = projectInfo[0].Longitude;
+                            project_object["name"] = projectInfo[0].Title;
+                            project_object["text"] = projectInfo[0].Description;
+                            project_object["country"] = projectInfo[0].Country;
+                            project_object["city"] = projectInfo[0].City;
+                        }
+
+                        tier2_cluster["children"].push(project_object);
+                        project_object = {};
+                    }
+                    projectInfo = [];
+                    SC.clustersCollection.push(tier2_cluster);
+                    tier2_cluster = {};
+                }else {
+
+
+                    tier1_cluster["tierNo"] = 1;
+                    tier1_cluster["name"] = t1_clusterName;
+                    tier1_cluster["clusterNo"] = t1_cluster.ClusterNo;
+                    tier1_cluster["projectCount"] = t1_cluster.ProjectNo;
+                    tier1_cluster["aver_longitude"] = t1_cluster.Longtitude;
+                    tier1_cluster["aver_latitude"] = t1_cluster.Latitude;
+                    tier1_cluster["projects_Included"] = t1_cluster.Projects_Included;
+                    tier1_cluster["title"] = t1_cluster.Title;
+                    tier1_cluster["text"] = t1_cluster.Text;
+                    tier1_cluster["children"] = [];
+
+
+                    for (var i = 0; i < tier1_cluster_length; i++) {
+                        clusterIndex++;
+
+                        tier1_children_name = Object.keys(country_tiers[t1_clusterNo - 1])[i];
+                        tier1_children = country_tiers[t1_clusterNo - 1][tier1_children_name];
+
+                        tier1_children_proNo = tier1_children["ProjectNumber"];
+
+                        if(tier1_children_proNo>1){
+                             projectsIncluded= tier1_children["ProjectsIncluded"].split(" ");
+
+                            tier2_cluster["tierNo"] = 2;
+                            tier2_cluster["name"] = tier1_children_name;
+                            tier2_cluster["clusterNo"] = clusterIndex;
+                            tier2_cluster["projectCount"] = tier1_children_proNo;
+                            tier2_cluster["aver_longtitude"] = tier1_children["total_Long"] / tier1_children_proNo;
+                            tier2_cluster["aver_latitude"] = tier1_children["total_Lat"] / tier1_children_proNo;
+                            tier2_cluster["projects_Included"] = projectsIncluded;
+                            tier2_cluster["title"] = tier1_children_name;
+                            tier2_cluster["text"] = tier1_children_name + "<br>ProjectNo = " + tier1_children_proNo;
+                            tier2_cluster["children"] = [];
+
+                            // add concrete projects as children to tier2 clusters
+                            for (j = 0; j < tier1_children_proNo; j++) {
+                                // TierNo,ProjectIndex,FCL_Project,Case Study,Longtitude,Latitude,Title,Text,Country,City
+                                project_object["tierNo"] = 3;
+                                project_object["project_Index"] = projectsIncluded[j]; // add in ptojects accordingly, 1-55
+                                project_object["size"] = 1;
+
+                                projectInfo = projects.filter(function (d) {
+                                    return Number(d.No) == Number(projectsIncluded[j]);
+                                });
+
+                                if (projectInfo.length > 0) {
+                                    //FCL_Project,Case_study,Latitude,Longitude,Title,Description,Image_Credit,City,Country
+                                    project_object["fcl_project"] = projectInfo[0].FCL_Project
+                                    project_object["case_study"] = projectInfo[0].Case_study;
+                                    project_object["latitude"] = projectInfo[0].Latitude;
+                                    project_object["longtitude"] = projectInfo[0].Longitude;
+                                    project_object["title"] = projectInfo[0].Title;
+                                    project_object["text"] = projectInfo[0].Description;
+                                    project_object["country"] = projectInfo[0].Country;
+                                    project_object["city"] = projectInfo[0].City;
+                                }
+
+                                tier2_cluster["children"].push(project_object);
+                                project_object = {};
+                            }
+
+                            tier1_cluster["children"].push(tier2_cluster);
+                            tier2_cluster = {};
+                        } else {
+
+                            projectsIncluded = tier1_children["ProjectsIncluded"];
+                            project_object["tierNo"] = 3;
+                            project_object["project_Index"] = projectsIncluded; // add in ptojects accordingly, 1-55
+                            project_object["size"] = 1;
+
+                            projectInfo = projects.filter(function (d) {
+                                return Number(d.No) == Number(projectsIncluded);
+                            });
+
+                            if (projectInfo.length > 0) {
+                                //FCL_Project,Case_study,Latitude,Longitude,Title,Description,Image_Credit,City,Country
+                                project_object["fcl_project"] = projectInfo[0].FCL_Project;
+                                project_object["case_study"] = projectInfo[0].Case_study;
+                                project_object["longtitude"] = projectInfo[0].Latitude;
+                                project_object["latitude"] = projectInfo[0].Longitude;
+                                project_object["title"] = projectInfo[0].Title;
+                                project_object["text"] = projectInfo[0].Description;
+                                project_object["country"] = projectInfo[0].Country;
+                                project_object["city"] = projectInfo[0].City;
+                            }
+
+                            tier1_cluster["children"].push(project_object);
+                            project_object = {};
+                        }
+                    }
+                    SC.clustersCollection.push(tier1_cluster);
+                    tier1_cluster = {};
+                }
+            });
+            console.log(JSON.stringify(SC.clustersCollection));
+        });*/
+
+// JSON.parse converts json_string to an object
+        //var obj = JSON.parse(SC.clustersCollection);
+// JSON.stringify converts the object to a string again
+
+
+            //var data = "{name: 'Bob', occupation: 'Plumber'}";
+       /* var url = 'data:text/json;charset=utf8,' + encodeURIComponent(obj);
+        window.open(url, '_blank');
+        window.focus();*/
+
+        //add the external circles
         for(i=1;i< clusterCount+1;i++) {
 
             number = clusterNumber[i];
@@ -233,17 +454,21 @@ function draw_worldmap() {
 
     d3.select("#pop_densityBtn").classed("selectedBtn",true);
     category = "Population Density";
-    //setup_circles();
+    setup_circles();
     newInput();
     
     
 }
 
 
-function move() {
-    var t = d3.event.translate;
-    var s = d3.event.scale;
-    //zscale = s;
+
+
+function move(t,s) {
+    if(t ==undefined || s== undefined){
+        var t = d3.event.translate;
+        var s = d3.event.scale;
+        //zscale = s;
+    }
 
     var h = map_height / 4;
 
@@ -255,6 +480,9 @@ function move() {
         h * (s - 1) + h * s,
         Math.max(map_height * (1 - s) - h * s, t[1])
     );
+    //t[0] = 100; x-axis
+   // t[1] =-1;  y-axis
+    //console.log("t[0] = "+t[0]+"   t[1] = "+t[1]+"  s="+s);
 
     zoom.translate(t);
     g.attr("transform", "translate(" + t + ")scale(" + s + ")");
@@ -262,7 +490,7 @@ function move() {
     //adjust the country hover stroke map_width based on zoom level
     d3.selectAll(".country").style("stroke-map_width", 1.5 / s);
     d3.selectAll(".text").style("font-size", 20 / s);
-    d3.selectAll(".point").attr("r", 4/ s);
+    //d3.selectAll(".point").attr("r", 4/ s);
 
 
 }
@@ -278,7 +506,6 @@ function throttle() {
 
 function click() {
     projection.invert(d3.mouse(this));
-    //console.log(latlon);
 }
 
 //function to add points and text to the map (used in plotting capitals)
@@ -294,6 +521,7 @@ function addpoint(color_status, lat, lon, title,text, radius, No) {
     var color_scheme = ["#CCFF99","#00FF00","#0000FF","#FFFF00","#00FFFF" ,
                         "#FF00FF","#C0C0C0","#FFFFF1","#780000 ","996633"];
 
+    if(parseInt(lat) == 51) console.log("x ="+x);
     //console.log("x:"+x+"   y:"+y);
     gpoint.append("svg:circle")
         .attr("cx",function(){
@@ -593,7 +821,7 @@ function find_tier1(matrix, tier_range){
 
     var output = [];
     output.push(tier_status, clusterNumber,clusters);
-
+    
     return output;
 
 }
