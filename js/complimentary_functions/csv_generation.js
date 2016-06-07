@@ -2,6 +2,8 @@
  * Created by yuhao on 2/6/16.
  */
 
+
+//<a href='#' onclick='downloadCSV({ filename: "project_Cluster_Info.csv" });'>Download CSV</a>
 function convertArrayOfObjectsToCSV(args) {
     var result, ctr, keys, columnDelimiter, lineDelimiter, data;
 

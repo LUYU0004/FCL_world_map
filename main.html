@@ -13,7 +13,7 @@
 </head>
 
 <body>
-<a href='#' onclick='downloadCSV({ filename: "project_Cluster_Info.csv" });'>Download CSV</a>
+
 <script>
 
 
@@ -24,6 +24,8 @@
                 case 'pop_densityBtn': category = "Population Density";
                     break;
                 case 'co2_emissionBtn': category = "CO2 Emission";
+                    break;
+                case  'fcl_projectsBtn': category = "FCL Projects";
                     break;
                 default: break;
             }
@@ -47,6 +49,7 @@
         <div id="navg_bar">
             <div class="navg_button" id="pop_densityBtn">Population Density</div>
             <div class="navg_button" id="co2_emissionBtn">CO2 Emission Per Capita</div>
+            <div class="navg_button" id="fcl_projectsBtn">FCL Projects</div>
         </div>
 
         <div><img id="fcl_logo" src="res/fcl_logo.png" alt="fcl_logo"></div>
@@ -62,6 +65,7 @@
 document.getElementById("content_holder").style.height=  window.innerHeight+'px';
 document.getElementById('pop_densityBtn').addEventListener("click", newInput);
 document.getElementById('co2_emissionBtn').addEventListener("click", newInput);
+document.getElementById('fcl_projectsBtn').addEventListener("click", newInput);
 </script>
 
 <script src="js/map/world_map.js"></script>

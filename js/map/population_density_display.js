@@ -15,21 +15,24 @@ function load_DData(_category){
         
     category = _category;
 
-    draw_time_slider();
+
     switch(category){
-        case "Population Density":          color_split = [500, 400, 300, 200, 100, 50, 10, 0];
+        case "Population Density":          draw_time_slider();
+                                            color_split = [500, 400, 300, 200, 100, 50, 10, 0];
                                             catNo = 1;
                                             max_property=1000;
                                             draw_legend(max_property);
                                             read_popData();
                                             break;
         
-        case "CO2 Emission": color_split = [50, 20, 10, 5, 1, 0.1, 0];//1964-2011
+        case "CO2 Emission":        draw_time_slider();
+                                    color_split = [50, 20, 10, 5, 1, 0.1, 0];//1964-2011
                                                 catNo = 2;
                                                 max_property=100;
                                                 draw_legend(max_property);
                                                 read_co2Data();
                                                 break;
+        case "FCL Projects": draw_points(); break;
         default: break;
     }
 
@@ -281,7 +284,8 @@ function draw_time_slider(){
             d3.select("#play_stopBtn").style('borderColor','gold');
         }).on("mouseout",function () {
             d3.select("#play_stopBtn").style('borderColor', 'transparent');
-        }).on('click',function(){
+        })
+        .on('click',function(){
 
             if(status ==0){
                 d3.select("#play_stopBtn").attr('src' ,stopBtn_Image.src);
@@ -308,7 +312,8 @@ function draw_time_slider(){
             d3.select("#replay_Btn").style('borderColor','gold');
         }).on("mouseout",function () {
         d3.select("#replay_Btn").style('borderColor', 'transparent');
-    }).on('click',function(){
+    })
+        .on('click',function(){
         console.log("replay!!!");
         cur_year = start_year;
         status =0;
