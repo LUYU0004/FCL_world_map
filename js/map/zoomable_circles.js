@@ -2,124 +2,214 @@
  * Created by yuhao on 27/5/16.
  */
 
-
-var margin = 20,
-    diameter = 100;
-var  node,circle,focus,view,text; //svg
-var cg_g;
-
-
-var color = d3.scale.linear()
-    .domain([-1, 5])
-    .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
-    .interpolate(d3.interpolateHcl);
-
-var pack = d3.layout.pack()
-    .padding(2)
-    .size([diameter - margin, diameter - margin])
-    .value(function(d) { return d.size;});
-/*
- svg = d3.select("body").append("svg")
- .attr("z-index",50)///////////////////
- .attr("width", diameter)
- .attr("height", diameter)
- .append("g")
- .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
- */
-var cg = svg.append("g")
-    .classed("extra_info",true)
-    .attr("id","zoomable_circles");
-
-var root;
-d3.json("data/flare.json", function(error, data) {
-
-
-    root = data[1];
-    if (error) throw error;
-    draw_circles(root);
-});
-
+//var average_longtitude;  // index 1 to number of clusters
+//var average_latitude;
 function draw_points(){
-    //
+    
+    var average_longtitude = [0];
+    var average_latitude  =[0];
+    
     d3.csv("data/fcl/1. Projects.csv", function (err, projects) {
 
-        var tier1 = generate_DistMatrix(projects);
-        var tier_status = tier1[0];  //index 0-54 indicates 55 projects
-        var clusterNumber = tier1[1];  //index zero with nothing
-        var clusters = tier1[2];    //index zero shows the number of projects not belonging to any cluster
-        var average_longtitude = [0];  // index 1 to number of clusters
-        var average_latitude  =[0];
-        var clusterCount = clusterNumber.length-1;
-        var clusterIndex;
+        if(err) console.log(err);
+        else{
+            var tier1 = generate_DistMatrix(projects);
+            var tier_status = tier1[0];  //index 0-54 indicates 55 projects
+            var clusterNumber = tier1[1];  //index zero with nothing
+            var clusters = tier1[2];    //index zero shows the number of projects not belonging to any cluster
 
-        //initialize the arrays
-        for(var i=0;i< clusterCount;i++){
-            average_latitude.push(0);
-            average_longtitude.push(0);
-        }
+            var clusterCount = clusterNumber.length-1;
+            var clusterIndex;
 
-        var lat, long;
-        var project_index;// start from 1 to 55
-        //var project_countries = [''];// start from index 1 , indicates project 1
-
-        var lat_list=[0];//start from index 1
-        var long_list = [0];
-        projects.forEach(function (i) {
-            project_index = i.No;
-            lat = Number(i.Latitude);
-            long = Number(i.Longitude);
-            clusterIndex = tier_status[project_index-1];
-            average_latitude[clusterIndex] =average_latitude[clusterIndex] + lat;
-            average_longtitude[clusterIndex] = average_longtitude[clusterIndex] + long;
-            lat_list.push(lat);
-            long_list.push(long);
-
-            /*var title = "<b>"+i.FCL_Project+"  "+i.Case_study+"</b>";
-             var text = "<br><p>"+i.Title+"</p>"+"<p style='font-size: 12px;'>Coordinate: "+ lat +"° N, "+ long+"°E <br>"
-             +i.Description+"</p>";
-             addpoint((tier_status[project_index-1]-1),i.Longitude,i.Latitude,title, title+text,undefined,project_index);
-             project_countries.push('');
-             project_countries[project_index] = i.Country;*/
-        });
-
-
-
-        //draw circles
-        var title;
-        var text;
-        var number;
-        var color=9;
-
-        //add the external circles
-        for(i=1;i< clusterCount+1;i++) {
-            if(i!=5){
-                number = clusterNumber[i];
-                average_longtitude[i] = average_longtitude[i] / number;
-                average_latitude[i] = average_latitude[i] / number;
-                title = "<b>Cluster " + i + "</b>";
-                text = title + "<br><br>Radius = " + (5 * number) +
-                    "<br>Project Number:  " + clusterNumber[i];
-                addpoint(color, average_longtitude[i], average_latitude[i], title, text, number);
+            //initialize the arrays
+            for(var i=0;i< clusterCount;i++){
+                average_latitude.push(0);
+                average_longtitude.push(0);
             }
+
+            var lat, long;
+            var project_index;// start from 1 to 55
+            //var project_countries = [''];// start from index 1 , indicates project 1
+
+            var lat_list=[0];//start from index 1
+            var long_list = [0];
+            projects.forEach(function (i) {
+                project_index = i.No;
+                lat = Number(i.Latitude);
+                long = Number(i.Longitude);
+                clusterIndex = tier_status[project_index-1];
+                average_latitude[clusterIndex] =average_latitude[clusterIndex] + lat;
+                average_longtitude[clusterIndex] = average_longtitude[clusterIndex] + long;
+                lat_list.push(lat);
+                long_list.push(long);
+
+                /*var title = "<b>"+i.FCL_Project+"  "+i.Case_study+"</b>";
+                 var text = "<br><p>"+i.Title+"</p>"+"<p style='font-size: 12px;'>Coordinate: "+ lat +"° N, "+ long+"°E <br>"
+                 +i.Description+"</p>";
+                 addpoint((tier_status[project_index-1]-1),i.Longitude,i.Latitude,title, title+text,undefined,project_index);
+                 project_countries.push('');
+                 project_countries[project_index] = i.Country;*/
+            });
+
+
+
+            //draw circles
+            var title;
+            var text;
+            var number;
+            var color=9;
+            var radius_unit = 3;
+
+            //add the external circles
+            for(i=1;i< clusterCount+1;i++) {
+                if(i!=5){
+                    number = clusterNumber[i];
+                    average_longtitude[i] = average_longtitude[i] / number;
+                    average_latitude[i] = average_latitude[i] / number;
+                    title = "<b>Cluster " + i + "</b>";
+                    text = title + "<br><br>Radius = " + (radius_unit * number) +
+                        "<br>Project Number:  " + clusterNumber[i];
+                    addpoint(color, average_longtitude[i], average_latitude[i], title, text, number);
+                }
+            }
+
+            //add in cluster 5 to let it be at top
+            number = clusterNumber[5];
+            average_longtitude[5] = average_longtitude[5] / number;
+            average_latitude[5] = average_latitude[5] / number;
+            title = "<b>Cluster 5</b>";
+            text = title + "<br><br>Radius = " + (radius_unit * number) +
+                "<br>Project Number:  " + clusterNumber[5];
+            addpoint(color, average_longtitude[5], average_latitude[5], title, text, number);
+
+            //add project points
+            projects.forEach(function (i) {
+                project_index = i.No;
+                var title = "<b>"+i.FCL_Project+"  "+i.Case_study+"</b>";
+                var text = "<br><p>"+i.Title+"</p>"+"<p style='font-size: 12px;'>Coordinate: "+ lat +"° N, "+ long+"°E <br>"
+                    +i.Description+"</p>";
+                addpoint((tier_status[project_index-1]-1),i.Longitude,i.Latitude,title, title+text,undefined,project_index);
+
+                var gpoint = g.append("g").attr("class","project_points extra_info");
+                var x = projection([lat, lon])[0];
+                var y = projection([lat, lon])[1];
+                var color_scheme = ["#CCFF99","#00FF00","#0000FF","#FFFF00","#00FFFF" ,
+                    "#FF00FF","#C0C0C0","#FFFFF1","#780000 ","996633"];
+
+                if(parseInt(lat) == 51) console.log("x ="+x);
+                //console.log("x:"+x+"   y:"+y);
+                gpoint.append("svg:circle")
+                    .attr("cx", x)
+                    .attr("cy", y)
+                    .attr("class", "point")
+                    .style("fill", function () {
+                        return color_scheme[color_status];
+                    }).style("opacity",0.4)
+                    .attr("r", radius_unit*radius)
+                    .attr("z-index",function () {
+                        var index =parseInt(radius*0.8 +10);// 20-(radius*0.8) +10;
+                        title = title +" z-index = " +index;
+                        return index;
+                    })
+                    .on("mouseover", function () {return tooltip.attr("style","visibility: visible");})
+                    .on("mousemove", function() {
+                        var mouse = d3.mouse(svg.node()).map(function (d) {
+                            return parseInt(d);
+                        });
+                        var half = (tooltip.node().getBoundingClientRect().right -mouse[0])/2;
+
+                        tooltip.attr("style", "left:" + (mouse[0]- tooltip.node().getBoundingClientRect().width/2) + "px;top:" + (mouse[1] + offsetT) + "px")
+                            .html("<div id='tooltip_holder' style='vertical-align: middle'><span id='pic_holder' class='Centerer' style" +
+                                "='float: left;vertical-align: middle'><img id='tooltip_pic' class='Centered' src='res/fcl_logo.png'></span>" +
+                                "<div id='tooltip_text' style='float: right;padding-left: 10px;padding-top: 10px;padding-right:10px;vertical-align: middle;border: 1px solid #b4b4b4;'>"+text+"</div></div>");
+
+
+                        d3.select("#tooltip_text").attr("style","float: right;padding-left: 15px;padding-top: 10px;padding-right:10px;vertical-align: middle;");
+
+                        //add in picture for the project
+                        var project_img = new Image();
+                        project_img.src = "img/project_img/"+No+"_fcl_vis.jpg";
+                        //console.log("project_img.src = "+project_img.src);
+                        d3.select("#tooltip_pic").attr("src",project_img.src);
+
+
+                        var left = tooltip.node().getBoundingClientRect().left;
+                        var top = tooltip.node().getBoundingClientRect().top;
+                        var tooltip_width = tooltip.node().getBoundingClientRect().width;
+
+                        var pic_height = d3.select("#tooltip_text").node().getBoundingClientRect().height;
+                        var pic_width = pic_height/1.25;
+
+                        d3.select("#tooltip_pic").style("width",pic_width+'px').style("height",pic_height+'px');
+
+                        tooltip.attr("style", "left:" + (mouse[0]- tooltip.node().getBoundingClientRect().width/2) + "px;top:" + (mouse[1] + offsetT) + "px;visibility: visible;");
+
+                        var text_height = pic_height;
+                        var text_width = d3.select("#tooltip_text").node().getBoundingClientRect().width;
+                        // var text_area =  text_height* text_width;
+
+                        //console.log("-----------");
+                        //console.log("text_area = "+text_area);
+
+
+                        /* var right = tooltip.node().getBoundingClientRect().right;
+                         var bottom = tooltip.node().getBoundingClientRect().bottom;
+                         var window_margin = 9; //actually 8, but to detect close to edge change to 8
+                         //var text_width = d3.select("#tooltip_text").node().getBoundingClientRect().width;
+
+                         var overflowR, overflowB;
+                         overflowR = right- (window.innerWidth -window_margin);
+                         overflowB = bottom -  (window.innerHeight - window_margin);
+                         var looptime = 0;
+                         var new_text_width = text_width;
+                         var new_text_height = d3.select("#tooltip_text").node().getBoundingClientRect().height;
+
+                         // console.log("text_width = "+text_width+"text_height="+new_text_height);
+                         //console.log(" overflowB = "+overflowB);
+                         //console.log("overflowR  = "+overflowR);
+
+                         /*if(new_text_width>325 &&(overflowB > 0 || overflowR>0)){
+                         d3.select("#tooltip_text").style("width",300+'px');
+                         text_width = 300;
+                         pic_height = d3.select("#tooltip_text").node().getBoundingClientRect().height;
+                         pic_width = pic_height/1.25;
+                         console.log("large width, set to 300");
+
+                         d3.select("#tooltip_pic").style("width",pic_width+'px').style("height",pic_height+'px');
+                         }*/
+
+
+
+                    }).on("mouseout", function () {
+                    return tooltip.attr("style","visibility: hidden");
+                })
+                    .on("click",function () {
+                        if(radius >1){
+                            var scale;
+                            /*if(radius >4) scale = 4;
+                             else{
+                             scale = parseInt(radius);
+                             }*/
+                            scale = 4;
+                            var x_multiplier = radius/3*0.1 +0.35;
+                            var y_multiplier = radius/3*0.1+0.3;
+                            if(radius ==23){
+                                x_multiplier  = 0.78;
+                                y_multiplier = 0.80;
+                            }else{
+                                if(radius ==2){
+                                    x_multiplier = 0.90;
+                                    y_multiplier = 0.7;
+                                }
+                            }
+                            var pos =[(x*x_multiplier)*(-1*scale),(y*y_multiplier)*(-1*scale)];
+                            move(pos , scale);
+                        }
+                    });
+            });
+
+
         }
-
-        //add in cluster 5 to let it be at top
-        number = clusterNumber[5];
-        average_longtitude[5] = average_longtitude[5] / number;
-        average_latitude[5] = average_latitude[5] / number;
-        title = "<b>Cluster 5</b>";
-        text = title + "<br><br>Radius = " + (5 * number) +
-            "<br>Project Number:  " + clusterNumber[5];
-        addpoint(color, average_longtitude[5], average_latitude[5], title, text, number)
-
-        //add project points
-        projects.forEach(function (i) {
-            project_index = i.No;
-            var title = "<b>"+i.FCL_Project+"  "+i.Case_study+"</b>";
-            var text = "<br><p>"+i.Title+"</p>"+"<p style='font-size: 12px;'>Coordinate: "+ lat +"° N, "+ long+"°E <br>"
-                +i.Description+"</p>";
-            addpoint((tier_status[project_index-1]-1),i.Longitude,i.Latitude,title, title+text,undefined,project_index);
-        });
 
         /*
          var clusterObj = {};
@@ -441,11 +531,12 @@ function generate_DistMatrix(projects){
 //function to add points and text to the map (used in plotting capitals)
 function addpoint(color_status, lat, lon, title,text, radius, No) {
 
+    var radius_unit = 4;
     if(radius == undefined) radius = 1;
     if(No == undefined) No = 0;
 
 
-    var gpoint = g.append("g").attr("class", "gpoint");
+    var gpoint = g.append("g").attr("class","gpoint extra_info");
     var x = projection([lat, lon])[0];
     var y = projection([lat, lon])[1];
     var color_scheme = ["#CCFF99","#00FF00","#0000FF","#FFFF00","#00FFFF" ,
@@ -460,7 +551,7 @@ function addpoint(color_status, lat, lon, title,text, radius, No) {
         .style("fill", function () {
             return color_scheme[color_status];
         }).style("opacity",0.4)
-        .attr("r", 5*radius)
+        .attr("r", radius_unit*radius)
         .attr("z-index",function () {
             var index =parseInt(radius*0.8 +10);// 20-(radius*0.8) +10;
             title = title +" z-index = " +index;
@@ -501,13 +592,13 @@ function addpoint(color_status, lat, lon, title,text, radius, No) {
 
             var text_height = pic_height;
             var text_width = d3.select("#tooltip_text").node().getBoundingClientRect().width;
-            var text_area =  text_height* text_width;
+           // var text_area =  text_height* text_width;
 
             //console.log("-----------");
             //console.log("text_area = "+text_area);
 
 
-            var right = tooltip.node().getBoundingClientRect().right;
+           /* var right = tooltip.node().getBoundingClientRect().right;
             var bottom = tooltip.node().getBoundingClientRect().bottom;
             var window_margin = 9; //actually 8, but to detect close to edge change to 8
             //var text_width = d3.select("#tooltip_text").node().getBoundingClientRect().width;
@@ -533,74 +624,19 @@ function addpoint(color_status, lat, lon, title,text, radius, No) {
              d3.select("#tooltip_pic").style("width",pic_width+'px').style("height",pic_height+'px');
              }*/
 
-            while (overflowB > 0 ^ overflowR>0 ) {
 
-                //console.log("looptime: "+looptime);
-
-
-                if(looptime>0){
-                    pic_height = new_text_height;
-                    pic_width = pic_height/1.25;
-
-                    d3.select("#tooltip_pic").style("width",pic_width+'px').style("height",pic_height+'px');
-                }
-
-                if (overflowR > 0) {
-
-                    if (looptime ==0){
-                        left = left - (pic_width+ text_width+25);
-                        //console.log("overflowR: change is  -( pic_width+text_width) = -"+(pic_width+text_width));
-                    }
-                    else{
-                        left = left - overflowR;
-                        //console.log("overflowR: chnge is -(new_text_width= "+new_text_width+" - text_width = "+text_width+")");
-                    }
-                    text_width = new_text_width;
-                    text_height = new_text_height;
-                    //console.log("computed - left = "+left);
-                }
-                if (overflowB > 0) {
-                    if (looptime == 0){
-                        top = top - (pic_height + offsetT+20);
-                        left = (mouse[0]- tooltip.node().getBoundingClientRect().width/2);
-                        //console.log("overflowB: change is  - (pic_height + offsetT) = -" + (pic_height + offsetT));
-                    }
-                    else{
-                        top = top - overflowB;
-                        //console.log("overflowB: change is  -(new_text_height ="+new_text_height+"  -pic_height ="+pic_height+")");
-                    }
-                    //console.log("top= "+overflowB);
-                }
-                tooltip_width = text_width+pic_width+25;
-                tooltip.attr("style", "left:" +left + "px;top:" + top + "px;visibility: visible;width:" +tooltip_width+  'px');
-
-                //console.log("computed_width = "+(text_width+pic_width+25)+"  read_width = "+tooltip.node().getBoundingClientRect().width);
-
-
-                overflowR = tooltip.node().getBoundingClientRect().right- (window.innerWidth -window_margin);
-                overflowB = tooltip.node().getBoundingClientRect().bottom -(window.innerHeight - window_margin);
-                new_text_width = d3.select("#tooltip_text").node().getBoundingClientRect().width;
-                new_text_height = d3.select("#tooltip_text").node().getBoundingClientRect().height;
-                text_area = new_text_height*new_text_width;
-
-                //console.log("new_text_area ="+ text_area+ "   text_height ="+new_text_height+"   text_width = "+new_text_width);
-                looptime++;
-                //console.log(looptime);
-                //console.log("overflow!  overflowB = "+overflowB+"  overflowR = "+overflowR);
-                //console.log("end_loop!!!!!!!!!!!!");
-
-                if(looptime>1   ) break;
-            }
 
         }).on("mouseout", function () {
         return tooltip.attr("style","visibility: hidden");
-    }).on("click",function () {
+    })
+        .on("click",function () {
         if(radius >1){
             var scale;
-            if(radius >3) scale = 3;
+            /*if(radius >4) scale = 4;
             else{
                 scale = parseInt(radius);
-            }
+            }*/
+            scale = 4;
             var x_multiplier = radius/3*0.1 +0.35;
             var y_multiplier = radius/3*0.1+0.3;
             if(radius ==23){
@@ -722,8 +758,14 @@ function find_tier1(matrix, tier_range){
 }
 
 
-function draw_circles(){
 
+
+var margin = 20,
+    diameter = 100;
+var  node,circle,focus,view,text; //svg
+var cg_g;
+
+function draw_circles(){
 
     /*d3.select( "#content_holder").append("span")//g.append("g")
         .attr("id","zoomable_circles")
@@ -732,32 +774,65 @@ function draw_circles(){
         .attr("width", '100%')//diameter
         .attr("height", '100%');*/
 
+
+    var color = d3.scale.linear()
+        .domain([-1, 5])
+        .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
+        .interpolate(d3.interpolateHcl);
+
+    var pack = d3.layout.pack()
+        .padding(2)
+        .size([diameter - margin, diameter - margin])
+        .value(function(d) { return d.size;});
+    /*
+     svg = d3.select("body").append("svg")
+     .attr("z-index",50)///////////////////
+     .attr("width", diameter)
+     .attr("height", diameter)
+     .append("g")
+     .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+     */
+    var cg = svg.append("g")
+        .classed("extra_info",true)
+        .attr("id","zoomable_circles");
+
+    var root;
+    d3.json("data/flare.json", function(error, data) {
+
+
+        //var projection = projection(average_latitude[6],average_longtitude[6]);
+        root = data[1];
+        if (error) throw error;
+        //draw_circles(root);
         cg_g = cg.append("g")
-            .attr("class","circle_holder")
-        .attr("transform", "translate(" + diameter  + "," + diameter + ")")  //2
-            .attr("style","border: 1px solid #d0d0d0;");
-            //+ diameter /2 + "," + diameter / 2 + ")");
+            .attr("class", "circle_holder")
+           .attr("transform", "translate(" + 500 + "," +500+ ")")  //2
+            .attr("style", "border: 1px solid #d0d0d0;");
+        //+ diameter /2 + "," + diameter / 2 + ")");
 
 
-
-
-        //console.log("root = "+root);
+        console.log("root = " + root);
         focus = root;
         var nodes = pack.nodes(root);
-            //view;
+        //view;
 
         circle = cg_g.selectAll("circle")  //svg
             .data(nodes)
             .enter()
             .append("circle")
-            .attr("class", function(d) {
+            .attr("class", function (d) {
                 var res = d.parent ? d.children ? "node" : "node node--leaf" : "node node--root";
-                return res; })
+                return res;
+            })
             //.attr("cx",)
-            .style("fill", function(d) { return d.children ? color(d.depth) : null; })
-            .style("fill-opacity",0.5)
-            .on("mouseover", function () {return tooltip.attr("style","visibility: visible");})
-            .on("mousemove", function(d,i) {
+            .style("fill", function (d) {
+                return d.children ? color(d.depth) : null;
+            })
+            .style("fill-opacity", 0.5)
+            .on("mouseover", function () {
+                return tooltip.attr("style", "visibility: visible");
+            })
+            .on("mousemove", function (d, i) {
                 var mouse = d3.mouse(svg.node()).map(function (d) {
                     return parseInt(d);
                 });
@@ -768,49 +843,51 @@ function draw_circles(){
 
             }).on("mouseout", function (d, i) {
                 return tooltip.attr("style", "visibility: hidden");
-            }).on("click", function(d) {
-                console.log("onclick!!   focus.x = "+ focus.name +" d.x = "+d.name);
+            }).on("click", function (d) {
+                console.log("onclick!!   focus.x = " + focus.name + " d.x = " + d.name);
                 if (focus !== d) zoom_Circles(d), d3.event.stopPropagation();
-                                        });
+            });
 
         /*cg_g.selectAll(".node--root")
-            .attr("cx",function (d) {
-                console.log(projection([d.aver_latitude,d.aver_longitude]));
-            return  projection([d.aver_latitude,d.aver_longitude])[0];
-        }).attr("cy",function (d) {
-            return projection([d.aver_latitude,d.aver_longitude])[1];
-        });*/
+         .attr("cx",function (d) {
+         console.log(projection([d.aver_latitude,d.aver_longitude]));
+         return  projection([d.aver_latitude,d.aver_longitude])[0];
+         }).attr("cy",function (d) {
+         return projection([d.aver_latitude,d.aver_longitude])[1];
+         });*/
 
-        cg_g.selectAll(".node--leaf").on("mousemove",function (d,i) {
+        //var x_translate = cg_g.selectAll(".node--root")[0];//[0]["aver_latitude"];
+        //cg_g.attr("transform", "translate(" + diameter + "," + diameter + ")")
+
 
             tooltip.html("<div id='tooltip_holder' style='vertical-align: middle'><span id='pic_holder' class='Centerer' style" +
-            "='float:left;vertical-align: middle'><img id='tooltip_pic' class='Centered' src='res/fcl_logo.png'></span>" +
-            "<div id='tooltip_text' style='float: right;padding-left: 10px;padding-top: 10px;padding-right:10px;vertical-align: middle;border: 1px solid #b4b4b4;'>"+"<br><p>"+d["title"]+"</p>"+"<p style='font-size: 12px;'>Coordinate: "+ d["latitude"] +"° N, "+ d["longtitude"]+"°E <br>"
-                +d["text"]+"</p>"+"</div></div>");
+                "='float:left;vertical-align: middle'><img id='tooltip_pic' class='Centered' src='res/fcl_logo.png'></span>" +
+                "<div id='tooltip_text' style='float: right;padding-left: 10px;padding-top: 10px;padding-right:10px;vertical-align: middle;border: 1px solid #b4b4b4;'>" + "<br><p>" + d["title"] + "</p>" + "<p style='font-size: 12px;'>Coordinate: " + d["latitude"] + "° N, " + d["longtitude"] + "°E <br>"
+                + d["text"] + "</p>" + "</div></div>");
 
 
-        d3.select("#tooltip_text").attr("style","float: right;padding-left: 15px;padding-top: 10px;padding-right:10px;vertical-align: middle;");
+            d3.select("#tooltip_text").attr("style", "float: right;padding-left: 15px;padding-top: 10px;padding-right:10px;vertical-align: middle;");
 
-        //add in picture for the project
-        var project_img = new Image();
-        project_img.src = "img/project_img/"+No+"_fcl_vis.jpg";
-        //console.log("project_img.src = "+project_img.src);
-        d3.select("#tooltip_pic").attr("src",project_img.src);
+            //add in picture for the project
+            var project_img = new Image();
+            project_img.src = "img/project_img/" + No + "_fcl_vis.jpg";
+            //console.log("project_img.src = "+project_img.src);
+            d3.select("#tooltip_pic").attr("src", project_img.src);
 
             var left = tooltip.node().getBoundingClientRect().left;
             var top = tooltip.node().getBoundingClientRect().top;
             var tooltip_width = tooltip.node().getBoundingClientRect().width;
 
             var pic_height = d3.select("#tooltip_text").node().getBoundingClientRect().height;
-            var pic_width = pic_height/1.25;
+            var pic_width = pic_height / 1.25;
 
-            d3.select("#tooltip_pic").style("width",pic_width+'px').style("height",pic_height+'px');
+            d3.select("#tooltip_pic").style("width", pic_width + 'px').style("height", pic_height + 'px');
 
-            tooltip.attr("style", "left:" + (mouse[0]- tooltip.node().getBoundingClientRect().width/2) + "px;top:" + (mouse[1] + offsetT) + "px;visibility: visible;");
+            tooltip.attr("style", "left:" + (mouse[0] - tooltip.node().getBoundingClientRect().width / 2) + "px;top:" + (mouse[1] + offsetT) + "px;visibility: visible;");
 
             var text_height = pic_height;
             var text_width = d3.select("#tooltip_text").node().getBoundingClientRect().width;
-            var text_area =  text_height* text_width;
+            var text_area = text_height * text_width;
 
             //console.log("-----------");
             //console.log("text_area = "+text_area);
@@ -822,8 +899,8 @@ function draw_circles(){
             //var text_width = d3.select("#tooltip_text").node().getBoundingClientRect().width;
 
             var overflowR, overflowB;
-            overflowR = right- (window.innerWidth -window_margin);
-            overflowB = bottom -  (window.innerHeight - window_margin);
+            overflowR = right - (window.innerWidth - window_margin);
+            overflowB = bottom - (window.innerHeight - window_margin);
             var looptime = 0;
             var new_text_width = text_width;
             var new_text_height = d3.select("#tooltip_text").node().getBoundingClientRect().height;
@@ -842,25 +919,25 @@ function draw_circles(){
              d3.select("#tooltip_pic").style("width",pic_width+'px').style("height",pic_height+'px');
              }*/
 
-            while (overflowB > 0 ^ overflowR>0 ) {
+            while (overflowB > 0 ^ overflowR > 0) {
 
                 //console.log("looptime: "+looptime);
 
 
-                if(looptime>0){
+                if (looptime > 0) {
                     pic_height = new_text_height;
-                    pic_width = pic_height/1.25;
+                    pic_width = pic_height / 1.25;
 
-                    d3.select("#tooltip_pic").style("width",pic_width+'px').style("height",pic_height+'px');
+                    d3.select("#tooltip_pic").style("width", pic_width + 'px').style("height", pic_height + 'px');
                 }
 
                 if (overflowR > 0) {
 
-                    if (looptime ==0){
-                        left = left - (pic_width+ text_width+25);
+                    if (looptime == 0) {
+                        left = left - (pic_width + text_width + 25);
                         //console.log("overflowR: change is  -( pic_width+text_width) = -"+(pic_width+text_width));
                     }
-                    else{
+                    else {
                         left = left - overflowR;
                         //console.log("overflowR: chnge is -(new_text_width= "+new_text_width+" - text_width = "+text_width+")");
                     }
@@ -869,28 +946,28 @@ function draw_circles(){
                     //console.log("computed - left = "+left);
                 }
                 if (overflowB > 0) {
-                    if (looptime == 0){
-                        top = top - (pic_height + offsetT+20);
-                        left = (mouse[0]- tooltip.node().getBoundingClientRect().width/2);
+                    if (looptime == 0) {
+                        top = top - (pic_height + offsetT + 20);
+                        left = (mouse[0] - tooltip.node().getBoundingClientRect().width / 2);
                         //console.log("overflowB: change is  - (pic_height + offsetT) = -" + (pic_height + offsetT));
                     }
-                    else{
+                    else {
                         top = top - overflowB;
                         //console.log("overflowB: change is  -(new_text_height ="+new_text_height+"  -pic_height ="+pic_height+")");
                     }
                     //console.log("top= "+overflowB);
                 }
-                tooltip_width = text_width+pic_width+25;
-                tooltip.attr("style", "left:" +left + "px;top:" + top + "px;visibility: visible;width:" +tooltip_width+  'px');
+                tooltip_width = text_width + pic_width + 25;
+                tooltip.attr("style", "left:" + left + "px;top:" + top + "px;visibility: visible;width:" + tooltip_width + 'px');
 
                 //console.log("computed_width = "+(text_width+pic_width+25)+"  read_width = "+tooltip.node().getBoundingClientRect().width);
 
 
-                overflowR = tooltip.node().getBoundingClientRect().right- (window.innerWidth -window_margin);
-                overflowB = tooltip.node().getBoundingClientRect().bottom -(window.innerHeight - window_margin);
+                overflowR = tooltip.node().getBoundingClientRect().right - (window.innerWidth - window_margin);
+                overflowB = tooltip.node().getBoundingClientRect().bottom - (window.innerHeight - window_margin);
                 new_text_width = d3.select("#tooltip_text").node().getBoundingClientRect().width;
                 new_text_height = d3.select("#tooltip_text").node().getBoundingClientRect().height;
-                text_area = new_text_height*new_text_width;
+                text_area = new_text_height * new_text_width;
 
                 //console.log("new_text_area ="+ text_area+ "   text_height ="+new_text_height+"   text_width = "+new_text_width);
                 looptime++;
@@ -898,34 +975,40 @@ function draw_circles(){
                 //console.log("overflow!  overflowB = "+overflowB+"  overflowR = "+overflowR);
                 //console.log("end_loop!!!!!!!!!!!!");
 
-                if(looptime>1   ) break;
+                if (looptime > 1) break;
             }
-    });
+        });
 
-       text = cg_g.selectAll("text")
+        text = cg_g.selectAll("text")
             .data(nodes)
             .enter().append("text")
             .attr("class", "project_clustering_label")
-            .style("fill-opacity", function(d) { return d.parent === root ? 0.8 : 0; })
-            .style("display", function(d) { return d.parent === root ? "inline" : "none"; })
-            .text(function(d) { return d.name; });
+            .style("fill-opacity", function (d) {
+                return d.parent === root ? 0.8 : 0;
+            })
+            .style("display", function (d) {
+                return d.parent === root ? "inline" : "none";
+            })
+            .text(function (d) {
+                return d.name;
+            });
 
         node = cg_g.selectAll("circle,text"); //svg
 
 
-
         //console.log("node_root = "+node_root);
-         //d3.selectAll(".node--root")
+        //d3.selectAll(".node--root")
         cg_g
-        .on("click", function() {
+            .on("click", function () {
                 console.log("zoom root!");
-                zoom_Circles(root); });
+                zoom_Circles(root);
+            });
 
         //console.log("cg = "+cg);
 
 
         zoomTo([root.x, root.y, root.r * 2 + margin]);
-        
+
 
 
     d3.select(self.frameElement).style("height", diameter + "px");
@@ -972,3 +1055,4 @@ function zoomTo(v) {
     var s = 2;
     move(t,s);
 }
+

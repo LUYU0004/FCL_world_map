@@ -12,12 +12,14 @@ var status =0; //play(1) or stop(0 ) for the time_slider
 /*load_countrySize_and_property */
 function load_DData(_category){
     var max_property;
-        
+
+
     category = _category;
 
 
     switch(category){
-        case "Population Density":          draw_time_slider();
+        case "Population Density":          remove_layer();
+                                            draw_time_slider();
                                             color_split = [500, 400, 300, 200, 100, 50, 10, 0];
                                             catNo = 1;
                                             max_property=1000;
@@ -25,14 +27,18 @@ function load_DData(_category){
                                             read_popData();
                                             break;
         
-        case "CO2 Emission":        draw_time_slider();
+        case "CO2 Emission":        remove_layer();
+                                    draw_time_slider();
                                     color_split = [50, 20, 10, 5, 1, 0.1, 0];//1964-2011
                                                 catNo = 2;
                                                 max_property=100;
                                                 draw_legend(max_property);
                                                 read_co2Data();
                                                 break;
-        case "FCL Projects": draw_points(); break;
+
+        case "FCL Projects":        remove_layer();
+                                    draw_points();//draw_circles();
+                                        break;
         default: break;
     }
 
@@ -55,6 +61,7 @@ function display_Density(cur_year){
 
     countries.attr("fill", function (d,i) {
         var name = d.properties.name;
+
         var country_properties = find_country_property(name);
         var country_size = find_country_size(name);
 
@@ -64,14 +71,18 @@ function display_Density(cur_year){
             var density = year_property / c_size*densityMultiplier;
 
             for (var index = 0; index < color_split.length; index++) {
-                if (density > color_split[index])
+                if (density > color_split[index]){
+
                     return colors[index];
+                }
             }
+
             return colors[1];
         } else {
             return colors[colors.length - 1];
         }
-    }).on("mousemove",null);;
+
+    }).on("mousemove",null);
 
     /*modify tooltip to add in info about population and country size*/
     var offsetL = document.getElementById("map_container").offsetLeft + 20;
@@ -82,6 +93,7 @@ function display_Density(cur_year){
     //country.on("mousemove",null);
 
     countries.on("mousemove", function (d,i) {
+
         var mouse = d3.mouse(svg.node()).map(function (d) {
             return parseInt(d);
         });
@@ -92,7 +104,6 @@ function display_Density(cur_year){
         var country_size = find_country_size(name);
         var cur_country_size = country_size[0][cur_year];
 
-        
         if (country_properties.length > 0 && country_size.length > 0) {
 
             var formatted_property = formatNum(year_property);
@@ -113,9 +124,10 @@ function display_Density(cur_year){
                     + formatNum(year_property) + "<br>|<b>Size:</b>" + cur_country_size + "<br>|<b>Density:</b>"
                     + density+density_unit+"</div>");
 
+            if(d.id ==262)
+                console.log("!!!!");
 
-
-             var left = mouse[0] + offsetL;
+            var left = mouse[0] + offsetL;
              var top = mouse[1] + offsetT;
              var window_margin = 16;
              var buffer = 5;
@@ -144,7 +156,7 @@ function display_Density(cur_year){
              tooltip.attr("style","width:"+ tooltip_Width
              +"px; left:"+ left+"px;top:"+top+"px;visibility: visible;");
 
-         //tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
+            //tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
 
         }else{tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
             .html(d.properties.name);}
@@ -180,8 +192,7 @@ function draw_legend(max_property) {
     var label_height = 15;
 
     var legend = svg.append('g')    //add the legend to extra_info.svg.g
-        .classed("extra_info",true)
-        .attr('class', 'color_legend')
+        .attr('class', "color_legend extra_info")
         .attr('width', wBox)
         .attr('height', hBox)
         .attr('transform', 'translate(0,' + offsetY + ')');
@@ -404,4 +415,10 @@ function formatNum(num) {
     }
 
     return format(num / factor) + unit;
+}
+
+function remove_layer(className){
+    if(className ==undefined) className = ".extra_info";
+    var extra_info= d3.selectAll(className);
+    extra_info.remove();
 }

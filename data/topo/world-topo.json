@@ -8187,7 +8187,7 @@
             ]
           ],
           "properties": {
-            "name": "Palestine, State of",
+            "name": "West Bank and Gaza",
             "color": "#98df8a"
           },
           "id": 275
@@ -9227,8 +9227,8 @@
             ]
           ],
           "properties": {
-            "name": "undefined",
-            "color": "#000000"
+            "name": "Somalia",
+            "color":"#2ca02c"
           },
           "id": -99
         },

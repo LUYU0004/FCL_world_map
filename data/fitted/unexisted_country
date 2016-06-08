@@ -2,4 +2,12 @@ Slovakia,
 
 Taiwan
 
-wrong: "Tajikistan"
+wrong: "Tajikistan" Slovakia,Kyrgyzstan, Côte d'Ivoire,
+
+
+
+Disputed:  West Bank, Western Sahara(not solved)
+
+Non-exist: <country_size.csv> - Central African Republic,South Sudan
+
+//Djibouti(weird!!!,just not in mousemove event)

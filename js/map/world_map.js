@@ -9,6 +9,7 @@ window.SC = {};
 SC.projectNo =0;
 SC.clustersCollection =[];
 
+
 var world_topo;
 
 
@@ -88,7 +89,9 @@ function draw_worldmap() {
         .attr("title", function (d, i) {
             return d.properties.name;
         }).attr("fill",
-        function () {
+        function (d) {
+            if(d.id == 706)
+                return "#000000";
             return "#DEEBF7";
         });
 
@@ -100,7 +103,7 @@ function draw_worldmap() {
             var mouse = d3.mouse(svg.node()).map(function (d) {
                 return parseInt(d);
             });
-           
+            
             return tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
                     .html(d.properties.name);
             
@@ -114,7 +117,7 @@ function draw_worldmap() {
 
 
 
-    //d3.select("#pop_densityBtn").classed("selectedBtn",true);
+    d3.select("#pop_densityBtn").classed("selectedBtn",true);
     category = "Population Density";
     newInput();
     
@@ -126,8 +129,8 @@ function draw_worldmap() {
 
 function move(t,s) {
     if(t ==undefined || s== undefined){
-        var t = d3.event.translate;
-        var s = d3.event.scale;
+        t = d3.event.translate;
+        s = d3.event.scale;
         //zscale = s;
     }
 
@@ -148,12 +151,19 @@ function move(t,s) {
     zoom.translate(t);
     g.attr("transform", "translate(" + t + ")scale(" + s + ")");
 
+    /* SET NEW ZOOM POINT */
+    zoom.scale(s);
+    zoom.translate(t);
+
     //adjust the country hover stroke map_width based on zoom level
     d3.selectAll(".country").style("stroke-map_width", 1.5 / s);
     d3.selectAll(".text").style("font-size", 20 / s);
-    //d3.selectAll(".point").attr("r", 4/ s);
-
-
+    var radius_set = d3.selectAll(".point")
+        .transition()
+        .duration(2000)
+        .attr('r', function(item) {
+            var radius = item.ProjectNo *3
+            return radius; });
 }
 
 var throttleTimer;

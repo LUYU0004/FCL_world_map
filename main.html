@@ -19,6 +19,7 @@
 
     function newInput(){
 
+        d3.selectAll(".navg_button").classed("selectedBtn",false);
         if(this.id){
             switch(this.id){
                 case 'pop_densityBtn': category = "Population Density";
@@ -30,8 +31,10 @@
                 default: break;
             }
 
-            d3.selectAll(".navg_button").classed("selectedBtn",false);
+
             d3.select(this).classed("selectedBtn",true);
+        }else{
+            d3.select("#pop_densityBtn").classed("selectedBtn",true);
         }
 
 
