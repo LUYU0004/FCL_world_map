@@ -37,7 +37,7 @@ function load_DData(_category){
                                                 break;
 
         case "FCL Projects":        remove_layer();
-                                    draw_points();//draw_circles();
+                                    draw_points();//draw_circles();draw_tiers();//
                                         break;
         default: break;
     }
@@ -191,7 +191,8 @@ function draw_legend(max_property) {
 
     var label_height = 15;
 
-    var legend = svg.append('g')    //add the legend to extra_info.svg.g
+
+    var legend = svg.append('g')  //svg.append('g')    //add the legend to extra_info.svg.g
         .attr('class', "color_legend extra_info")
         .attr('width', wBox)
         .attr('height', hBox)
@@ -201,12 +202,11 @@ function draw_legend(max_property) {
     var dot_legend = legend.append('g')
         .attr('class','dot_legend');
 
-    dot_legend.append('svg:circle')
+    dot_legend.append('circle')
         .attr("cx", 5)
         .attr("cy", function () {
             return (color_split.length+3) * hRect;
-        })
-        .attr("class", "point")
+        }).attr("class", "point")
         .style("fill", "red")
         .attr("r", 4);
 
@@ -255,7 +255,6 @@ function draw_legend(max_property) {
     }).attr('x', 2).attr('y', function(){
         return 0;//(color_split.length+1) * hRect;
     });
-
 
 }
 
