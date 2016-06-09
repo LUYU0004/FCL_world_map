@@ -5,494 +5,122 @@
 //var average_longtitude;  // index 1 to number of clusters
 //var average_latitude;
 function draw_points(){
-    
-    var average_longtitude = [0];
-    var average_latitude  =[0];
-    
-    d3.csv("data/fcl/1. Projects.csv", function (err, projects) {
 
-        if(err) console.log(err);
-        else{
-            var tier1 = generate_DistMatrix(projects);
-            var tier_status = tier1[0];  //index 0-54 indicates 55 projects
-            var clusterNumber = tier1[1];  //index zero with nothing
-            var clusters = tier1[2];    //index zero shows the number of projects not belonging to any cluster
+    var color_scheme = ["#CCFF99","#00FF00","#0000FF","#FFFF00","#00FFFF" ,
+        "#FF00FF","#C0C0C0","#FFFFF1","#780000 ","996633"];
+    var projects = svg.append("g").attr("class","projects extra_info");
+    var radius_unit = 4;
 
-            var clusterCount = clusterNumber.length-1;
-            var clusterIndex;
+    //draw the custers
+    d3.csv("data/complementary/project_Cluster_Info (1).csv", function (err, clusters) {
 
-            //initialize the arrays
-            for(var i=0;i< clusterCount;i++){
-                average_latitude.push(0);
-                average_longtitude.push(0);
-            }
+        if (err) console.log(err);
+        else {
+            clusters = clusters.slice(0,8);
+            var coordinates=[];
+            var project_clusters = projects.append("g").attr("class","project_clusters");
 
-            var lat, long;
-            var project_index;// start from 1 to 55
-            //var project_countries = [''];// start from index 1 , indicates project 1
-
-            var lat_list=[0];//start from index 1
-            var long_list = [0];
-            projects.forEach(function (i) {
-                project_index = i.No;
-                lat = Number(i.Latitude);
-                long = Number(i.Longitude);
-                clusterIndex = tier_status[project_index-1];
-                average_latitude[clusterIndex] =average_latitude[clusterIndex] + lat;
-                average_longtitude[clusterIndex] = average_longtitude[clusterIndex] + long;
-                lat_list.push(lat);
-                long_list.push(long);
-
-                /*var title = "<b>"+i.FCL_Project+"  "+i.Case_study+"</b>";
-                 var text = "<br><p>"+i.Title+"</p>"+"<p style='font-size: 12px;'>Coordinate: "+ lat +"° N, "+ long+"°E <br>"
-                 +i.Description+"</p>";
-                 addpoint((tier_status[project_index-1]-1),i.Longitude,i.Latitude,title, title+text,undefined,project_index);
-                 project_countries.push('');
-                 project_countries[project_index] = i.Country;*/
-            });
-
-
-
-            //draw circles
-            var title;
-            var text;
-            var number;
-            var color=9;
-            var radius_unit = 3;
-
-            //add the external circles
-            for(i=1;i< clusterCount+1;i++) {
-                if(i!=5){
-                    number = clusterNumber[i];
-                    average_longtitude[i] = average_longtitude[i] / number;
-                    average_latitude[i] = average_latitude[i] / number;
-                    title = "<b>Cluster " + i + "</b>";
-                    text = title + "<br><br>Radius = " + (radius_unit * number) +
-                        "<br>Project Number:  " + clusterNumber[i];
-                    addpoint(color, average_longtitude[i], average_latitude[i], title, text, number);
-                }
-            }
-
-            //add in cluster 5 to let it be at top
-            number = clusterNumber[5];
-            average_longtitude[5] = average_longtitude[5] / number;
-            average_latitude[5] = average_latitude[5] / number;
-            title = "<b>Cluster 5</b>";
-            text = title + "<br><br>Radius = " + (radius_unit * number) +
-                "<br>Project Number:  " + clusterNumber[5];
-            addpoint(color, average_longtitude[5], average_latitude[5], title, text, number);
-
-            //add project points
-            projects.forEach(function (i) {
-                project_index = i.No;
-                var title = "<b>"+i.FCL_Project+"  "+i.Case_study+"</b>";
-                var text = "<br><p>"+i.Title+"</p>"+"<p style='font-size: 12px;'>Coordinate: "+ lat +"° N, "+ long+"°E <br>"
-                    +i.Description+"</p>";
-                addpoint((tier_status[project_index-1]-1),i.Longitude,i.Latitude,title, title+text,undefined,project_index);
-
-                var gpoint = g.append("g").attr("class","project_points extra_info");
-                var x = projection([lat, lon])[0];
-                var y = projection([lat, lon])[1];
-                var color_scheme = ["#CCFF99","#00FF00","#0000FF","#FFFF00","#00FFFF" ,
-                    "#FF00FF","#C0C0C0","#FFFFF1","#780000 ","996633"];
-
-                if(parseInt(lat) == 51) console.log("x ="+x);
-                //console.log("x:"+x+"   y:"+y);
-                gpoint.append("svg:circle")
-                    .attr("cx", x)
-                    .attr("cy", y)
-                    .attr("class", "point")
-                    .style("fill", function () {
-                        return color_scheme[color_status];
-                    }).style("opacity",0.4)
-                    .attr("r", radius_unit*radius)
-                    .attr("z-index",function () {
-                        var index =parseInt(radius*0.8 +10);// 20-(radius*0.8) +10;
-                        title = title +" z-index = " +index;
-                        return index;
-                    })
-                    .on("mouseover", function () {return tooltip.attr("style","visibility: visible");})
-                    .on("mousemove", function() {
-                        var mouse = d3.mouse(svg.node()).map(function (d) {
-                            return parseInt(d);
-                        });
-                        var half = (tooltip.node().getBoundingClientRect().right -mouse[0])/2;
-
-                        tooltip.attr("style", "left:" + (mouse[0]- tooltip.node().getBoundingClientRect().width/2) + "px;top:" + (mouse[1] + offsetT) + "px")
-                            .html("<div id='tooltip_holder' style='vertical-align: middle'><span id='pic_holder' class='Centerer' style" +
-                                "='float: left;vertical-align: middle'><img id='tooltip_pic' class='Centered' src='res/fcl_logo.png'></span>" +
-                                "<div id='tooltip_text' style='float: right;padding-left: 10px;padding-top: 10px;padding-right:10px;vertical-align: middle;border: 1px solid #b4b4b4;'>"+text+"</div></div>");
-
-
-                        d3.select("#tooltip_text").attr("style","float: right;padding-left: 15px;padding-top: 10px;padding-right:10px;vertical-align: middle;");
-
-                        //add in picture for the project
-                        var project_img = new Image();
-                        project_img.src = "img/project_img/"+No+"_fcl_vis.jpg";
-                        //console.log("project_img.src = "+project_img.src);
-                        d3.select("#tooltip_pic").attr("src",project_img.src);
-
-
-                        var left = tooltip.node().getBoundingClientRect().left;
-                        var top = tooltip.node().getBoundingClientRect().top;
-                        var tooltip_width = tooltip.node().getBoundingClientRect().width;
-
-                        var pic_height = d3.select("#tooltip_text").node().getBoundingClientRect().height;
-                        var pic_width = pic_height/1.25;
-
-                        d3.select("#tooltip_pic").style("width",pic_width+'px').style("height",pic_height+'px');
-
-                        tooltip.attr("style", "left:" + (mouse[0]- tooltip.node().getBoundingClientRect().width/2) + "px;top:" + (mouse[1] + offsetT) + "px;visibility: visible;");
-
-                        var text_height = pic_height;
-                        var text_width = d3.select("#tooltip_text").node().getBoundingClientRect().width;
-                        // var text_area =  text_height* text_width;
-
-                        //console.log("-----------");
-                        //console.log("text_area = "+text_area);
-
-
-                        /* var right = tooltip.node().getBoundingClientRect().right;
-                         var bottom = tooltip.node().getBoundingClientRect().bottom;
-                         var window_margin = 9; //actually 8, but to detect close to edge change to 8
-                         //var text_width = d3.select("#tooltip_text").node().getBoundingClientRect().width;
-
-                         var overflowR, overflowB;
-                         overflowR = right- (window.innerWidth -window_margin);
-                         overflowB = bottom -  (window.innerHeight - window_margin);
-                         var looptime = 0;
-                         var new_text_width = text_width;
-                         var new_text_height = d3.select("#tooltip_text").node().getBoundingClientRect().height;
-
-                         // console.log("text_width = "+text_width+"text_height="+new_text_height);
-                         //console.log(" overflowB = "+overflowB);
-                         //console.log("overflowR  = "+overflowR);
-
-                         /*if(new_text_width>325 &&(overflowB > 0 || overflowR>0)){
-                         d3.select("#tooltip_text").style("width",300+'px');
-                         text_width = 300;
-                         pic_height = d3.select("#tooltip_text").node().getBoundingClientRect().height;
-                         pic_width = pic_height/1.25;
-                         console.log("large width, set to 300");
-
-                         d3.select("#tooltip_pic").style("width",pic_width+'px').style("height",pic_height+'px');
-                         }*/
-
-
-
-                    }).on("mouseout", function () {
-                    return tooltip.attr("style","visibility: hidden");
+            project_clusters.selectAll("circle").data(clusters).enter()
+                .append("circle")
+                .attr("class","project_cluster")
+                .attr("cx", function(d){
+                    return projection([d.Longitude,d.Latitude])[0];
+                }).attr("cy",function (d) {
+                return projection([d.Longitude,d.Latitude])[1];
+            }).style("fill", function () {
+                return color_scheme[4];
+            }).style("opacity",0.2)
+                .attr("z-index",function(d){
+                    return 0.8*d.ProjectNo +10;
                 })
-                    .on("click",function () {
-                        if(radius >1){
-                            var scale;
-                            /*if(radius >4) scale = 4;
-                             else{
-                             scale = parseInt(radius);
-                             }*/
-                            scale = 4;
-                            var x_multiplier = radius/3*0.1 +0.35;
-                            var y_multiplier = radius/3*0.1+0.3;
-                            if(radius ==23){
-                                x_multiplier  = 0.78;
-                                y_multiplier = 0.80;
-                            }else{
-                                if(radius ==2){
-                                    x_multiplier = 0.90;
-                                    y_multiplier = 0.7;
-                                }
-                            }
-                            var pos =[(x*x_multiplier)*(-1*scale),(y*y_multiplier)*(-1*scale)];
-                            move(pos , scale);
-                        }
+                .attr("r", function (d) {
+                    var radius = Number(d.ProjectNo)*radius_unit;
+                    if(radius >20) radius = 0.8*radius;
+                    return radius;
+                })
+                .on("mouseover", function () {
+                    var _t = d3.select(this);
+                    _t.style("border-radius","5px")
+                        .style("border","1px solid #FFFF00");
+                    return tooltip.attr("style","visibility: visible");})
+                .on("mousemove", function(d) {
+                    var mouse = d3.mouse(svg.node()).map(function (d) {
+                        return parseInt(d);
                     });
-            });
+                    var half = (tooltip.node().getBoundingClientRect().right -mouse[0])/2;
 
+                    tooltip.attr("style", "left:" + (mouse[0]- tooltip.node().getBoundingClientRect().width/2) + "px;top:" + (mouse[1] + offsetT) + "px")
+                        .html("<div id='tooltip_holder' style='vertical-align: middle'>" +
+                            "<div id='tooltip_text' style='float: right;padding-left: 10px;padding-top: 10px;padding-right:10px;vertical-align: middle;border: 1px solid #b4b4b4;'>"+d.Text+"</div></div>");
+
+                    tooltip.attr("style", "left:" + (mouse[0]- tooltip.node().getBoundingClientRect().width/2) + "px;top:" + (mouse[1] + offsetT) + "px;visibility: visible;");
+
+                }).on("mouseout", function () {
+                    return tooltip.attr("style","visibility: hidden");
+                }).on("click",function (d) {
+
+                        var cur_lvl = zoom.scale();
+
+                        var scale = 3;
+                        var y_factor = 1.3;
+                       if(d.Latitude<0) { y_factor = 1;}
+                        var x_multiplier = (projection([d.Longitude, d.Latitude])[0]/innerWidth)*(-1.19*scale);
+                        var y_multiplier = (projection([d.Longitude, d.Latitude])[1]/innerHeight)*(-y_factor*scale);
+
+                        var pos =[(projection([d.Longitude, d.Latitude])[0]*x_multiplier),(projection([d.Longitude, d.Latitude])[1]*y_multiplier)];
+                        move(pos , scale);
+                        //var _t = d3.select(this);
+                        //_t.style("visibility","hidden");
+                        //this.attr("style","visibility:hidden");
+                });
 
         }
-
-        /*
-         var clusterObj = {};
-         var cluster_countries = [[]];// start from index 1
-         var found ;
-         var the_country;
-         var cluster_length;
-         var country_tiers = [];
-         var countryObj = {};
-         var country_index ;
-         var country_no;
-
-         //list the 2D arrays -- countries in each tier 1 cluster
-         for(i=1; i< clusters.length;i++){
-         cluster_countries.push([]);
-         cluster_length = clusters[i].length;
-         country_no =0;
-         for(var j=0;j<cluster_length;j++){
-         country_index = clusters[i][j];
-         the_country = project_countries[country_index];
-
-         //check if the country name exist alr in cluster_countries[i]
-         found = cluster_countries[i].filter(function(d){
-         return d ==the_country;
-         });
-
-         if(found == undefined || found.length ==0) {
-         country_no++;
-         cluster_countries[i].push(the_country);
-         countryObj[the_country] = {};
-         countryObj[the_country]['Name'] = the_country;
-         countryObj[the_country]['ProjectsIncluded']=country_index;
-         countryObj[the_country]['ProjectNumber'] = 1;
-         countryObj[the_country]['total_Lat'] = lat_list[country_index];
-         countryObj[the_country]['total_Long'] = long_list[country_index];
-         //TierNo,Name,ClusterNo,ProjectNo,Longtitude,Latitude,Projects_Included,Title,Text,CountriesIncluded
-         }
-         else{
-         countryObj[the_country]['ProjectsIncluded']+=' '+country_index;
-         countryObj[the_country]['ProjectNumber']++;
-         countryObj[the_country]['total_Lat'] +=lat_list[country_index];
-         countryObj[the_country]['total_Long'] +=long_list[country_index];
-
-         }
-
-         found = undefined;
-         }
-         countryObj['country_no'] = country_no;
-         country_tiers.push(countryObj);
-         countryObj = {};
-         }
-         */
-
-
-        /*using (1) project_Cluster_info(1).csv ---providing tier1 clusters, can be deemed as continent lvl
-         ,organized tgr if distance less than tier1_range = 100
-         *       (2) country_tiers array --providing country-lvl cluster
-         * purpose: to generate a 3-tier classfication json file to store parent-children relationship for zoomable circles*/
-
-        // to store the whole array, each object of it is a cluster {"name":"", "children":[]} or real project{"name":"", "size":1 }*/
-
-        /* SC.clustersCollection = [];
-
-         var tier1_cluster = {};  //root of each zoomable circle
-         //TierNo,Name,ClusterNo,ProjectCount,Longtitude,Latitude,Projects_Included,Title,Text,children --may tier2 or project
-
-         var tier2_cluster ={};
-         //TierNo,Name,ClusterNo,ProjectCount,Longtitude,Latitude,Projects_Included,Title,Text,children - with projects
-
-         var project_object = {}; //real-project,
-         //TierNo,ProjectIndex,FCL_Project,Case Study,Longtitude,Latitude,Title,Text,Country,City
-
-         d3.csv("data/complementary/project_Cluster_Info (1).csv", function (err, tier1s) {
-
-         //add in the points not in any clusters, clusters[0]
-         for (j = 0; j < clusters[0].length; j++) {
-         // TierNo,ProjectIndex,FCL_Project,Case Study,Longtitude,Latitude,Title,Text,Country,City
-         project_object["tierNo"] = 3;
-         project_object["project_Index"] = clusters[0][j]; // add in projects accordingly, 1-55
-         project_object["size"] = 1;
-
-         var projectInfo = projects.filter(function (d) {
-         return Number(d.No) == Number(clusters[0][j]);
-         });
-
-         if (projectInfo.length > 0) {
-         //FCL_Project,Case_study,Latitude,Longitude,Title,Description,Image_Credit,City,Country
-         project_object["fcl_project"] = projectInfo[0].FCL_Project;
-         project_object["case_study"] = projectInfo[0].Case_study;
-         project_object["latitude"] = projectInfo[0].Latitude;
-         project_object["longtitude"] = projectInfo[0].Longitude;
-         project_object["name"] = projectInfo[0].Title;
-         project_object["text"] = projectInfo[0].Description;
-         project_object["country"] = projectInfo[0].Country;
-         project_object["city"] = projectInfo[0].City;
-
-         }
-         SC.clustersCollection.push(project_object);
-         projectInfo = [];
-         project_object = {};
-         }
-
-
-
-
-         //add in projects in any clusters
-         var clusterIndex = clusterCount; //9
-         var tier1_cluster_length ;
-         var tier1_children;
-         var tier1_children_proNo;
-         var tier1_children_name;
-
-         tier1s.forEach(function (t1_cluster) {
-
-
-         var t1_clusterNo = t1_cluster.ClusterNo;
-         var t1_clusterName = t1_cluster.Name;
-         var projectsIncluded;
-
-         if(t1_clusterName == undefined) return;
-
-         tier1_cluster_length = country_tiers[t1_clusterNo-1]["country_no"];
-
-
-         if (tier1_cluster_length==1) {  // if only 1 country included, add in tier2 cluster as children to root
-         clusterIndex++;
-
-         var tier2_name = Object.keys(country_tiers[t1_clusterNo - 1])[0]
-         var tier2  = country_tiers[t1_clusterNo - 1][tier2_name];
-         var tier2_proNo  =  tier2 ["ProjectNumber"];
-         projectsIncluded =  tier2 ["ProjectsIncluded"].split(" ");
-
-
-         tier2_cluster["tierNo"] = 2;
-         tier2_cluster["name"] = tier2_name;
-         tier2_cluster["clusterNo"] = clusterIndex;
-         tier2_cluster["projectCount"] = tier2_proNo ;
-         tier2_cluster["aver_longtitude"] =  tier2 ["total_Long"] / tier2_proNo ;
-         tier2_cluster["aver_latitude"] =  tier2 ["total_Lat"] / tier2_proNo ;
-         tier2_cluster["projects_Included"] = projectsIncluded;
-         tier2_cluster["title"] = tier2_name;
-         tier2_cluster["text"] = tier2_name + "<br>ProjectNo = " + tier2_proNo ;
-         tier2_cluster["children"] = [];
-
-         for (j = 0; j < tier2_proNo ; j++) {
-         // TierNo,ProjectIndex,FCL_Project,Case Study,Longtitude,Latitude,Title,Text,Country,City
-         project_object["tierNo"] = 3;
-         project_object["project_Index"] = projectsIncluded[j]; // add in ptojects accordingly, 1-55
-         project_object["size"] = 1;
-
-         projectInfo = projects.filter(function (d) {
-         return Number(d.No) == Number(projectsIncluded[j]);
-         });
-
-         if (projectInfo.length > 0) {
-         //FCL_Project,Case_study,Latitude,Longitude,Title,Description,Image_Credit,City,Country
-         project_object["fcl_project"] = projectInfo[0].FCL_Project
-         project_object["case_study"] = projectInfo[0].Case_study;
-         project_object["latitude"] = projectInfo[0].Latitude;
-         project_object["longtitude"] = projectInfo[0].Longitude;
-         project_object["name"] = projectInfo[0].Title;
-         project_object["text"] = projectInfo[0].Description;
-         project_object["country"] = projectInfo[0].Country;
-         project_object["city"] = projectInfo[0].City;
-         }
-
-         tier2_cluster["children"].push(project_object);
-         project_object = {};
-         }
-         projectInfo = [];
-         SC.clustersCollection.push(tier2_cluster);
-         tier2_cluster = {};
-         }else {
-
-
-         tier1_cluster["tierNo"] = 1;
-         tier1_cluster["name"] = t1_clusterName;
-         tier1_cluster["clusterNo"] = t1_cluster.ClusterNo;
-         tier1_cluster["projectCount"] = t1_cluster.ProjectNo;
-         tier1_cluster["aver_longitude"] = t1_cluster.Longtitude;
-         tier1_cluster["aver_latitude"] = t1_cluster.Latitude;
-         tier1_cluster["projects_Included"] = t1_cluster.Projects_Included;
-         tier1_cluster["title"] = t1_cluster.Title;
-         tier1_cluster["text"] = t1_cluster.Text;
-         tier1_cluster["children"] = [];
-
-
-         for (var i = 0; i < tier1_cluster_length; i++) {
-         clusterIndex++;
-
-         tier1_children_name = Object.keys(country_tiers[t1_clusterNo - 1])[i];
-         tier1_children = country_tiers[t1_clusterNo - 1][tier1_children_name];
-
-         tier1_children_proNo = tier1_children["ProjectNumber"];
-
-         if(tier1_children_proNo>1){
-         projectsIncluded= tier1_children["ProjectsIncluded"].split(" ");
-
-         tier2_cluster["tierNo"] = 2;
-         tier2_cluster["name"] = tier1_children_name;
-         tier2_cluster["clusterNo"] = clusterIndex;
-         tier2_cluster["projectCount"] = tier1_children_proNo;
-         tier2_cluster["aver_longtitude"] = tier1_children["total_Long"] / tier1_children_proNo;
-         tier2_cluster["aver_latitude"] = tier1_children["total_Lat"] / tier1_children_proNo;
-         tier2_cluster["projects_Included"] = projectsIncluded;
-         tier2_cluster["title"] = tier1_children_name;
-         tier2_cluster["text"] = tier1_children_name + "<br>ProjectNo = " + tier1_children_proNo;
-         tier2_cluster["children"] = [];
-
-         // add concrete projects as children to tier2 clusters
-         for (j = 0; j < tier1_children_proNo; j++) {
-         // TierNo,ProjectIndex,FCL_Project,Case Study,Longtitude,Latitude,Title,Text,Country,City
-         project_object["tierNo"] = 3;
-         project_object["project_Index"] = projectsIncluded[j]; // add in ptojects accordingly, 1-55
-         project_object["size"] = 1;
-
-         projectInfo = projects.filter(function (d) {
-         return Number(d.No) == Number(projectsIncluded[j]);
-         });
-
-         if (projectInfo.length > 0) {
-         //FCL_Project,Case_study,Latitude,Longitude,Title,Description,Image_Credit,City,Country
-         project_object["fcl_project"] = projectInfo[0].FCL_Project
-         project_object["case_study"] = projectInfo[0].Case_study;
-         project_object["latitude"] = projectInfo[0].Latitude;
-         project_object["longtitude"] = projectInfo[0].Longitude;
-         project_object["title"] = projectInfo[0].Title;
-         project_object["text"] = projectInfo[0].Description;
-         project_object["country"] = projectInfo[0].Country;
-         project_object["city"] = projectInfo[0].City;
-         }
-
-         tier2_cluster["children"].push(project_object);
-         project_object = {};
-         }
-
-         tier1_cluster["children"].push(tier2_cluster);
-         tier2_cluster = {};
-         } else {
-
-         projectsIncluded = tier1_children["ProjectsIncluded"];
-         project_object["tierNo"] = 3;
-         project_object["project_Index"] = projectsIncluded; // add in ptojects accordingly, 1-55
-         project_object["size"] = 1;
-
-         projectInfo = projects.filter(function (d) {
-         return Number(d.No) == Number(projectsIncluded);
-         });
-
-         if (projectInfo.length > 0) {
-         //FCL_Project,Case_study,Latitude,Longitude,Title,Description,Image_Credit,City,Country
-         project_object["fcl_project"] = projectInfo[0].FCL_Project;
-         project_object["case_study"] = projectInfo[0].Case_study;
-         project_object["longtitude"] = projectInfo[0].Latitude;
-         project_object["latitude"] = projectInfo[0].Longitude;
-         project_object["title"] = projectInfo[0].Title;
-         project_object["text"] = projectInfo[0].Description;
-         project_object["country"] = projectInfo[0].Country;
-         project_object["city"] = projectInfo[0].City;
-         }
-
-         tier1_cluster["children"].push(project_object);
-         project_object = {};
-         }
-         }
-         SC.clustersCollection.push(tier1_cluster);
-         tier1_cluster = {};
-         }
-         });
-         console.log(JSON.stringify(SC.clustersCollection));
-         });*/
-
-// JSON.parse converts json_string to an object
-        //var obj = JSON.parse(SC.clustersCollection);
-// JSON.stringify converts the object to a string again
-
-
-        //var data = "{name: 'Bob', occupation: 'Plumber'}";
-        /* var url = 'data:text/json;charset=utf8,' + encodeURIComponent(obj);
-         window.open(url, '_blank');
-         window.focus();*/
-
     });
+
+////to draw the projects dots
+    d3.csv("data/fcl/1. Projects.csv", function (err, points) {
+
+        if (err) console.log(err);
+        else {
+            points = points.slice(0,55);
+
+            var project_points = projects.append("g").attr("class","project_points");
+
+            project_points.selectAll("circle").data(points).enter()
+                .append("circle")
+                .attr("class","point")
+                .attr("cx", function(d){
+                    return projection([d.Longitude,d.Latitude])[0];
+                }).attr("cy",function (d) {
+                return projection([d.Longitude,d.Latitude])[1];
+            }).style("fill", function () {
+                return color_scheme[6];
+            }).style("opacity",1)
+                .attr("r", radius_unit*1)
+                .on("mouseover", function () {return tooltip.attr("style","visibility: visible");})
+                .on("mousemove", function(d) {
+                    var mouse = d3.mouse(svg.node()).map(function (d) {
+                        return parseInt(d);
+                    });
+                    var text = "<br><p>"+d.Title+"</p>"+"<p style='font-size: 12px;'>Coordinate: "+ d.Latitude +"° N, "+ d.Longitude+"°E <br>"
+                        +d.Description+"</p>";
+
+                    tooltip.attr("style", "left:" + (mouse[0]- tooltip.node().getBoundingClientRect().width/2) + "px;top:" + (mouse[1] + offsetT) + "px")
+                        .html("<div id='tooltip_holder' style='vertical-align: middle'><span id='pic_holder' class='Centerer' style" +
+                            "='float: left;vertical-align: middle'><img id='tooltip_pic' class='Centered' src='res/fcl_logo.png'></span>" +
+                            "<div id='tooltip_text' style='float: right;padding-left: 10px;padding-top: 10px;padding-right:10px;vertical-align: middle;border: 1px solid #b4b4b4;'>"+text+"</div></div>");
+
+                    tooltip.attr("style", "left:" + (mouse[0]- tooltip.node().getBoundingClientRect().width/2) + "px;top:" + (mouse[1] + offsetT) + "px;visibility: visible;");
+
+                }).on("mouseout", function () {
+                return tooltip.attr("style","visibility: hidden");
+            }).on("click",null);
+
+        }
+    });
+
+    
+
 }
 
 
@@ -631,12 +259,8 @@ function addpoint(color_status, lat, lon, title,text, radius, No) {
     })
         .on("click",function () {
         if(radius >1){
-            var scale;
-            /*if(radius >4) scale = 4;
-            else{
-                scale = parseInt(radius);
-            }*/
-            scale = 4;
+            var scale = 4;
+
             var x_multiplier = radius/3*0.1 +0.35;
             var y_multiplier = radius/3*0.1+0.3;
             if(radius ==23){
@@ -649,7 +273,9 @@ function addpoint(color_status, lat, lon, title,text, radius, No) {
                 }
             }
             var pos =[(x*x_multiplier)*(-1*scale),(y*y_multiplier)*(-1*scale)];
-            move(pos , scale);
+
+            move(pos,scale);
+
         }
     });
 

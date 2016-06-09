@@ -53,7 +53,7 @@ function setup() {
         //.center()
         //.rotate( [71.057,0] )
         .center( [0, 42.313] )
-        .scale(map_width /2/ Math.PI);
+        .scale(map_width /2/Math.PI);
 
     path = d3.geo.path().projection(projection);
     
@@ -129,9 +129,8 @@ function draw_worldmap() {
 
 function move(t,s) {
     if(t ==undefined || s== undefined){
-        t = d3.event.translate;
+       t = d3.event.translate;
         s = d3.event.scale;
-        //zscale = s;
     }
 
     var h = map_height / 4;
@@ -144,26 +143,24 @@ function move(t,s) {
         h * (s - 1) + h * s,
         Math.max(map_height * (1 - s) - h * s, t[1])
     );
-    //t[0] = 100; x-axis
-   // t[1] =-1;  y-axis
-    //console.log("t[0] = "+t[0]+"   t[1] = "+t[1]+"  s="+s);
 
-    zoom.translate(t);
-    g.attr("transform", "translate(" + t + ")scale(" + s + ")");
+    svg.attr("transform", "translate(" + t + ")scale(" + s + ")");
 
     /* SET NEW ZOOM POINT */
     zoom.scale(s);
     zoom.translate(t);
 
+    d3.selectAll("circle.project_cluster").style("visibility", function () {
+       return s>3 ? "hidden":"visible";
+    });
+
+
+
     //adjust the country hover stroke map_width based on zoom level
     d3.selectAll(".country").style("stroke-map_width", 1.5 / s);
     d3.selectAll(".text").style("font-size", 20 / s);
-    var radius_set = d3.selectAll(".point")
-        .transition()
-        .duration(2000)
-        .attr('r', function(item) {
-            var radius = item.ProjectNo *3
-            return radius; });
+    /*d3.selectAll(".point")
+        .attr('r', 3/zoom.scale());*/
 }
 
 var throttleTimer;
