@@ -32,8 +32,8 @@
 }
 
 #color_legend {
-    top: 85%;
-    left: 3%;
+    top: 300px;
+    left: 20px;
     margin: 5px 5px 0px 0px;
     padding:2px;
     border: 1px solid #010101;
@@ -41,7 +41,7 @@
     width:200px;
     height: 250px;
     z-index: 10;
-    position: fixed;
+    position: absolute;
 
 }
 

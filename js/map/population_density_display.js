@@ -9,6 +9,9 @@ var colors = ["#08306B", "#08519C", "#2171B5", "#4292C6", "#6BAED6", "#9ECAE1", 
 
 var status =0; //play(1) or stop(0 ) for the time_slider
 
+//var content_svg = d3.select("#map_container").append("svg").append("g");
+//content_svg.append("circle").attr("cx",500).attr("cy",500).attr("r",100).style("fill",red).style("z-index",'10');
+
 /*load_countrySize_and_property */
 function load_DData(_category){
     var max_property;
@@ -37,7 +40,8 @@ function load_DData(_category){
                                                 break;
 
         case "FCL Projects":        remove_layer();
-                                    draw_points();//draw_circles();draw_tiers();//
+                                   draw_tiers();//draw_points(); //
+                                    //draw_circles();
                                         break;
         default: break;
     }
@@ -170,7 +174,7 @@ function display_Density(cur_year){
  */
 function draw_legend(max_property) {
 
-    d3.selectAll(".color_legend").remove();
+    d3.selectAll("#color_legend").remove();
 
     var wFactor = 10,
         hFactor = 2;
@@ -191,9 +195,9 @@ function draw_legend(max_property) {
 
     var label_height = 15;
 
-
     var legend = svg.append('g')  //svg.append('g')    //add the legend to extra_info.svg.g
-        .attr('class', "color_legend extra_info")
+        .attr('class', "extra_info")
+        .attr('id',"color_legend")
         .attr('width', wBox)
         .attr('height', hBox)
         .attr('transform', 'translate(0,' + offsetY + ')');

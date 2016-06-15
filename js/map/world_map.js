@@ -29,7 +29,7 @@ var map_width , map_height;
 var projection, path, svg, g, graticule;
 var tooltip;
 
-var zoom = d3.behavior.zoom().scaleExtent([1, 100]).on("zoom", move);
+var zoom = d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", move);
 
 
 function setup() {
@@ -129,13 +129,17 @@ function draw_worldmap() {
 
 function move(t,s) {
     if(t ==undefined || s== undefined){
-       t = d3.event.translate;
-        s = d3.event.scale;
+
+        s = d3.event.scale ;
+        t = d3.event.translate;
+        console.log("auto!");
     }
 
+
+    console.log("s="+s+"  t1 = "+t);
     var h = map_height / 4;
 
-    t[0] = Math.min(
+   t[0] = Math.min(
         (map_width / map_height) * (s - 1),
         Math.max(map_width * (1 - s), t[0])
     );
@@ -145,10 +149,12 @@ function move(t,s) {
     );
 
     svg.attr("transform", "translate(" + t + ")scale(" + s + ")");
-
+    
+    
     /* SET NEW ZOOM POINT */
-    zoom.scale(s);
     zoom.translate(t);
+    zoom.scale(s);
+
 
     d3.selectAll("circle.project_cluster").style("visibility", function () {
        return s>3 ? "hidden":"visible";
@@ -159,8 +165,10 @@ function move(t,s) {
     //adjust the country hover stroke map_width based on zoom level
     d3.selectAll(".country").style("stroke-map_width", 1.5 / s);
     d3.selectAll(".text").style("font-size", 20 / s);
-    /*d3.selectAll(".point")
-        .attr('r', 3/zoom.scale());*/
+    circle.selectAll("circle")
+        .attr('r', function(d){
+            d.r/s;
+        });
 }
 
 var throttleTimer;
