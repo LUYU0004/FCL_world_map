@@ -12,13 +12,56 @@
 
 #menuBar{
     position: absolute;
-    top: 0;
-    left: 0;
-    width : 98%;
-    height: 6%;
+    top: 20px;
+    right:25px;
+    width : 200px;
+    height: 200px;
     z-index: 10;
-    border-bottom: 2px solid #d0d0d0;
+    overflow: hidden;
+    border: 2px solid #d0d0d0;
+    background-color: #e2e3e8;
+    box-shadow: 1px 1px 5px #adadad;
 
+}
+
+#navg_bar {
+    height: 200px;
+    position: absolute;
+    top: 70px;
+
+}
+
+.navg_button {
+padding-top: 7px;
+    display: inline-block;
+    align-content: center;
+    height: 25px;;
+    width: 200px;;
+    color: #000000;
+    font-size: 14px;
+    font-family: Helvetica,Arial,sans-serif;
+    font-weight: 200;
+    line-height: 1em;
+    cursor: pointer;
+    text-align:center;
+    border-bottom: 2px solid #d0d0d0;
+}
+
+.selectedBtn {
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0.05, #DEEBF7),color-stop(1, #DEEBF7));
+}
+
+
+
+#fcl_logo {
+    padding: 10px;
+    width: 180px;;
+    height: 50px;
+    top: 0;
+    right:0;
+    overflow:hidden;
+    position: absolute;
+    border-bottom: 2px solid #d0d0d0;
 }
 
 #map_container {
@@ -32,8 +75,8 @@
 }
 
 #color_legend {
-    top: 300px;
-    left: 20px;
+    top: 400px;
+    left: 40px;
     margin: 5px 5px 0px 0px;
     padding:2px;
     border: 1px solid #010101;
@@ -91,64 +134,6 @@
      display: none;
  }
 
-div.tooltip {
-    color: #222;
-    background: #fff;
-    padding: .5em;
-    text-shadow: #f5f5f5 0 1px 0;
-    border-radius: 2px;
-    box-shadow: 0px 0px 2px 0px #a6a6a6;
-    opacity: 0.9;
-    position: absolute;
-    z-index: 30;
-}
-
-#navg_bar {
-    padding-left: 30px;
-}
-
-.Centerer
-{
-    display: inline-block;
-    vertical-align: middle;
-}
-.Centered
-{
-    display: inline-block;
-    vertical-align: middle;
-}
-
-.navg_button {
-
-    display: inline-block;
-    padding: 8px 10px;
-    margin-right: -5px;
-    color: #000000;
-    font-size: 14px;
-    font-family: Helvetica,Arial,sans-serif;
-    font-weight: 200;
-    line-height: 1em;
-    cursor: pointer;
-    text-shadow: 1px 1px 1px rgba(255,255,255,0.2);
-    -webkit-background-clip: text;
-    border: 1px solid #b4b4b4;
-    background: -webkit-gradient(linear,left top,left bottom,color-stop(0.05, #ffffff),color-stop(1,#dcdcdc));
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff',endColorstr='#dcdcdc');
-    background-color: #dcdcdc;
-    text-decoration: none;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-.selectedBtn {
-    background: -webkit-gradient(linear,left top,left bottom,color-stop(0.05, #DEEBF7),color-stop(1, #DEEBF7));
-}
-
-
 
 .graticule {
     fill: none;
@@ -172,16 +157,3 @@ div.tooltip {
     stroke-width: 1px;
 }
 
-
-#fcl_logo {
-    /*margin: 5px 5px 0px 0px;
-padding:2px;
-border: 1px solid #d0d0d0;
-border-radius:5px;*/
-    width:20%;
-    height: 30px;
-    top: 0;
-    right:0;
-    overflow:hidden;
-    position: absolute;
-}

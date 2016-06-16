@@ -40,7 +40,9 @@ function load_DData(_category){
                                                 break;
 
         case "FCL Projects":        remove_layer();
-                                   draw_tiers();//draw_points(); //
+                                   generate_DistMatrix();//draw_points(); //
+                                    
+                                    //draw_circles();
                                     //draw_circles();
                                         break;
         default: break;
@@ -185,7 +187,7 @@ function draw_legend(max_property) {
 
     var wRect = wBox / (wFactor * 0.75),
         offsetText = wRect / 2,
-        offsetY = map_height - hBox * 1.2,//0.9
+        offsetY = map_height - hBox * 1,//0.9
         tr = 'translate(' + offsetText + ',' + offsetText * 3 + ')';
 
     var steps = color_split.length,
@@ -200,9 +202,9 @@ function draw_legend(max_property) {
         .attr('id',"color_legend")
         .attr('width', wBox)
         .attr('height', hBox)
-        .attr('transform', 'translate(0,' + offsetY + ')');
+        .attr('transform', 'translate(20,' + offsetY + ')');
 
-    //draw dot legend
+    /*draw dot legend
     var dot_legend = legend.append('g')
         .attr('class','dot_legend');
 
@@ -217,7 +219,7 @@ function draw_legend(max_property) {
     dot_legend.append('text').text("indicates FCL project locations.")
         .attr('x', 15).attr('y', function(){
         return (color_split.length+3) * hRect;
-    });
+    });*/
 
     var sg = legend.append('g')
         .attr('transform', tr);
@@ -253,8 +255,13 @@ function draw_legend(max_property) {
     }).attr('x', wRect + offsetText).attr('y', offsetText * offsetYFactor * 2+label_height);
 
     sg.append('text').text(function () {
-        //var text = formatNum(max_population);
-        return category;
+        switch (category){
+            case "Population Density":          return "People per sq.km";
+                break;
+
+            case "CO2 Emission":            return "Tons per person";
+                break;
+        }
 
     }).attr('x', 2).attr('y', function(){
         return 0;//(color_split.length+1) * hRect;

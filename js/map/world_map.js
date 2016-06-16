@@ -7,7 +7,9 @@
 
 window.SC = {};
 SC.projectNo =0;
-SC.clustersCollection =[];
+//SC.clustersCollection =[];
+SC.projects = [];
+SC.matrix = [];
 
 
 var world_topo;
@@ -29,7 +31,8 @@ var map_width , map_height;
 var projection, path, svg, g, graticule;
 var tooltip;
 
-var zoom = d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", move);
+var zoom = d3.behavior.zoom().scaleExtent([1, 8])
+            .on("zoom",move);
 
 
 function setup() {
@@ -39,9 +42,6 @@ function setup() {
 
     tooltip = d3.select("#map_container").append("div").attr("class", "tooltip")
         .attr("style","visibility: hidden");//
-
-   // tooltip_points = d3.select("#map_container").append("div").attr("class", "tooltip")
-     //   .attr("style","visibility: hidden");//
 
     map_width = document.getElementById("map_container").offsetWidth;
     map_height = window.innerHeight;
@@ -103,6 +103,7 @@ function draw_worldmap() {
             var mouse = d3.mouse(svg.node()).map(function (d) {
                 return parseInt(d);
             });
+            console.log("mouse ="+mouse);
             
             return tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
                     .html(d.properties.name);
@@ -129,17 +130,51 @@ function draw_worldmap() {
 
 function move(t,s) {
     if(t ==undefined || s== undefined){
-
         s = d3.event.scale ;
         t = d3.event.translate;
-        console.log("auto!");
     }
 
+    var tier1_scale = 2;
+    var tier2_scale = 4;
+    var tier3_scale = 6;
+    var tier4_scale =7;
+    var tier_range = 100;
+    var scale =2;
 
-    console.log("s="+s+"  t1 = "+t);
+
+    if(s>= tier4_scale) {
+        
+        tier_range = 3;
+        scale = tier4_scale;
+        svg.selectAll(".projects").remove();
+        find_last_tier(SC.matrix,tier_range,scale);
+       
+    }else if(s>=tier3_scale){
+        
+        tier_range=5;
+        scale = tier3_scale;
+        svg.selectAll(".projects").remove();
+        find_last_tier(SC.matrix,tier_range,scale);
+
+    }else if(s>=tier2_scale){
+        
+        tier_range = 25 ;
+        scale = tier2_scale;
+        svg.selectAll(".projects").remove();
+        find_last_tier(SC.matrix,tier_range,scale);
+
+    }else if(s>=tier1_scale){
+        
+        tier_range = 50 ;
+        scale = tier1_scale;
+        svg.selectAll(".projects").remove();
+        find_last_tier(SC.matrix,tier_range,scale);
+
+    }
+    
     var h = map_height / 4;
 
-   t[0] = Math.min(
+    t[0] = Math.min(
         (map_width / map_height) * (s - 1),
         Math.max(map_width * (1 - s), t[0])
     );
@@ -155,9 +190,8 @@ function move(t,s) {
     zoom.translate(t);
     zoom.scale(s);
 
-
-    d3.selectAll("circle.project_cluster").style("visibility", function () {
-       return s>3 ? "hidden":"visible";
+    d3.selectAll(".point").style("r", function (d) {
+       return radius_unit/zoom.scale();;
     });
 
 
@@ -165,10 +199,7 @@ function move(t,s) {
     //adjust the country hover stroke map_width based on zoom level
     d3.selectAll(".country").style("stroke-map_width", 1.5 / s);
     d3.selectAll(".text").style("font-size", 20 / s);
-    circle.selectAll("circle")
-        .attr('r', function(d){
-            d.r/s;
-        });
+
 }
 
 var throttleTimer;
