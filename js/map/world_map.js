@@ -104,7 +104,6 @@ function draw_worldmap() {
             var mouse = d3.mouse(svg.node()).map(function (d) {
                 return parseInt(d);
             });
-            console.log("mouse ="+mouse);
             
             return tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
                     .html(d.properties.name);
@@ -192,10 +191,17 @@ function move(t,s) {
     zoom.translate(t);
     zoom.scale(s);
 
-    d3.selectAll(".point").style("r", function (d) {
-       return Math.sqrt(area_unit*1/(Math.PI*s));
+    d3.selectAll(".point").attr("r", function (d) {
+       return Math.sqrt(area_unit*d["projectNo"]/(Math.PI*s));
+    });
+
+    d3.selectAll(".cluster").attr("r", function (d) {
+        return Math.sqrt(area_unit*d["projectNo"]/(Math.PI*s));
     });
     
+    //cg_g.remove();
+    svg.selectAll(".zoomable").remove();
+
     
 
     //adjust the country hover stroke map_width based on zoom level

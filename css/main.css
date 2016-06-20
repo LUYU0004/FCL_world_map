@@ -74,8 +74,8 @@ padding-top: 7px;
 
 }
 
-#color_legend {
-    top: 350px;
+.legend {
+    bottom: 10px;
     left: 40px;
     margin: 5px 5px 0px 0px;
     padding:2px;

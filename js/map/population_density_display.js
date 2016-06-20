@@ -40,6 +40,7 @@ function load_DData(_category){
                                                 break;
 
         case "FCL Projects":        remove_layer();
+                                    draw_project_legend();
                                    generate_DistMatrix();//draw_points(); //
                                     
                                     //draw_circles();
@@ -182,7 +183,7 @@ function display_Density(cur_year){
                 var window_margin = 16;
                 var buffer = 5;
 
-                var tooltip_right = tooltip.select("#tooltip_country").node().getBoundingClientRect().width + left;//d3.select("#tooltip_country").node().getBoundingClientRect().right;
+                var tooltip_right = tooltip.node().getBoundingClientRect().width + left;//d3.select("#tooltip_country").node().getBoundingClientRect().right;
                 var window_right = innerWidth - window_margin - buffer;
 
                 if(tooltip_right > window_right){
@@ -193,7 +194,7 @@ function display_Density(cur_year){
 
                 }
 
-                var tooltip_height = d3.select("#tooltip_country").node().getBoundingClientRect().height;
+                var tooltip_height = tooltip.node().getBoundingClientRect().height;
 
                 var tooltip_bottom = top+tooltip_height;//d3.select("#tooltip_country").node().getBoundingClientRect().bottom;
 
@@ -218,7 +219,7 @@ function display_Density(cur_year){
  */
 function draw_legend(max_property) {
 
-    d3.selectAll("#color_legend").remove();
+    d3.selectAll(".legend").remove();
 
     var wFactor = 10,
         hFactor = 2;
@@ -243,7 +244,7 @@ function draw_legend(max_property) {
 
     var color_legend = body.append("div")
         .classed("extra_info",true)
-        .attr('id','color_legend');
+        .attr("class","legend");
 
     var svg = color_legend
         .attr("z-index", 40)

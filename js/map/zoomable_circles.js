@@ -45,6 +45,8 @@ function generate_DistMatrix(){
         });
 
         find_last_tier(matrix,100,1); // draw tier1
+
+
         SC.matrix = matrix;
     });
 
@@ -68,15 +70,18 @@ function addpoint(color_status, lat, lon, title,text, projectNo, imgNo,scale) {
     var color_scheme = ["#CCFF99","#00FF00","#0000FF","#FFFF00","#00FFFF" ,
         "#FF00FF","#C0C0C0","#FFFFF1","#780000 ","996633"];
     
-    gpoint.append("svg:circle")
+    gpoint.selectAll("circle")
+        .data([{"projectNo":projectNo}])
+        .enter()
+        .append("svg:circle")
         .attr("cx", x)
         .attr("cy", y)
         .attr("class", "point")
         .style("fill", function () {
             return color_scheme[color_status];
         }).style("opacity",0.4)
-        .attr("r", function () {
-            return Math.sqrt(projectNo*area_unit/Math.PI);
+        .attr("r", function (d) {
+            return Math.sqrt(d["projectNo"]*area_unit/Math.PI);
         })
         .on("mouseover", function () {
 
@@ -87,7 +92,7 @@ function addpoint(color_status, lat, lon, title,text, projectNo, imgNo,scale) {
 
             tooltip.attr("style", "right:" + (innerWidth-x*sc-left)+ "px;bottom:" +(innerHeight-y*sc-top)+ "px;visibility: visible")
                 .classed("tooltip_short",true)
-                .html("<div id='tooltip_holder'><div id='tooltip_button'>button</div><div id='pic_holder' class='Centerer'><img id='tooltip_pic' class='Centered' src='res/fcl_logo.png'></div>" +
+                .html("<div id='tooltip_holder' class='tooltip_short'><div id='tooltip_button'>button</div><div id='pic_holder' class='Centerer'><img id='tooltip_pic' class='Centered' src='res/fcl_logo.png'></div>" +
                     "<div id='tooltip_text'><b>" + title + "</b></div></div>");
 
             //add in picture for the project
@@ -98,7 +103,7 @@ function addpoint(color_status, lat, lon, title,text, projectNo, imgNo,scale) {
 
         })
        .on("mouseout", function () {
-        return tooltip.attr("style","visibility: hidden");
+        return tooltip.selectAll(".tooltip_short").attr("style","visibility: hidden");
     })
         .on("click",function () {
 
@@ -130,10 +135,11 @@ function addpoint(color_status, lat, lon, title,text, projectNo, imgNo,scale) {
                 if(height>300){
                     tooltip.attr("style", "right:" + (innerWidth-x*scale-left)+ "px;bottom:" +(innerHeight-y*scale-top)+ "px;visibility: visible;width:300px;height:300px")
                 }else{
-                    tooltip.attr("style", "right:" + (innerWidth-root_x*scale-left-left_adjust)+ "px;bottom:" +(innerHeight-root_y*scale-top-bottom_adjust)+ "px;visibility: visible;width:300px");
+                    tooltip.attr("style", "right:" + (innerWidth-x*scale-left)+ "px;bottom:" +(innerHeight-y*scale-top)+ "px;visibility: visible;width:300px");
                 }
             }
     });
+
 }
 
 
@@ -149,17 +155,20 @@ function add_zoomable_cluster(color_status, lat, lon, title,text, projectNo,scal
     var y = projection([lon, lat])[1];
     var color_scheme = ["#CCFF99","#00FF00","#0000FF","#FFFF00","#00FFFF" ,
         "#FF00FF","#C0C0C0","#FFFFF1","#780000 ","996633"];
-    var looptime = 0;
 
-    gpoint.append("svg:circle")
+
+    gpoint.selectAll("circle")
+        .data([clusterObj])
+        .enter()
+        .append("svg:circle")
         .attr("cx", x)
         .attr("cy", y)
         .attr("class", "cluster")
         .style("fill", function () {
             return color_scheme[color_status];
-        }).style("opacity",0.9)
-        .attr("r", function(){
-            return Math.sqrt(projectNo*area_unit/Math.PI);
+        }).style("opacity",0.7)
+        .attr("r", function(d){
+            return Math.sqrt(d["projectNo"]*area_unit/Math.PI);
         })
         .on("mouseover", function () {
 
@@ -174,7 +183,7 @@ function add_zoomable_cluster(color_status, lat, lon, title,text, projectNo,scal
                     "<div id='tooltip_text'><b>" +title+"</b><br><p>"+text+"</p></div></div>");})
 
         .on("mouseout", function () {
-            return tooltip.attr("style","visibility: hidden");
+            return tooltip.selectAll(".tooltip_short").attr("style","visibility: hidden");
     })
         .on("click",function () {
 
@@ -190,8 +199,7 @@ function add_zoomable_cluster(color_status, lat, lon, title,text, projectNo,scal
             tooltip.attr("style", "right:" + (innerWidth-x*sc-left)+ "px;bottom:" +(innerHeight-y*sc-top)+ "px;visibility: visible");
 
 
-            //d3.select(this).attr("style", "visibility: hidden");
-            svg.selectAll(".zoomable").remove();
+            //this.attr("style", "visibility: hidden");
             draw_circles(clusterObj);
 
         });
@@ -397,7 +405,7 @@ function draw_circles(root){
         .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
         .interpolate(d3.interpolateHcl);
 
-    diameter = Math.sqrt(root["projectNo"]*area_unit/Math.PI) *2;
+    diameter = Math.sqrt(root["projectNo"]*area_unit/(Math.PI*zoom.scale())) *2;
     var pack = d3.layout.pack()
         .padding(2)
         .size([diameter , diameter ])
@@ -414,6 +422,8 @@ function draw_circles(root){
 
     focus = root;
     var nodes = pack.nodes(root);
+
+
     circle = cg_g.selectAll("circle")  //svg
         .data(nodes)
         .enter()
@@ -474,9 +484,7 @@ function draw_circles(root){
 
         })
         .on("mouseout", function (d, i) {
-            if(d["name"]!="Cluster 6")
-                console.log("!!");
-            return tooltip.attr("style", "visibility: hidden;opacity:0;transition: opacity 1s;");
+            return tooltip.selectAll(".tooltip_short").attr("style", "visibility: hidden;opacity:0;transition: opacity 1s;");
         })
         .on("click", function (d) {
 
@@ -578,4 +586,68 @@ function zoomTo(v) {
     circle.attr("r", function (d) {
         return d.r * k;
     });
+}
+
+function draw_project_legend(){
+
+    d3.selectAll(".legend").remove();
+
+    var body = d3.select("#content_holder");
+
+    var project_legend = body.append("div")
+        .classed("extra_info",true)
+        .attr('class','legend');
+
+    var wFactor = 10,
+        hFactor = 2;
+
+    var wBox = map_width / wFactor,
+        hBox = map_height / hFactor;
+
+    var svg = project_legend
+        .attr("z-index", 40)
+        .append("svg")
+        .attr("width", wBox)
+        .attr("height", hBox)
+        .append("g");
+
+    var legend = svg
+        .append('g')  //svg.append('g')    //add the legend to extra_info.svg.g
+        .attr('width', wBox)
+        .attr('height', hBox);
+    
+    var wRect = wBox / (wFactor * 0.75);
+    var offsetText =  wRect / 2;
+    var tr = 'translate(' + offsetText + ',' + offsetText * 3 + ')';
+    var sg = legend.append('g')
+        .attr('transform', tr);
+    
+
+    var area = [5,10,25];
+
+    sg.selectAll('circle').data(area).enter().append('circle')
+        .attr("class","project_legend")
+        .attr('cx',wBox/2)//wBox/2)
+        .attr('cy', function (d, i) {
+            var y=hBox/6 *i+d;
+
+            return y;
+        }).attr('fill', function (d, i) {
+        return '#C0C0C0';
+    }).attr('r',function (d,i) {
+        return Math.sqrt(d*area_unit/(Math.PI*zoom.scale()));
+    }).attr("opacity",0.7);
+
+    sg.selectAll('text').data(area).enter().append("text")
+        .attr("dx",function(d){
+            var x_adjust = d>=10? 7:4;
+            return wBox/2-x_adjust;
+        })
+        .attr("dy", function(d,i){return (hBox/6 *i+d+4);})
+        .text(function(d){return d});
+
+    sg.append("text")
+        .attr("dx",15)
+        .attr("dy", function(d){return (hBox/6 *3+30);})
+        .text("Project Number");
 }
