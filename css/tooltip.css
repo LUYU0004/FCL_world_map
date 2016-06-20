@@ -1,8 +1,8 @@
 
 div.tooltip {
     color: #222;
+    padding:15px;
     background: #ffffff;
-    padding: .5em;
     text-shadow: #f5f5f5 0 1px 0;
     border-radius: 2px;
     box-shadow: 0px 0px 2px 0px #a6a6a6;
@@ -10,9 +10,38 @@ div.tooltip {
     position: absolute;
     z-index: 30;
     overflow: scroll;
+    vertical-align: middle;
 }
 
+#pic_holder{
+    vertical-align: middle;
+    border: 1px solid #b4b4b4;
+}
 
+#tooltip_pic{
+    width:150px;
+    height:150px;
+}
+
+#tooltip_text{
+    padding-top:20px;
+    text-align: left;
+    vertical-align: middle;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.tooltip_short{
+    width: 150px;
+    font-size: 14px;
+}
+
+.text_title{
+    font-size: 15px;
+}
+
+p{
+    font-size: 14px;
+}
 .Centerer
 {
     display: inline-block;

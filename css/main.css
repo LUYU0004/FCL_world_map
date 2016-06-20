@@ -75,14 +75,10 @@ padding-top: 7px;
 }
 
 #color_legend {
-    top: 400px;
+    top: 350px;
     left: 40px;
     margin: 5px 5px 0px 0px;
     padding:2px;
-    border: 1px solid #010101;
-    border-radius:5px;
-    width:200px;
-    height: 250px;
     z-index: 10;
     position: absolute;
 

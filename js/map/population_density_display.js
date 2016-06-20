@@ -56,6 +56,7 @@ function display_Density(cur_year){
 
     var densityMultiplier = 1;
 
+
     switch(catNo){
         case 1: break;
         case 2: densityMultiplier = 1000;
@@ -98,74 +99,115 @@ function display_Density(cur_year){
 
     //country.on("mousemove",null);
 
-    countries.on("mousemove", function (d,i) {
+    countries
+        .on("mouseover",function (d) {
+            var mouse = d3.mouse(svg.node()).map(function (d) {
+                return parseInt(d);
+            });
 
-        var mouse = d3.mouse(svg.node()).map(function (d) {
-            return parseInt(d);
-        });
 
-        var name = d.properties.name;
-        var country_properties = find_country_property(name);
-        var year_property = country_properties[0][cur_year];
-        var country_size = find_country_size(name);
-        var cur_country_size = country_size[0][cur_year];
+            var name = d.properties.name;
+            var country_properties = find_country_property(name);
+            var year_property = country_properties[0][cur_year];
+            var country_size = find_country_size(name);
+            var cur_country_size = country_size[0][cur_year];
 
-        if (country_properties.length > 0 && country_size.length > 0) {
+            if (country_properties.length > 0 && country_size.length > 0) {
 
-            var formatted_property = formatNum(year_property);
-            var density = year_property / cur_country_size * densityMultiplier;
-            var density_unit;
-            switch(catNo){
-                case 1: cur_country_size = cur_country_size + ' (sq.km)';
-                    density_unit = ' people per (sq.km)';
-                    break;
-                case 2: cur_country_size = cur_country_size +' people';
-                    density_unit = ' tons per person';
-                    break;
-                default: break;
-            }
+                var formatted_property = formatNum(year_property);
+                var density = year_property / cur_country_size * densityMultiplier;
+                var density_unit;
+                switch(catNo){
+                    case 1: cur_country_size = cur_country_size + ' (sq.km)';
+                        density_unit = ' people per (sq.km)';
+                        break;
+                    case 2: cur_country_size = cur_country_size +' people';
+                        density_unit = ' tons per person';
+                        break;
+                    default: break;
+                }
 
-            tooltip
-                .html("<div id='tooltip_country'>|<b>"+d.properties.name + "</b><br>|<b>" + category + ":</b>"
-                    + formatNum(year_property) + "<br>|<b>Size:</b>" + cur_country_size + "<br>|<b>Density:</b>"
-                    + density+density_unit+"</div>");
+                tooltip
+                    .html("<div id='tooltip_country'>|<b>"+d.properties.name + "</b><br>|<b>" + category + ":</b>"
+                        + formatNum(year_property) + "<br>|<b>Size:</b>" + cur_country_size + "<br>|<b>Density:</b>"
+                        + density+density_unit+"</div>");
 
-            if(d.id ==262)
-                console.log("!!!!");
+                var left_adjust = zoom.translate()[0];
+                var top_adjust = zoom.translate()[1];
+                var scale = zoom.scale();
 
-            var left = mouse[0] + offsetL;
-             var top = mouse[1] + offsetT;
-             var window_margin = 16;
-             var buffer = 5;
+                var left = mouse[0]*scale + offsetL+left_adjust;
+                var top = mouse[1]*scale + offsetT+top_adjust;
+                var window_margin = 16;
+                var buffer = 5;
 
-             var tooltip_right = d3.select("#tooltip_country").node().getBoundingClientRect().width + left;//d3.select("#tooltip_country").node().getBoundingClientRect().right;
-             var window_right = window.innerWidth - window_margin - buffer;
+               /* var tooltip_right = d3.select("#tooltip_country").node().getBoundingClientRect().width + left;//d3.select("#tooltip_country").node().getBoundingClientRect().right;
+                var window_right = innerWidth - window_margin - buffer;
 
-             if(tooltip_right > window_right){
+                if(tooltip_right > window_right){
 
-                var tooltip_Width = 275;
+                    var tooltip_Width = 275;
 
-                left = mouse[0]-tooltip_Width-offsetL  ;
+                    left = mouse[0]-tooltip_Width-offsetL  ;
 
-             }
+                }
 
-            var tooltip_height = d3.select("#tooltip_country").node().getBoundingClientRect().height;
+                var tooltip_height = d3.select("#tooltip_country").node().getBoundingClientRect().height;
 
                 var tooltip_bottom = top+tooltip_height;//d3.select("#tooltip_country").node().getBoundingClientRect().bottom;
 
-                 if(tooltip_bottom> (window.innerHeight-window_margin)){
-                     //console.log("2  mouse[1]="+mouse[1]+"  tooltip_bottom="+tooltip_bottom);
+                if(tooltip_bottom> (window.innerHeight-window_margin)){
                     top = mouse[1]-tooltip_height-offsetT;
-                    //console.log("top="+top);
-             }
+                }*/
 
-             tooltip.attr("style","width:"+ tooltip_Width
-             +"px; left:"+ left+"px;top:"+top+"px;visibility: visible;");
+                return tooltip.attr("style", "right:"+(innerWidth - left)+"px;bottom:"+(innerHeight - top)+"px;visibility: visible;");
 
-            //tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
+            }else{
+                return tooltip.attr("style", "right:" + (innerWidth-mouse[0] - offsetL) + "px;bottom:" + (innerHeight - mouse[1] - offsetT) + "px;visibility:visible")
+                    .html(d.properties.name);
+            }
+        })
+        .on("mousemove", function (d,i) {
 
-        }else{tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
-            .html(d.properties.name);}
+            var left_adjust = zoom.translate()[0];
+            var top_adjust = zoom.translate()[1];
+            var scale = zoom.scale();
+            
+            var mouse = d3.mouse(svg.node()).map(function (d) {
+                return parseInt(d);
+            });
+
+                var left = mouse[0]*scale + offsetL+left_adjust;
+                var top = mouse[1]*scale + offsetT+top_adjust;
+                var window_margin = 16;
+                var buffer = 5;
+
+                var tooltip_right = tooltip.select("#tooltip_country").node().getBoundingClientRect().width + left;//d3.select("#tooltip_country").node().getBoundingClientRect().right;
+                var window_right = innerWidth - window_margin - buffer;
+
+                if(tooltip_right > window_right){
+
+                    var tooltip_Width = 275;
+
+                    left = mouse[0]-tooltip_Width-offsetL  ;
+
+                }
+
+                var tooltip_height = d3.select("#tooltip_country").node().getBoundingClientRect().height;
+
+                var tooltip_bottom = top+tooltip_height;//d3.select("#tooltip_country").node().getBoundingClientRect().bottom;
+
+                if(tooltip_bottom> (window.innerHeight-window_margin)){
+                    top = mouse[1]-tooltip_height-offsetT;
+                }
+
+                return tooltip.attr("style","left:"+ left+"px;top:"+top+"px;visibility: visible;");
+
+
+
+    }).on("mouseout", function (d, i) {
+        looptime = 0;
+        return tooltip.attr("style", "visibility: hidden");
     });
 
 }
@@ -187,7 +229,7 @@ function draw_legend(max_property) {
 
     var wRect = wBox / (wFactor * 0.75),
         offsetText = wRect / 2,
-        offsetY = map_height - hBox * 1,//0.9
+        offsetY = map_height - hBox * 2,//0.9
         tr = 'translate(' + offsetText + ',' + offsetText * 3 + ')';
 
     var steps = color_split.length,
@@ -197,12 +239,24 @@ function draw_legend(max_property) {
 
     var label_height = 15;
 
-    var legend = svg.append('g')  //svg.append('g')    //add the legend to extra_info.svg.g
-        .attr('class', "extra_info")
-        .attr('id',"color_legend")
+    var body = d3.select("#content_holder");
+
+    var color_legend = body.append("div")
+        .classed("extra_info",true)
+        .attr('id','color_legend');
+
+    var svg = color_legend
+        .attr("z-index", 40)
+        .append("svg")
+        .attr("width", wBox+20)
+        .attr("height", hBox)
+        .append("g");
+
+    var legend = svg
+         .append('g')  //svg.append('g')    //add the legend to extra_info.svg.g
         .attr('width', wBox)
-        .attr('height', hBox)
-        .attr('transform', 'translate(20,' + offsetY + ')');
+        .attr('height', hBox);
+
 
     /*draw dot legend
     var dot_legend = legend.append('g')
@@ -346,7 +400,6 @@ function draw_time_slider(){
     });
 
 }
-
 
 function find_country_property(country_name) {
 

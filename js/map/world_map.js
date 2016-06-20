@@ -98,7 +98,8 @@ function draw_worldmap() {
 
 
     
-    country.on("mouseover", function(){ return tooltip.attr("style","visibility: visible;borderColor: #F5F5DC");})
+    country.on("mouseover", function(){ 
+        return tooltip.attr("style","visibility: visible;borderColor: #F5F5DC");})
         .on("mousemove", function (d,i) {
             var mouse = d3.mouse(svg.node()).map(function (d) {
                 return parseInt(d);
@@ -132,6 +133,7 @@ function move(t,s) {
     if(t ==undefined || s== undefined){
         s = d3.event.scale ;
         t = d3.event.translate;
+
     }
 
     var tier1_scale = 2;
@@ -190,11 +192,11 @@ function move(t,s) {
     zoom.translate(t);
     zoom.scale(s);
 
-    d3.selectAll(".point").style("r", function (d) {
-       return radius_unit/zoom.scale();;
+    d3.selectAll("circle").style("r", function (d) {
+       return Math.sqrt(area_unit*1/(Math.PI*s));
     });
-
-
+    
+    
 
     //adjust the country hover stroke map_width based on zoom level
     d3.selectAll(".country").style("stroke-map_width", 1.5 / s);

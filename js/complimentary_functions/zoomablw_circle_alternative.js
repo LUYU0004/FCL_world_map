@@ -627,3 +627,197 @@ function draw_tiers(){
     });
 
 }
+
+
+/*find tiers accroding to given distance*/
+// 55 projects, index 0-54
+function find_tier(matrix, tier_range, scale){
+
+    var tier_status=[];// 1 indicates the corresponding project is included in tier1 already
+    var check_status = []; //1 indicates checked alr for neighbours
+    var stack = [];
+    var neighbours = [];
+    var value;
+
+
+    //to create a neighbour matrix holding neighbours to each project
+    for(var index =0;index<SC.projectNo;index++){
+
+        neighbours.push([]);
+        for(var i=0; i<SC.projectNo;i++){
+            value = matrix[index][i];
+            if(value<=tier_range && index !=i){ //index != i  to avoid same project distance
+                neighbours[index].push(i);
+            }
+        }
+    }
+
+    //to classify projects into cluster
+    for (var j=0;j<SC.projectNo;j++){
+        tier_status.push(0);
+        check_status.push(0);
+
+    }
+
+
+    var first_ofstack;
+    var stack_length = 0;
+    var neighbour_length;
+    var neighbour_No;
+    var looptime = 0;
+    var clusterIndex = 1;
+    var clusterNumber = [];
+    var cluster_aver_lat = [];
+    var cluster_aver_lon = [];
+
+    clusterNumber.push(0,0);
+    cluster_aver_lat.push(0);
+    cluster_aver_lon.push(0);
+
+    for(index = 0;index<SC.projectNo;index++){
+        if(check_status[index]==0){
+            if(looptime>1) {
+                clusterIndex++;
+                clusterNumber.push(0);
+                cluster_aver_lat.push(0);
+                cluster_aver_lon.push(0);
+            }
+            looptime =0;
+            stack.push(index);
+            stack_length++;
+
+            while(stack_length > 0){
+                looptime++;
+                first_ofstack = stack.shift();
+                stack_length--;
+
+                if(check_status[first_ofstack] ==0){
+                    check_status[first_ofstack] = 1;
+                    neighbour_length =neighbours[first_ofstack].length;
+
+                    if( neighbour_length> 0){
+                        if(tier_status[first_ofstack]==0) {
+                            tier_status[first_ofstack] = clusterIndex;
+                            clusterNumber[clusterIndex]++;
+                        }
+
+                        for(i=0;i<neighbour_length;i++){
+                            neighbour_No = neighbours[first_ofstack][i];
+                            stack.push(neighbour_No);
+                            stack_length++;
+                            if(tier_status[first_ofstack]==0) {
+                                tier_status[neighbour_No] = clusterIndex;
+                                clusterNumber[clusterIndex]++;}
+                        }
+
+                    }
+                }
+
+            }
+
+        }
+
+    }
+    clusterNumber.pop();
+
+    var clusters = [];
+    var clusterObj = {};
+    var clusterCollection = [];
+
+    var projects = SC.projects;
+    var project ;
+
+    for(i=0;i<clusterNumber.length;i++){
+        clusters.push([]);
+
+    }
+
+    //sort projects in tier1_status according to cluster number, clusters[0] collects all projects with no cluster
+    for(i=0;i< SC.projectNo;i++){
+        index = tier_status[i];
+        clusters[index].push(i+1); //represents actual project numbers, from 1 to 55
+        project = projects[i];
+        cluster_aver_lat[index] += Number(project["latitude"]);
+        cluster_aver_lon[index] += Number(project["longitude"]);
+    }
+
+
+    //add in cluster objects
+    var projectNo ;
+    var name;
+    var text;
+    var clusterSort = [];
+
+    for(i=1;i<clusterNumber.length;i++){
+        projectNo = clusterNumber[i];
+        cluster_aver_lat[i] = cluster_aver_lat[i]/projectNo;
+        cluster_aver_lon[i] = cluster_aver_lon[i]/projectNo;
+
+        clusterSort.push([i,projectNo]);
+    }
+    clusterSort.sort(function(a, b) {return b[1]-a[1];});
+
+    //draw clusters
+    for(i=0; i< clusterSort.length;i++){
+        clusterIndex = clusterSort[i][0];
+        projectNo = clusterSort[i][1];
+        name = "Cluster "+clusterIndex;
+        text = "Project Number="+projectNo;
+        addcluster(6,cluster_aver_lat[clusterIndex],cluster_aver_lon[clusterIndex],name,text,projectNo,scale);
+    }
+
+    //draw non-clustered projects
+    var length = clusters[0].length;
+    var projectIndex;
+    for (i=0;i<length;i++){
+        projectIndex = clusters[0][i]-1;
+        project = projects[projectIndex];
+        addpoint(2,project["latitude"],project["longitude"],project["name"],project["text"],1,projectIndex+1,scale);
+    }
+
+}
+
+//function to add clusters of projects
+function addcluster(color_status, lat, lon, title,text, radius,scale) {
+
+    if(radius == undefined) radius = 2;
+    if(color_status==undefined) color_status = 6;
+
+
+    var gpoint = g.append("g").attr("class","projects extra_info");
+    var x = projection([lon,lat])[0];
+    var y = projection([lon, lat])[1];
+    var color_scheme = ["#CCFF99","#00FF00","#0000FF","#FFFF00","#00FFFF" ,
+        "#FF00FF","#C0C0C0","#FFFFF1","#780000 ","996633"];
+
+    gpoint.append("svg:circle")
+        .attr("cx", x)
+        .attr("cy", y)
+        .attr("class", "cluster")
+        .style("fill", function () {
+            return color_scheme[color_status];
+        }).style("opacity",0.4)
+        .attr("r", radius_unit*radius)
+        .on("mouseover", function () {
+
+            var left = zoom.translate()[0];
+            var top= zoom.translate()[1];
+            var sc = zoom.scale();
+
+
+            tooltip.attr("style", "right:" + (innerWidth-x*sc-left)+ "px;bottom:" +(innerHeight-y*sc-top)+ "px;visibility: visible")
+                .html("<div id='tooltip_holder'><div id='tooltip_text' ><b>"
+                    +title+"</b><br><p>"+text+"</p></div></div>");
+        })
+        .on("mouseout", function () {
+            return tooltip.attr("style","visibility: hidden");
+        })
+        .on("click",function () {
+            var x =   innerWidth/2 - projection([lon,lat])[0] *scale ;
+            var y = innerHeight/2 - projection([lon,lat])[1] *scale;
+            move([x,y],scale);
+
+        });
+
+
+}
