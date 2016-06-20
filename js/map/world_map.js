@@ -192,7 +192,7 @@ function move(t,s) {
     zoom.translate(t);
     zoom.scale(s);
 
-    d3.selectAll("circle").style("r", function (d) {
+    d3.selectAll(".point").style("r", function (d) {
        return Math.sqrt(area_unit*1/(Math.PI*s));
     });
     
