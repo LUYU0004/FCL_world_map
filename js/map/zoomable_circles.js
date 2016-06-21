@@ -54,7 +54,7 @@ function generate_DistMatrix(){
 }
 
 var radius_unit = 5;
-var area_unit =100;
+var area_unit =200;
 //function to add points and text to the map (used in plotting capitals)
 function addpoint(color_status, lat, lon, title,text, projectNo, imgNo,scale) {
 
@@ -74,12 +74,13 @@ function addpoint(color_status, lat, lon, title,text, projectNo, imgNo,scale) {
         .data([{"projectNo":projectNo}])
         .enter()
         .append("svg:circle")
+        .style("stroke","#000")
+        .style("stroke-width", "0.5px")
         .attr("cx", x)
         .attr("cy", y)
         .attr("class", "point")
-        .style("fill", function () {
-            return color_scheme[color_status];
-        }).style("opacity",0.4)
+        .style("fill", 'yellow'//function () {return color_scheme[color_status];}
+        ).style("opacity",0.7)
         .attr("r", function (d) {
             return Math.sqrt(d["projectNo"]*area_unit/Math.PI);
         })
@@ -164,9 +165,10 @@ function add_zoomable_cluster(color_status, lat, lon, title,text, projectNo,scal
         .attr("cx", x)
         .attr("cy", y)
         .attr("class", "cluster")
-        .style("fill", function () {
-            return color_scheme[color_status];
-        }).style("opacity",0.7)
+        .style("stroke","#000")
+        .style("stroke-width", '0.5px')
+        .style("fill", 'yellow'//function () {return color_scheme[color_status];}
+        ).style("opacity",0.4)
         .attr("r", function(d){
             return Math.sqrt(d["projectNo"]*area_unit/Math.PI);
         })
@@ -180,7 +182,7 @@ function add_zoomable_cluster(color_status, lat, lon, title,text, projectNo,scal
             tooltip.attr("style", "right:" + (innerWidth-x*sc-left)+ "px;bottom:" +(innerHeight-y*sc-top)+ "px;visibility: visible")
                 .classed("tooltip_short",false)
                 .html("<div id='tooltip_holder'>" +
-                    "<div id='tooltip_text'><b>" +title+"</b><br><p>"+text+"</p></div></div>");})
+                    "<div id='tooltip_text'>"+text+"</div></div>");})
 
         .on("mouseout", function () {
             return tooltip.selectAll(".tooltip_short").attr("style","visibility: hidden");
@@ -343,7 +345,7 @@ function find_last_tier(matrix, tier_range,scale){
         clusterIndex = clusterSort[i][0];
         projectNo = clusterSort[i][1];
         name = "Cluster "+clusterIndex;
-        text ="Project Number="+projectNo;
+        text ="Number of Projects : "+projectNo;
         clusterObj["name"] = name;
         clusterObj["text"] = text;
         clusterObj["longitude"] = cluster_aver_lon[clusterIndex];
@@ -405,7 +407,7 @@ function draw_circles(root){
         .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
         .interpolate(d3.interpolateHcl);
 
-    diameter = Math.sqrt(root["projectNo"]*area_unit/(Math.PI*zoom.scale())) *2;
+    diameter = Math.sqrt(root["projectNo"]*area_unit/(Math.PI))/zoom.scale() *2;
     var pack = d3.layout.pack()
         .padding(2)
         .size([diameter , diameter ])
@@ -590,14 +592,14 @@ function zoomTo(v) {
 
 function draw_project_legend(){
 
-    d3.selectAll(".legend").remove();
+   // d3.selectAll(".legend").remove();
 
     var body = d3.select("#content_holder");
 
     var project_legend = body.append("div")
         .attr('class','legend project_layer');
 
-    var wFactor = 10,
+    var wFactor = 8,
         hFactor = 2;
 
     var wBox = map_width / wFactor,
@@ -622,22 +624,23 @@ function draw_project_legend(){
         .attr('transform', tr);
     
 
-    var area = [5,10,25];
+    var area = [5,10,20];
 
     sg.selectAll('circle').data(area).enter().append('circle')
         .attr("class","project_legend")
         .attr('cx',wBox/2)//wBox/2)
+        .style("stroke","#000")
+        .style("stroke-width","0.5px")
         .attr('cy', function (d, i) {
             var y=hBox/6 *i+d;
 
             return y;
-        }).attr('fill', function (d, i) {
-        return '#C0C0C0';
-    }).attr('r',function (d,i) {
+        }).attr('fill', 'yellow'//function (d, i) {return '#C0C0C0';}
+    ).attr('r',function (d,i) {
         var s = zoom.scale();
         console.log("legend_scale = "+s);
-        return Math.sqrt(s*d*area_unit/(Math.PI));
-    }).attr("opacity",0.7);
+        return Math.sqrt(d*area_unit/(Math.PI));
+    }).attr("opacity",0.5);
 
     sg.selectAll('text').data(area).enter().append("text")
         .attr("dx",function(d){
@@ -650,5 +653,5 @@ function draw_project_legend(){
     sg.append("text")
         .attr("dx",15)
         .attr("dy", function(d){return (hBox/6 *3+30);})
-        .text("Project Number");
+        .text("Number of Project");
 }

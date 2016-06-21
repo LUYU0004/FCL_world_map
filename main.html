@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/slider.css"/>
     <link rel="stylesheet" href="css/zoomable_circles.css"/>
     <link rel="stylesheet" href="css/tooltip.css"/>
+    <link rel="stylesheet" href="css/sliding_menuBar.css"/>
 
     <script src="//d3js.org/d3.v3.min.js"></script>
     <script src="js/lib/topojson.v1.min.js"></script>
@@ -23,12 +24,13 @@
 
     function newInput(){
 
-            this.classList.toggle("selectedBtn");
-            var res  = d3.select(this).classed("selectedBtn");
-
+        //d3.selectAll(".navg_button").classed("selectedBtn",false);
+        if(this.id){
             switch(this.id){
                 case 'pop_densityBtn':
                             category = "Population Density";
+                             this.classList.toggle("selectedBtn");
+                             var res  = d3.select(this).classed("selectedBtn");
 
                         if(res){
                             pop_layer = true;
@@ -38,19 +40,22 @@
                             remove_layer('.pop_layer');
                         }
                     break;
-                case 'co2_emissionBtn':
-                        category = "CO2 Emission";
+                case 'co2_emissionBtn': category = "CO2 Emission";
+                    this.classList.toggle("selectedBtn");
+                    var res  = d3.select(this).classed("selectedBtn");
 
                     if(res){
                         co2_layer = true;
                         load_DData(category);
                     }else{
-                        co2_layer = false;
+                        pop_layer = false;
                         remove_layer('.co2_layer');
                     }
                     break;
-                case  'fcl_projectsBtn':
-                    category = "FCL Projects";
+                case  'fcl_projectsBtn': category = "FCL Projects";
+
+                    this.classList.toggle("selectedBtn");
+                    var res  = d3.select(this).classed("selectedBtn");
 
                     if(res){
                         project_layer = true;
@@ -59,36 +64,54 @@
                         project_layer = false;
                         remove_layer('.project_layer');
                     }
-
                     break;
                 default: break;
             }
 
+
+            //d3.select(this).classed("selectedBtn",true);
+        }else{
+            d3.select("#pop_densityBtn").classed("selectedBtn",true);
+        }
+
     }
+
+    /* Set the width of the side navigation to 250px */
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "200px";
+    }
+
+    /* Set the width of the side navigation to 0 */
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    }
+
 
 </script>
 
 <div id="content_holder">
+    <div ><img id="fcl_logo" src="res/fcl_logo.png" alt="fcl_logo"></div>
     <div id="menuBar" style="float:right;">
-        <div ><img id="fcl_logo" src="res/fcl_logo.png" alt="fcl_logo"></div>
         <div id="navg_bar">
-            <div class="navg_button" id="pop_densityBtn">  Population Density
-                <div class = 'opacity_bar'>opacity bar1</div></div>
+            <a class="navg_button" id="pop_densityBtn">  Population Density</a>
 
-            <div class="navg_button" id="co2_emissionBtn">  CO2 Emission Per Capita
-                <div class = 'opacity_bar'>opacity bar2</div></div>
+            <a class="navg_button" id="co2_emissionBtn">  CO2 Emission Per Capita</a>
 
-            <div class="navg_button" id="fcl_projectsBtn">  FCL Projects
-                <div class = 'opacity_bar'>opacity bar3</div></div>
         </div>
-       <!-- <div id="navg_bar">
-            <div class="navg_button" id="pop_densityBtn">  Population Density</div>
-            <div class="navg_button" id="co2_emissionBtn">  CO2 Emission Per Capita</div>
-            <div class="navg_button" id="fcl_projectsBtn">  FCL Projects</div>
-        </div>-->
-
 
     </div>
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#" id="fcl_projectsBtn"> FCL Projects</a>
+        <a href="#">Global Network</a>
+        <a href="#">Staff</a>
+        <a href="http://www.fcl.ethz.ch/" target="_blank">Website</a>
+    </div>
+
+    <!-- Use any element to open the sidenav -->
+    <span id ="openBtn" onclick="openNav()">F<br>C<br>L</span>
+
 
     <div id="map_container">
     </div>

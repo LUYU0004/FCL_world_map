@@ -2,12 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5cd72448-d8fc-45b4-afc0-c979ee3734fe" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/sliding_menuBar.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/main.css" afterPath="$PROJECT_DIR$/css/main.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/tooltip.css" afterPath="$PROJECT_DIR$/css/tooltip.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/map/population_density_display.js" afterPath="$PROJECT_DIR$/js/map/population_density_display.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/map/world_map.js" afterPath="$PROJECT_DIR$/js/map/world_map.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/map/zoomable_circles.js" afterPath="$PROJECT_DIR$/js/map/zoomable_circles.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/slider/timer_slider.js" afterPath="$PROJECT_DIR$/js/slider/timer_slider.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.html" afterPath="$PROJECT_DIR$/main.html" />
     </list>
     <ignored path="FCL Explantory Visualization.iws" />
@@ -32,32 +33,8 @@
       <file leaf-file-name="main.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="352">
-              <caret line="59" column="55" selection-start-line="59" selection-start-column="55" selection-end-line="59" selection-end-column="55" />
-              <folding>
-                <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="world_map.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/js/map/world_map.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="211">
-              <caret line="194" column="35" selection-start-line="194" selection-start-column="35" selection-end-line="194" selection-end-column="35" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="population_density_display.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/js/map/population_density_display.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="656">
-              <caret line="121" column="0" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
+            <state relative-caret-position="79">
+              <caret line="93" column="32" selection-start-line="93" selection-start-column="32" selection-end-line="93" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -66,24 +43,42 @@
       <file leaf-file-name="zoomable_circles.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/map/zoomable_circles.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="183">
-              <caret line="632" column="21" selection-start-line="632" selection-start-column="21" selection-end-line="632" selection-end-column="21" />
+            <state relative-caret-position="4035">
+              <caret line="643" column="0" selection-start-line="643" selection-start-column="0" selection-end-line="643" selection-end-column="0" />
               <folding>
                 <element signature="e#42#98#0" expanded="false" />
-                <element signature="e#20058#20117#0" expanded="false" />
-                <element signature="e#20158#20239#0" expanded="false" />
-                <element signature="e#20268#20306#0" expanded="false" />
-                <marker date="1466477240000" expanded="true" signature="18480:18502" ph="..." />
+                <element signature="n#!!block;n#generate_DistMatrix#0" expanded="false" />
+                <element signature="n#!!block;n#addpoint#0" expanded="false" />
+                <element signature="n#!!block;n#add_zoomable_cluster#0" expanded="false" />
+                <element signature="n#!!block;n#find_last_tier#0" expanded="false" />
+                <element signature="e#20174#20233#0" expanded="false" />
+                <element signature="e#20274#20355#0" expanded="false" />
+                <element signature="e#20384#20422#0" expanded="false" />
+                <marker date="1466496465000" expanded="true" signature="18596:18618" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="zoomable_circles.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/css/zoomable_circles.css">
+      <file leaf-file-name="main.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/css/main.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+            <state relative-caret-position="240">
+              <caret line="79" column="37" selection-start-line="79" selection-start-column="37" selection-end-line="79" selection-end-column="37" />
+              <folding>
+                <element signature="e#17#189#0" expanded="false" />
+                <element signature="e#2523#2705#0" expanded="false" />
+                <element signature="e#2716#2740#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sliding_menuBar.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/css/sliding_menuBar.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="45">
+              <caret line="11" column="10" selection-start-line="11" selection-start-column="10" selection-end-line="11" selection-end-column="10" />
               <folding />
             </state>
           </provider>
@@ -92,8 +87,28 @@
       <file leaf-file-name="tooltip.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/css/tooltip.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="23" column="1" selection-start-line="23" selection-start-column="1" selection-end-line="23" selection-end-column="1" />
+            <state relative-caret-position="30">
+              <caret line="2" column="16" selection-start-line="2" selection-start-column="16" selection-end-line="2" selection-end-column="16" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="timer_slider.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/js/slider/timer_slider.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="735">
+              <caret line="107" column="47" selection-start-line="107" selection-start-column="47" selection-end-line="107" selection-end-column="47" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="slider.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/css/slider.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="12" column="17" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -149,14 +164,15 @@
         <option value="d3js.org/d3.v3.min.js" />
         <option value="$PROJECT_DIR$/data/fcl/1. Projects.csv" />
         <option value="$PROJECT_DIR$/js/complimentary_functions/zoomablw_circle_alternative.js" />
-        <option value="$PROJECT_DIR$/css/tooltip.css" />
         <option value="$PROJECT_DIR$/css/zoomable_circles.css" />
         <option value="$PROJECT_DIR$/js/slider/timer_slider.js" />
-        <option value="$PROJECT_DIR$/css/main.css" />
-        <option value="$PROJECT_DIR$/main.html" />
-        <option value="$PROJECT_DIR$/js/map/world_map.js" />
-        <option value="$PROJECT_DIR$/js/map/population_density_display.js" />
+        <option value="$PROJECT_DIR$/css/tooltip.css" />
         <option value="$PROJECT_DIR$/js/map/zoomable_circles.js" />
+        <option value="$PROJECT_DIR$/js/map/population_density_display.js" />
+        <option value="$PROJECT_DIR$/js/map/world_map.js" />
+        <option value="$PROJECT_DIR$/main.html" />
+        <option value="$PROJECT_DIR$/css/main.css" />
+        <option value="$PROJECT_DIR$/css/sliding_menuBar.css" />
       </list>
     </option>
   </component>
@@ -554,7 +570,7 @@
       <workItem from="1466132306158" duration="12813000" />
       <workItem from="1466150267226" duration="10762000" />
       <workItem from="1466400347557" duration="10656000" />
-      <workItem from="1466421063097" duration="5712000" />
+      <workItem from="1466421063097" duration="15564000" />
     </task>
     <task id="LOCAL-00001" summary="Minor adjustments&#10;&#10;(1) logo display adjustment&#10;(2) Clear redundant rect in world_map.js&#10;    - class = legend_bg, legend_bar">
       <created>1463544024303</created>
@@ -787,11 +803,18 @@
       <option name="project" value="LOCAL" />
       <updated>1466409345482</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="Modifications:&#10;(1) Separate different layers, and enable them to exist at the same time&#10;(2) adjust the legend of projects according to zoom lvl&#10;">
+      <created>1466477416067</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1466477416067</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="578512000" />
+    <option name="totallyTimeSpent" value="588364000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -808,14 +831,14 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32962668" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32876712" sideWeight="0.49722" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32650274" sideWeight="0.5345512" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32650274" sideWeight="0.46544877" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32739726" sideWeight="0.47418585" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32739726" sideWeight="0.5258141" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32954547" sideWeight="0.4875" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2494043" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32876712" sideWeight="0.49722" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36612022" sideWeight="0.45274028" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3657534" sideWeight="0.44956315" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32954547" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -862,7 +885,6 @@
       <path value="$PROJECT_DIR$" />
       <path value="$PROJECT_DIR$/FCL_Explantory_Visualization" />
     </ignored-roots>
-    <MESSAGE value="try to separate the layers&#10;Layer 1: static world map with country name&#10;Layer 2: population density with time scale" />
     <MESSAGE value="Changes:&#10;(1) create a separate basic world map &#10;(2) The layer of population density is not working properly" />
     <MESSAGE value="legend separated,&#10;&#10;time_slider go wrong" />
     <MESSAGE value="backup for adding new CO2 Emission data" />
@@ -887,14 +909,15 @@
     <MESSAGE value="Modification on &#10;FCL_Project layer ---&gt; add in zoomable feature" />
     <MESSAGE value="Modifications;&#10;(1) Adjust the tooltip positions&#10;(2) Adjust points size on zoom&#10;" />
     <MESSAGE value="Final backup before implementing expandable bars &amp; time scroll&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Final backup before implementing expandable bars &amp; time scroll&#10;" />
+    <MESSAGE value="Modifications:&#10;(1) Separate different layers, and enable them to exist at the same time&#10;(2) adjust the legend of projects according to zoom lvl&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Modifications:&#10;(1) Separate different layers, and enable them to exist at the same time&#10;(2) adjust the legend of projects according to zoom lvl&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint type="javascript">
           <url>file://$PROJECT_DIR$/js/map/population_density_display.js</url>
-          <line>321</line>
+          <line>319</line>
           <option name="timeStamp" value="116" />
         </line-breakpoint>
         <line-breakpoint type="javascript">
@@ -903,48 +926,43 @@
         </line-breakpoint>
         <line-breakpoint type="javascript">
           <url>file://$PROJECT_DIR$/js/map/world_map.js</url>
-          <line>167</line>
+          <line>169</line>
           <option name="timeStamp" value="630" />
         </line-breakpoint>
         <line-breakpoint type="javascript">
           <url>file://$PROJECT_DIR$/js/map/zoomable_circles.js</url>
-          <line>511</line>
+          <line>513</line>
           <option name="timeStamp" value="677" />
         </line-breakpoint>
         <line-breakpoint type="javascript">
           <url>file://$PROJECT_DIR$/js/map/zoomable_circles.js</url>
-          <line>515</line>
+          <line>517</line>
           <option name="timeStamp" value="678" />
         </line-breakpoint>
         <line-breakpoint type="javascript">
           <url>file://$PROJECT_DIR$/js/map/zoomable_circles.js</url>
-          <line>553</line>
+          <line>555</line>
           <option name="timeStamp" value="686" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/js/map/zoomable_circles.js</url>
-          <line>202</line>
+          <line>204</line>
           <option name="timeStamp" value="689" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/js/map/zoomable_circles.js</url>
-          <line>624</line>
+          <line>626</line>
           <option name="timeStamp" value="690" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/js/map/zoomable_circles.js</url>
-          <line>638</line>
+          <line>641</line>
           <option name="timeStamp" value="691" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/js/map/zoomable_circles.js</url>
-          <line>630</line>
+          <line>634</line>
           <option name="timeStamp" value="692" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/js/map/world_map.js</url>
-          <line>203</line>
-          <option name="timeStamp" value="693" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/js/map/population_density_display.js</url>
@@ -952,11 +970,29 @@
           <properties />
           <option name="timeStamp" value="696" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/main.html</url>
+          <line>21</line>
+          <properties />
+          <option name="timeStamp" value="697" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/js/map/world_map.js</url>
+          <line>118</line>
+          <properties />
+          <option name="timeStamp" value="699" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/js/map/zoomable_circles.js</url>
+          <line>147</line>
+          <properties />
+          <option name="timeStamp" value="700" />
+        </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="697" />
+      <option name="time" value="701" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="JavascriptDebugType">
@@ -967,11 +1003,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/00_Sample_GraphicDesigns/LSEUrbanAge_InteractiveTool/Screen Shot 2016-03-07 at 11.58.27 am.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/00_Sample_GraphicDesigns/LSEUrbanAge_InteractiveTool/Screen Shot 2016-03-07 at 11.58.44 am.png">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -1239,18 +1270,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/slider/timer_slider.js">
+    <entry file="file://$PROJECT_DIR$/js/map/world_map.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="17" column="29" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="29" />
+        <state relative-caret-position="388">
+          <caret line="213" column="61" selection-start-line="213" selection-start-column="61" selection-end-line="213" selection-end-column="61" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/map/population_density_display.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1260">
+          <caret line="319" column="61" selection-start-line="319" selection-start-column="61" selection-end-line="319" selection-end-column="61" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/css/zoomable_circles.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+        <state relative-caret-position="75">
+          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="6" selection-end-column="24" />
           <folding />
         </state>
       </provider>
@@ -1263,67 +1304,64 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/css/main.css">
+    <entry file="file://$PROJECT_DIR$/css/tooltip.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1327">
-          <caret line="133" column="0" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
-          <folding>
-            <element signature="e#17#189#0" expanded="false" />
-            <element signature="e#1717#1950#0" expanded="false" />
-            <element signature="e#2136#2318#0" expanded="false" />
-            <element signature="e#2329#2353#0" expanded="false" />
-            <element signature="e#2367#2452#0" expanded="false" />
-            <element signature="e#2463#2507#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="30">
+          <caret line="2" column="16" selection-start-line="2" selection-start-column="16" selection-end-line="2" selection-end-column="16" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/css/tooltip.css">
+    <entry file="file://$PROJECT_DIR$/js/slider/timer_slider.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="23" column="1" selection-start-line="23" selection-start-column="1" selection-end-line="23" selection-end-column="1" />
+        <state relative-caret-position="735">
+          <caret line="107" column="47" selection-start-line="107" selection-start-column="47" selection-end-line="107" selection-end-column="47" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="59" column="55" selection-start-line="59" selection-start-column="55" selection-end-line="59" selection-end-column="55" />
+        <state relative-caret-position="79">
+          <caret line="93" column="32" selection-start-line="93" selection-start-column="32" selection-end-line="93" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/main.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="79" column="37" selection-start-line="79" selection-start-column="37" selection-end-line="79" selection-end-column="37" />
           <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="e#17#189#0" expanded="false" />
+            <element signature="e#2523#2705#0" expanded="false" />
+            <element signature="e#2716#2740#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/map/world_map.js">
+    <entry file="file://$PROJECT_DIR$/css/sliding_menuBar.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="211">
-          <caret line="194" column="35" selection-start-line="194" selection-start-column="35" selection-end-line="194" selection-end-column="35" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/map/population_density_display.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="656">
-          <caret line="121" column="0" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
+        <state relative-caret-position="45">
+          <caret line="11" column="10" selection-start-line="11" selection-start-column="10" selection-end-line="11" selection-end-column="10" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/map/zoomable_circles.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="632" column="21" selection-start-line="632" selection-start-column="21" selection-end-line="632" selection-end-column="21" />
+        <state relative-caret-position="4035">
+          <caret line="643" column="0" selection-start-line="643" selection-start-column="0" selection-end-line="643" selection-end-column="0" />
           <folding>
             <element signature="e#42#98#0" expanded="false" />
-            <element signature="e#20058#20117#0" expanded="false" />
-            <element signature="e#20158#20239#0" expanded="false" />
-            <element signature="e#20268#20306#0" expanded="false" />
-            <marker date="1466477240000" expanded="true" signature="18480:18502" ph="..." />
+            <element signature="n#!!block;n#generate_DistMatrix#0" expanded="false" />
+            <element signature="n#!!block;n#addpoint#0" expanded="false" />
+            <element signature="n#!!block;n#add_zoomable_cluster#0" expanded="false" />
+            <element signature="n#!!block;n#find_last_tier#0" expanded="false" />
+            <element signature="e#20174#20233#0" expanded="false" />
+            <element signature="e#20274#20355#0" expanded="false" />
+            <element signature="e#20384#20422#0" expanded="false" />
+            <marker date="1466496465000" expanded="true" signature="18596:18618" ph="..." />
           </folding>
         </state>
       </provider>

@@ -132,6 +132,7 @@ function move(t,s) {
         t = d3.event.translate;
 
     }
+    tooltip.style("visibility","hidden");
 
     var tier1_scale = 2;
     var tier2_scale = 4;
@@ -188,26 +189,29 @@ function move(t,s) {
     zoom.translate(t);
     zoom.scale(s);
 
-    d3.selectAll(".point").attr("r", function (d) {
-       return Math.sqrt(area_unit*d["projectNo"]/(Math.PI*s));
+    d3.selectAll(".point")
+        .style("stroke-width", 0.5/s+'px')
+        .attr("r", function (d) {
+       return Math.sqrt(area_unit*d["projectNo"]/Math.PI)/s;
     });
 
-    console.log("move_scale = "+s);
-    d3.selectAll(".cluster").attr("r", function (d) {
-        return Math.sqrt(area_unit*d["projectNo"]/(Math.PI*s));
+    d3.selectAll(".cluster")
+        .style("stroke-width", 0.5/s+'px')
+        .attr("r", function (d) {
+        return Math.sqrt(area_unit*d["projectNo"]/Math.PI)/s;
     });
+
     
     //cg_g.remove();
     svg.selectAll(".zoomable").remove();
 
-    if(project_layer){//adjust the radius of the legend ball
-        draw_project_legend();
-    }
     
 
     //adjust the country hover stroke map_width based on zoom level
     d3.selectAll(".country").style("stroke-map_width", 1.5 / s);
     d3.selectAll(".text").style("font-size", 20 / s);
+    d3.selectAll(".equator").style("stroke-width", 1/s+'px');
+    d3.selectAll("graticule").style("stroke-width", 0.5/s+'px');
 
 }
 

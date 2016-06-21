@@ -216,7 +216,6 @@ function draw_legend(max_property,className) {
     var color_legend = body.append("div")
         .attr("class","legend "+className);
 
-    console.log(color_legend);
     var svg = color_legend
         .attr("z-index", 40)
         .append("svg")
@@ -287,7 +286,6 @@ function draw_time_slider(className){
     var time_slider = body.append("div")
         .attr('class','time_slider '+ className);
 
-    console.log(time_slider);
 
     var playBtn_Image = new Image();
     playBtn_Image.src = "img/Play_button.png";
@@ -320,6 +318,7 @@ function draw_time_slider(className){
 
             if(status ==0){
                 d3.select("#play_stopBtn").attr('src' ,stopBtn_Image.src);
+                console.log("status "+status);
                 status = 1;
                 animate_time();
             }else{
@@ -345,7 +344,7 @@ function draw_time_slider(className){
         d3.select("#replay_Btn").style('borderColor', 'transparent');
     })
         .on('click',function(){
-        console.log("replay!!!");
+
         cur_year = start_year;
         status =0;
         stop_animateTime();
@@ -376,11 +375,10 @@ function find_country_size(country_name){
 }
 
 function read_popData(className){
-    console.log(className);
     d3.csv("data/fitted/country_size.csv", function (error, data) {
         switch(className){
             case 'pop_layer': world_country_size = data;
-                console.log("read_popdata()");
+
                     read_population('pop_layer');
                     break;
             default: break;
@@ -442,6 +440,5 @@ function formatNum(num) {
 function remove_layer(className){
     if(className ==undefined) className = ".extra_info";
     var extra_info= d3.selectAll(className);
-    console.log("extra_info = "+extra_info);
     extra_info.remove();
 }
