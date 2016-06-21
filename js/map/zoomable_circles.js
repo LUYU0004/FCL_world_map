@@ -64,7 +64,7 @@ function addpoint(color_status, lat, lon, title,text, projectNo, imgNo,scale) {
     if(color_status==undefined) color_status = 2;
 
 
-    var gpoint = g.append("g").attr("class","projects extra_info");
+    var gpoint = g.append("g").attr("class","projects project_layer");
     var x = projection([lon,lat])[0];
     var y = projection([lon, lat])[1];
     var color_scheme = ["#CCFF99","#00FF00","#0000FF","#FFFF00","#00FFFF" ,
@@ -150,7 +150,7 @@ function add_zoomable_cluster(color_status, lat, lon, title,text, projectNo,scal
     if(color_status==undefined) color_status = 6;
 
 
-    var gpoint = g.append("g").attr("class","projects extra_info");
+    var gpoint = g.append("g").attr("class","projects project_layer");
     var x = projection([lon,lat])[0];
     var y = projection([lon, lat])[1];
     var color_scheme = ["#CCFF99","#00FF00","#0000FF","#FFFF00","#00FFFF" ,
@@ -393,7 +393,7 @@ var cg ;
 //to setup for draw_Circles at the first use
 function setup_circles(){
     cg = svg.append("g")
-        .classed("extra_info",true)
+        .attr("class","project_layer")
         .attr("id","zoomable_circles");
 }
 
@@ -595,8 +595,7 @@ function draw_project_legend(){
     var body = d3.select("#content_holder");
 
     var project_legend = body.append("div")
-        .classed("extra_info",true)
-        .attr('class','legend');
+        .attr('class','legend project_layer');
 
     var wFactor = 10,
         hFactor = 2;
@@ -612,7 +611,7 @@ function draw_project_legend(){
         .append("g");
 
     var legend = svg
-        .append('g')  //svg.append('g')    //add the legend to extra_info.svg.g
+        .append('g')  
         .attr('width', wBox)
         .attr('height', hBox);
     
@@ -635,7 +634,9 @@ function draw_project_legend(){
         }).attr('fill', function (d, i) {
         return '#C0C0C0';
     }).attr('r',function (d,i) {
-        return Math.sqrt(d*area_unit/(Math.PI*zoom.scale()));
+        var s = zoom.scale();
+        console.log("legend_scale = "+s);
+        return Math.sqrt(s*d*area_unit/(Math.PI));
     }).attr("opacity",0.7);
 
     sg.selectAll('text').data(area).enter().append("text")

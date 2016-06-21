@@ -35,7 +35,7 @@ function setup_slider(start_y, end_y){
         .extent([start_year, start_year])
         .on("brush", brushed);
 
-    var svg = d3.select("#time_slider")
+    var svg = d3.selectAll(".time_slider")
         .attr("z-index", 40)
         .append("svg")
         .attr("width", slider_width + slider_margin.left + slider_margin.right)

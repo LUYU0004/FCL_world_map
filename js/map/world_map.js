@@ -113,14 +113,12 @@ function draw_worldmap() {
     }).on("mouseout", function (d, i) {
         return tooltip.attr("style", "visibility: hidden");
     });
-
-
-
-
-
-    d3.select("#pop_densityBtn").classed("selectedBtn",true);
+    
+    
     category = "Population Density";
-    newInput();
+    document.getElementById("pop_densityBtn").classList.toggle("selectedBtn");
+    pop_layer = true;
+    load_DData(category);
     
     
 }
@@ -158,7 +156,6 @@ function move(t,s) {
         find_last_tier(SC.matrix,tier_range,scale);
 
     }else if(s>=tier2_scale){
-        
         tier_range = 25 ;
         scale = tier2_scale;
         svg.selectAll(".projects").remove();
@@ -195,6 +192,7 @@ function move(t,s) {
        return Math.sqrt(area_unit*d["projectNo"]/(Math.PI*s));
     });
 
+    console.log("move_scale = "+s);
     d3.selectAll(".cluster").attr("r", function (d) {
         return Math.sqrt(area_unit*d["projectNo"]/(Math.PI*s));
     });
@@ -202,6 +200,9 @@ function move(t,s) {
     //cg_g.remove();
     svg.selectAll(".zoomable").remove();
 
+    if(project_layer){//adjust the radius of the legend ball
+        draw_project_legend();
+    }
     
 
     //adjust the country hover stroke map_width based on zoom level

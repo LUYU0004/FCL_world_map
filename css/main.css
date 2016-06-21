@@ -24,6 +24,9 @@
 
 }
 
+.opacity_bar{
+    display:none}
+
 #navg_bar {
     height: 200px;
     position: absolute;
@@ -32,8 +35,8 @@
 }
 
 .navg_button {
-padding-top: 7px;
     display: inline-block;
+    padding-top: 7px;
     align-content: center;
     height: 25px;;
     width: 200px;;
@@ -45,13 +48,30 @@ padding-top: 7px;
     cursor: pointer;
     text-align:center;
     border-bottom: 2px solid #d0d0d0;
+    position:relative;
+}
+
+.navg_button:hover, .navg_button:focus {
+    border: 2px solid #010101;
 }
 
 .selectedBtn {
     background: -webkit-gradient(linear,left top,left bottom,color-stop(0.05, #DEEBF7),color-stop(1, #DEEBF7));
 }
 
+.selectedBtn.opacity_bar{
+    position:absolute;
+    border:2px solid red;
+    display: block;
+}
 
+.on{
+    display:block;
+}
+
+.on.opacity_bar{
+
+}
 
 #fcl_logo {
     padding: 10px;
@@ -85,7 +105,7 @@ padding-top: 7px;
 }
 
 
-#time_slider {
+.time_slider {
     /*margin: 5px 5px 0px 0px;
     padding:2px;
     border: 1px solid #d0d0d0;
@@ -99,7 +119,7 @@ padding-top: 7px;
     position: absolute;
 }
 
-#play_stopBtn {
+.play_stopBtn {
 
     width:20px;
     height: 20px;
@@ -112,7 +132,7 @@ padding-top: 7px;
 
 }
 
-#replay_Btn {
+.replay_Btn {
     width:30px;
     height: 30px;
     bottom:4.5%;

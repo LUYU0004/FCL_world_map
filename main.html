@@ -17,33 +17,53 @@
 
 <script>
 
+    var pop_layer = false;
+    var co2_layer = false;
+    var project_layer = false;
 
     function newInput(){
 
-        d3.selectAll(".navg_button").classed("selectedBtn",false);
-        if(this.id){
+            this.classList.toggle("selectedBtn");
+            var res  = d3.select(this).classed("selectedBtn");
+
             switch(this.id){
-                case 'pop_densityBtn': category = "Population Density";
+                case 'pop_densityBtn':
+                            category = "Population Density";
+
+                        if(res){
+                            pop_layer = true;
+                            load_DData(category);
+                        }else{
+                            pop_layer = false;
+                            remove_layer('.pop_layer');
+                        }
                     break;
-                case 'co2_emissionBtn': category = "CO2 Emission";
+                case 'co2_emissionBtn':
+                        category = "CO2 Emission";
+
+                    if(res){
+                        co2_layer = true;
+                        load_DData(category);
+                    }else{
+                        co2_layer = false;
+                        remove_layer('.co2_layer');
+                    }
                     break;
-                case  'fcl_projectsBtn': category = "FCL Projects";
+                case  'fcl_projectsBtn':
+                    category = "FCL Projects";
+
+                    if(res){
+                        project_layer = true;
+                        load_DData(category);
+                    }else{
+                        project_layer = false;
+                        remove_layer('.project_layer');
+                    }
+
                     break;
                 default: break;
             }
 
-
-            d3.select(this).classed("selectedBtn",true);
-        }else{
-            d3.select("#pop_densityBtn").classed("selectedBtn",true);
-        }
-
-
-        if(category){
-            load_DData(category);
-        }else{
-            alert("Invalid Choice!");
-        }
     }
 
 </script>
@@ -52,10 +72,20 @@
     <div id="menuBar" style="float:right;">
         <div ><img id="fcl_logo" src="res/fcl_logo.png" alt="fcl_logo"></div>
         <div id="navg_bar">
+            <div class="navg_button" id="pop_densityBtn">  Population Density
+                <div class = 'opacity_bar'>opacity bar1</div></div>
+
+            <div class="navg_button" id="co2_emissionBtn">  CO2 Emission Per Capita
+                <div class = 'opacity_bar'>opacity bar2</div></div>
+
+            <div class="navg_button" id="fcl_projectsBtn">  FCL Projects
+                <div class = 'opacity_bar'>opacity bar3</div></div>
+        </div>
+       <!-- <div id="navg_bar">
             <div class="navg_button" id="pop_densityBtn">  Population Density</div>
             <div class="navg_button" id="co2_emissionBtn">  CO2 Emission Per Capita</div>
             <div class="navg_button" id="fcl_projectsBtn">  FCL Projects</div>
-        </div>
+        </div>-->
 
 
     </div>

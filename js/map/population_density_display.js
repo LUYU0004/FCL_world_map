@@ -21,30 +21,25 @@ function load_DData(_category){
 
 
     switch(category){
-        case "Population Density":          remove_layer();
-                                            draw_time_slider();
+        case "Population Density":          //remove_layer();
+                                            draw_time_slider('pop_layer');
                                             color_split = [500, 400, 300, 200, 100, 50, 10, 0];
-                                            catNo = 1;
                                             max_property=1000;
-                                            draw_legend(max_property);
-                                            read_popData();
+                                            draw_legend(max_property,"pop_layer");
+                                            read_popData("pop_layer");
                                             break;
         
-        case "CO2 Emission":        remove_layer();
-                                    draw_time_slider();
+        case "CO2 Emission":        //remove_layer();
+                                    draw_time_slider('co2_layer');
                                     color_split = [50, 20, 10, 5, 1, 0.1, 0];//1964-2011
-                                                catNo = 2;
                                                 max_property=100;
-                                                draw_legend(max_property);
+                                                draw_legend(max_property,"co2_layer");
                                                 read_co2Data();
                                                 break;
 
-        case "FCL Projects":        remove_layer();
+        case "FCL Projects":        //remove_layer();
                                     draw_project_legend();
-                                   generate_DistMatrix();//draw_points(); //
-                                    
-                                    //draw_circles();
-                                    //draw_circles();
+                                   generate_DistMatrix();//draw_points(); //draw_circles();//draw_circles();
                                         break;
         default: break;
     }
@@ -58,9 +53,8 @@ function display_Density(cur_year){
     var densityMultiplier = 1;
 
 
-    switch(catNo){
-        case 1: break;
-        case 2: densityMultiplier = 1000;
+    switch(category){
+        case "CO2 Emission": densityMultiplier = 1000;
         default: break;
     }
 
@@ -96,9 +90,6 @@ function display_Density(cur_year){
     var offsetL = document.getElementById("map_container").offsetLeft + 20;
     var offsetT = document.getElementById("map_container").offsetTop + 10;
 
-    //var countries = g.selectAll(".country");
-
-    //country.on("mousemove",null);
 
     countries
         .on("mouseover",function (d) {
@@ -118,11 +109,12 @@ function display_Density(cur_year){
                 var formatted_property = formatNum(year_property);
                 var density = year_property / cur_country_size * densityMultiplier;
                 var density_unit;
-                switch(catNo){
-                    case 1: cur_country_size = cur_country_size + ' (sq.km)';
+
+                switch(category){
+                    case "Population Density": cur_country_size = cur_country_size + ' (sq.km)';
                         density_unit = ' people per (sq.km)';
                         break;
-                    case 2: cur_country_size = cur_country_size +' people';
+                    case "CO2 Emission": cur_country_size = cur_country_size +' people';
                         density_unit = ' tons per person';
                         break;
                     default: break;
@@ -139,27 +131,6 @@ function display_Density(cur_year){
 
                 var left = mouse[0]*scale + offsetL+left_adjust;
                 var top = mouse[1]*scale + offsetT+top_adjust;
-                var window_margin = 16;
-                var buffer = 5;
-
-               /* var tooltip_right = d3.select("#tooltip_country").node().getBoundingClientRect().width + left;//d3.select("#tooltip_country").node().getBoundingClientRect().right;
-                var window_right = innerWidth - window_margin - buffer;
-
-                if(tooltip_right > window_right){
-
-                    var tooltip_Width = 275;
-
-                    left = mouse[0]-tooltip_Width-offsetL  ;
-
-                }
-
-                var tooltip_height = d3.select("#tooltip_country").node().getBoundingClientRect().height;
-
-                var tooltip_bottom = top+tooltip_height;//d3.select("#tooltip_country").node().getBoundingClientRect().bottom;
-
-                if(tooltip_bottom> (window.innerHeight-window_margin)){
-                    top = mouse[1]-tooltip_height-offsetT;
-                }*/
 
                 return tooltip.attr("style", "right:"+(innerWidth - left)+"px;bottom:"+(innerHeight - top)+"px;visibility: visible;");
 
@@ -183,7 +154,7 @@ function display_Density(cur_year){
                 var window_margin = 16;
                 var buffer = 5;
 
-                var tooltip_right = tooltip.node().getBoundingClientRect().width + left;//d3.select("#tooltip_country").node().getBoundingClientRect().right;
+                var tooltip_right = tooltip.node().getBoundingClientRect().width + left;
                 var window_right = innerWidth - window_margin - buffer;
 
                 if(tooltip_right > window_right){
@@ -196,7 +167,7 @@ function display_Density(cur_year){
 
                 var tooltip_height = tooltip.node().getBoundingClientRect().height;
 
-                var tooltip_bottom = top+tooltip_height;//d3.select("#tooltip_country").node().getBoundingClientRect().bottom;
+                var tooltip_bottom = top+tooltip_height;
 
                 if(tooltip_bottom> (window.innerHeight-window_margin)){
                     top = mouse[1]-tooltip_height-offsetT;
@@ -217,9 +188,9 @@ function display_Density(cur_year){
 /*
  Add color legend to extra_layer
  */
-function draw_legend(max_property) {
+function draw_legend(max_property,className) {
 
-    d3.selectAll(".legend").remove();
+    //d3.selectAll(".legend").remove();
 
     var wFactor = 10,
         hFactor = 2;
@@ -243,9 +214,9 @@ function draw_legend(max_property) {
     var body = d3.select("#content_holder");
 
     var color_legend = body.append("div")
-        .classed("extra_info",true)
-        .attr("class","legend");
+        .attr("class","legend "+className);
 
+    console.log(color_legend);
     var svg = color_legend
         .attr("z-index", 40)
         .append("svg")
@@ -258,23 +229,6 @@ function draw_legend(max_property) {
         .attr('width', wBox)
         .attr('height', hBox);
 
-
-    /*draw dot legend
-    var dot_legend = legend.append('g')
-        .attr('class','dot_legend');
-
-    dot_legend.append('circle')
-        .attr("cx", 5)
-        .attr("cy", function () {
-            return (color_split.length+3) * hRect;
-        }).attr("class", "point")
-        .style("fill", "red")
-        .attr("r", 4);
-
-    dot_legend.append('text').text("indicates FCL project locations.")
-        .attr('x', 15).attr('y', function(){
-        return (color_split.length+3) * hRect;
-    });*/
 
     var sg = legend.append('g')
         .attr('transform', tr);
@@ -310,11 +264,11 @@ function draw_legend(max_property) {
     }).attr('x', wRect + offsetText).attr('y', offsetText * offsetYFactor * 2+label_height);
 
     sg.append('text').text(function () {
-        switch (category){
-            case "Population Density":          return "People per sq.km";
+        switch (className){
+            case "pop_layer":          return "People per sq.km";
                 break;
 
-            case "CO2 Emission":            return "Tons per person";
+            case "co2_layer":            return "Tons per person";
                 break;
         }
 
@@ -324,15 +278,16 @@ function draw_legend(max_property) {
 
 }
 
-function draw_time_slider(){
+function draw_time_slider(className){
 
-    d3.select("#time_slider").remove();
+    //d3.select("#time_slider").remove();
 
     var body = d3.select("#content_holder");
     
     var time_slider = body.append("div")
-        .classed("extra_info",true)
-        .attr('id','time_slider');
+        .attr('class','time_slider '+ className);
+
+    console.log(time_slider);
 
     var playBtn_Image = new Image();
     playBtn_Image.src = "img/Play_button.png";
@@ -343,14 +298,14 @@ function draw_time_slider(){
 
     var replay = false;
     var play_stop_btn = body.append("a")
-        .classed("extra_info",true)
+        .classed(className,true)
         .attr("href","#");
 
 
 
 
     play_stop_btn.append("img")
-        .attr("id", "play_stopBtn")
+        .attr("class", "play_stopBtn")
         .attr("src","img/Play_button.png")
         .attr("alt","click");
 
@@ -375,11 +330,11 @@ function draw_time_slider(){
     });
  
  var replay_btn = body.append("a")
- .classed("extra_info",true)
+ .classed(className,true)
  .attr("href","#");
 
  replay_btn.append("img")
- .attr("id", "replay_Btn")
+ .attr("class", "replay_Btn")
  .attr("src","img/replay_button.png")
  .attr("alt","click");
 
@@ -420,11 +375,13 @@ function find_country_size(country_name){
     return m;
 }
 
-function read_popData(){
+function read_popData(className){
+    console.log(className);
     d3.csv("data/fitted/country_size.csv", function (error, data) {
-        switch(catNo){
-            case 1: world_country_size = data;
-                    read_population(catNo);
+        switch(className){
+            case 'pop_layer': world_country_size = data;
+                console.log("read_popdata()");
+                    read_population('pop_layer');
                     break;
             default: break;
         }
@@ -432,23 +389,22 @@ function read_popData(){
     });
 }
 
-function read_population(){
+function read_population(className){
     d3.csv("data/fitted/population.csv", function (error, data) {
         var start_year, end_year;
-        switch(catNo){
-            case 1:     property =  data;
+        switch(className){
+            case 'pop_layer':     property =  data;
                         start_year = 1964;
                         end_year = 2014;
                         break;
-            case 2:     world_country_size = data;
+            case 'co2_layer':     world_country_size = data;
                         start_year = 1964;
                         end_year = 2011;
                         break;
 
-            default:    alert("wrong category number:"+catNo);break;
+            default:    alert("wrong category !");break;
         }
 
-        //console.log("property"+property);
         display_Density(start_year);
         setup_slider(start_year, end_year);//1964-2014
         //animate_time();
@@ -459,7 +415,7 @@ function read_population(){
 function read_co2Data(){
     d3.csv("data/raw/CO2 emissions (kt)/en.atm.co2e.kt_Indicator_en_csv_v2(edited).csv", function (error, data) {
         property = data;
-        read_population();
+        read_population('co2_layer');
     });
 }
 
@@ -467,13 +423,15 @@ function formatNum(num) {
     var format = d3.format(',.02f');
     var factor = 1;
     var unit = '';
-    
-    switch (catNo){
-        case 1: factor = 1000000;
-                unit = ' M people'
+
+
+    switch (category){
+        case "Population Density":
+                factor = 1000000;
+                unit = ' M people';
                 break;
-        case 2: factor = 1;
-                unit = ' K tons'
+        case "CO2 Emission": factor = 1;
+                unit = ' K tons';
                 break;
         default: break;
     }
@@ -484,5 +442,6 @@ function formatNum(num) {
 function remove_layer(className){
     if(className ==undefined) className = ".extra_info";
     var extra_info= d3.selectAll(className);
+    console.log("extra_info = "+extra_info);
     extra_info.remove();
 }
