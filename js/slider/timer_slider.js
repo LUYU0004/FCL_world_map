@@ -5,10 +5,17 @@
 
 var start_year, end_year, cur_year;
 var handle, brush, x,slider;
+var overlay,label,box;
 
-function setup_slider(start_y, end_y){
+function setup_slider(start_y, end_y, className){
 
+/*<div class="menu-item" style="height: 140px;" id ="label_slider">
+    </div>*/
     //console.log("setup_slider("+start_y+" , "+end_y+") ");
+    d3.selectAll(".menu_bar").append("div")
+        .attr("class","menu-item "+className)
+        .attr("height",140)
+        .attr("id","label_slider");
 
     start_year = start_y;
         end_year = end_y;
@@ -19,9 +26,9 @@ function setup_slider(start_y, end_y){
 
 
 
-    var slider_margin = {top: 2, right: 10, bottom: 10, left: 10},
-        slider_width = document.getElementById("map_container").offsetWidth *0.70 - slider_margin.right - slider_margin.left,
-        slider_height =50;
+    var slider_margin = {top: 0, right: 7, bottom: 0, left: 9},
+        slider_width = 180,//document.getElementById("map_container").offsetWidth *0.70 - slider_margin.right - slider_margin.left,
+        slider_height =30;
 
 
     var year_range = d3.scale.linear().domain([start_year, end_year]);
@@ -35,20 +42,60 @@ function setup_slider(start_y, end_y){
         .extent([start_year, start_year])
         .on("brush", brushed);
 
-    var svg = d3.selectAll(".time_slider")
-        .attr("z-index", 40)
+    var body = d3.select("#label_slider");//d3.select("#content_holder");
+
+    /*Add the year label; the value is set on transition.*/
+    var label_svg = body//d3.select("#year_label")
+        .attr("z-index", 30)
         .append("svg")
+        .attr("class",className)
+        .attr("width",200)
+        .attr("height",90)
+        .append("g");
+
+    label = label_svg.append("text")
+        .attr("class", "year label")
+        .attr("text-anchor", "end")
+        .attr("y", 80)
+        .attr("x", 100)
+        .text(start_year);
+
+    // Add an overlay for the year label.
+    box = label.node().getBBox();
+
+
+    overlay = label_svg.append("rect")
+        .attr("class", "overlay")
+        .attr("x", box.x)
+        .attr("y", box.y)
+        .attr("width", box.width)
+        .attr("height", box.height)
+        .on("mouseover",
+            enableInteraction);
+
+
+    /*implement the slider*/
+    var time_slider = body.append("div")
+        .attr('class','time_slider '+ className);
+
+
+    var slider_svg = time_slider//d3.selectAll(".time_slider")
+        .attr("z-index", 30)
+        .append("svg")
+        .attr("class",className)
         .attr("width", slider_width + slider_margin.left + slider_margin.right)
         .attr("height", slider_height  +slider_margin.top+slider_margin.bottom)
         .append("g");
 
-    svg.append("g")
+    var year_interval = 10;
+
+    slider_svg.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate("+slider_margin.left+"," + slider_height / 2 + ")")
+        .attr("transform", "translate("+slider_margin.left+"," + slider_height / 3 + ")")
         .call(d3.svg.axis()
             .scale(x)
             .orient("bottom")
-            .ticks((end_year - start_year) / 2)
+            .ticks((end_year - start_year) /year_interval)
             .tickFormat(function(d) { return d; })
             .tickSize(0)
             .tickPadding(12))
@@ -56,7 +103,7 @@ function setup_slider(start_y, end_y){
         .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
         .attr("class", "halo");
 
-    slider = svg.append("g")
+    slider = slider_svg.append("g")
         .attr("class", "slider")
         .call(brush);
 
@@ -68,9 +115,50 @@ function setup_slider(start_y, end_y){
 
     handle = slider.append("circle")
         .attr("class", "handle")
-        .attr("transform", "translate("+slider_margin.left+"," + slider_height / 2 + ")")
+        .attr("transform", "translate("+slider_margin.left+"," + slider_height / 3 + ")")
         .attr("r", 9);
-    
+
+
+}
+
+function enableInteraction() {
+    console.log("enableInteraction!");
+    var yearScale = d3.scale.linear()
+        .domain([start_year, end_year])
+        .range([box.x + 10, box.x + box.width - 10])
+        .clamp(true);
+
+
+    // Cancel the current transition, if any.
+   slider.transition().duration(0);
+    status=0;
+
+    overlay
+        .on("mouseover", mouseover)
+        .on("mouseout", mouseout)
+        .on("mousemove", mousemove)
+        .on("touchmove", mousemove);
+
+    function mouseover() {
+        console.log("active");
+        label.classed("active", true);
+    }
+
+    function mouseout() {
+        label.classed("active", false);
+    }
+
+    function mousemove() {
+        if(status ==1){
+            status =0;
+            stop_animateTime();
+
+        }
+        console.log("mousemove");
+        label.classed("active", true);
+        cur_year = yearScale.invert(d3.mouse(this)[0]);
+        brushed();
+    }
 }
 
 
@@ -83,13 +171,18 @@ function animate_time() {
         .duration(500* (end_year - start_year))
         .call(brush.extent([end_year, end_year]))
         //.call(brush.extent([end_year, end_year]))
-        .call(brush.event);
+        .call(brush.event)
+        .each("end", function(){
+            status =0;
+
+        });
 
 
 
 }
 
 function stop_animateTime(){
+
     brushed();
 }
 
@@ -97,21 +190,25 @@ function update(value){
     cur_year = Math.round(value);
     //console.log("update- cur_year: "+ cur_year);
     display_Density(cur_year);
+    label.text(cur_year);
 }
 
 function brushed() {
-    
+
     var value = brush.extent()[0];
         //console.log("brushed! value: "+value);
 
         if (d3.event.sourceEvent) { // not a programmatic event
             value = x.invert(d3.mouse(this)[0]);
-            //console.log("d3.event.sourceEvent"+d3.event.sourceEvent+ ",  brush",value);
+            console.log("d3.event.sourceEvent"+d3.event.sourceEvent+ ",  brush",value);
             brush.extent([value, value]);
         }else{
-            if(status ==0){
+            if(status == 0){
+                value = cur_year;
                 brush.extent([cur_year, cur_year]);
+                console.log("status ==0  "+ cur_year);
             }
+            console.log("nothing "+value);
         }
 
     handle.attr("cx", x(value));

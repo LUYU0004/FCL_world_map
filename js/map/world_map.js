@@ -7,9 +7,11 @@
 
 window.SC = {};
 SC.projectNo =0;
-//SC.clustersCollection =[];
+SC.networkNo = 0;
 SC.projects = [];
-SC.matrix = [];
+SC.network = [];
+SC.project_matrix = [];
+SC.network_matrix = [];
 
 
 var world_topo;
@@ -66,6 +68,7 @@ function setup() {
         .append("g");
 
     g = svg.append("g").attr("id","country_holder");
+
 }
 
 function draw_worldmap() {
@@ -113,12 +116,13 @@ function draw_worldmap() {
     }).on("mouseout", function (d, i) {
         return tooltip.attr("style", "visibility: hidden");
     });
-    
-    
+
+    remove_layer('.pop_layer');
     category = "Population Density";
     document.getElementById("pop_densityBtn").classList.toggle("selectedBtn");
     pop_layer = true;
     load_DData(category);
+    d3.select("#pop_densityBtn").selectAll("ul").style("height","93px");
     
     
 }
@@ -146,30 +150,42 @@ function move(t,s) {
         
         tier_range = 3;
         scale = tier4_scale;
-        svg.selectAll(".projects").remove();
-        find_last_tier(SC.matrix,tier_range,scale);
+        svg.selectAll(".items").remove();
+        if(project_layer)find_last_tier(tier_range,scale,'project_layer');
+        if(network_layer)find_last_tier(tier_range,scale,'network_layer');
        
     }else if(s>=tier3_scale){
         
         tier_range=5;
         scale = tier3_scale;
-        svg.selectAll(".projects").remove();
-        find_last_tier(SC.matrix,tier_range,scale);
+        svg.selectAll(".items").remove();
+        if(project_layer)find_last_tier(tier_range,scale,'project_layer');
+        if(network_layer)find_last_tier(tier_range,scale,'network_layer');
 
     }else if(s>=tier2_scale){
-        tier_range = 25 ;
+        tier_range = 25;
         scale = tier2_scale;
-        svg.selectAll(".projects").remove();
-        find_last_tier(SC.matrix,tier_range,scale);
+        svg.selectAll(".items").remove();
+        if(project_layer)find_last_tier(tier_range,scale,'project_layer');
+        if(network_layer)find_last_tier(tier_range,scale,'network_layer');
 
     }else if(s>=tier1_scale){
         
         tier_range = 50 ;
         scale = tier1_scale;
-        svg.selectAll(".projects").remove();
-        find_last_tier(SC.matrix,tier_range,scale);
+        svg.selectAll(".items").remove();
+        if(project_layer)find_last_tier(tier_range,scale,'project_layer');
+        if(network_layer)find_last_tier(tier_range,scale,'network_layer');
 
+    }else{
+
+        tier_range = 100 ;
+        scale = 1;
+        svg.selectAll(".items").remove();
+        if(project_layer)find_last_tier(tier_range,scale,'project_layer');
+        if(network_layer)find_last_tier(tier_range,scale,'network_layer');
     }
+    
     
     var h = map_height / 4;
 
@@ -192,20 +208,20 @@ function move(t,s) {
     d3.selectAll(".point")
         .style("stroke-width", 0.5/s+'px')
         .attr("r", function (d) {
-       return Math.sqrt(area_unit*d["projectNo"]/Math.PI)/s;
+       return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
     });
 
     d3.selectAll(".cluster")
         .style("stroke-width", 0.5/s+'px')
         .attr("r", function (d) {
-        return Math.sqrt(area_unit*d["projectNo"]/Math.PI)/s;
+        return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
     });
 
-    
+
     //cg_g.remove();
     svg.selectAll(".zoomable").remove();
 
-    
+
 
     //adjust the country hover stroke map_width based on zoom level
     d3.selectAll(".country").style("stroke-map_width", 1.5 / s);

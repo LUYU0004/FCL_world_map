@@ -21,22 +21,31 @@
     var pop_layer = false;
     var co2_layer = false;
     var project_layer = false;
+    var network_layer = false;
 
     function newInput(){
 
+        tooltip.style("visibility","hidden");
         //d3.selectAll(".navg_button").classed("selectedBtn",false);
         if(this.id){
+            var the_ul = d3.select(this).selectAll("ul");
+
+
             switch(this.id){
                 case 'pop_densityBtn':
                             category = "Population Density";
                              this.classList.toggle("selectedBtn");
+                             the_ul.style("height","93px");
                              var res  = d3.select(this).classed("selectedBtn");
+
 
                         if(res){
                             pop_layer = true;
+
                             load_DData(category);
                         }else{
                             pop_layer = false;
+                            the_ul.style("height","0");
                             remove_layer('.pop_layer');
                         }
                     break;
@@ -46,25 +55,40 @@
 
                     if(res){
                         co2_layer = true;
+                        the_ul.style("height","93px");
                         load_DData(category);
                     }else{
                         pop_layer = false;
+                        the_ul.style("height","0");
                         remove_layer('.co2_layer');
                     }
                     break;
-                case  'fcl_projectsBtn': category = "FCL Projects";
+                case  'fcl_projectsBtn': //category = "FCL Projects";
 
                     this.classList.toggle("selectedBtn");
                     var res  = d3.select(this).classed("selectedBtn");
 
                     if(res){
                         project_layer = true;
-                        load_DData(category);
+                        load_DData("FCL Projects");
                     }else{
                         project_layer = false;
                         remove_layer('.project_layer');
                     }
                     break;
+                case 'global_networkBtn': //category = "Global Network";
+                    this.classList.toggle("selectedBtn");
+                    var res  = d3.select(this).classed("selectedBtn");
+
+                    if(res){
+                        network_layer = true;
+                        load_DData("Global Network");
+                    }else{
+                        network_layer = false;
+                        remove_layer('.network_layer');
+                    }
+                    break;
+
                 default: break;
             }
 
@@ -90,21 +114,37 @@
 </script>
 
 <div id="content_holder">
-    <div ><img id="fcl_logo" src="res/fcl_logo.png" alt="fcl_logo"></div>
-    <div id="menuBar" style="float:right;">
-        <div id="navg_bar">
-            <a class="navg_button" id="pop_densityBtn">  Population Density</a>
 
-            <a class="navg_button" id="co2_emissionBtn">  CO2 Emission Per Capita</a>
-
+    <nav class = "menu_bar">
+        <div class="menu-item" style="padding: 10px; border-top: 0">
+            <img id="fcl_logo" src="res/fcl_logo.png" alt="fcl_logo" width="180px" height="40px">
         </div>
 
-    </div>
+        <div class="menu-item navg_button" id="pop_densityBtn">
+            <h4><a>  Population Density</a></h4>
+            <ul>
+                <li><div class="color_slider"></div></li>
+
+            </ul>
+        </div>
+
+        <div class="menu-item navg_button" id="co2_emissionBtn">
+            <h4><a>  CO2 Emission Per Capita</a></h4>
+            <ul>
+                <li><a href="#">Phone</a></li>
+                <li><a href="#">Email</a></li>
+                <li><a href="#">Location</a></li>
+            </ul>
+        </div>
+
+
+    </nav>
+
 
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="#" id="fcl_projectsBtn"> FCL Projects</a>
-        <a href="#">Global Network</a>
+        <a href="#" id="global_networkBtn">Global Network</a>
         <a href="#">Staff</a>
         <a href="http://www.fcl.ethz.ch/" target="_blank">Website</a>
     </div>
@@ -124,13 +164,14 @@ document.getElementById("content_holder").style.height=  window.innerHeight+'px'
 document.getElementById('pop_densityBtn').addEventListener("click", newInput);
 document.getElementById('co2_emissionBtn').addEventListener("click", newInput);
 document.getElementById('fcl_projectsBtn').addEventListener("click", newInput);
+document.getElementById('global_networkBtn').addEventListener("click", newInput);
 </script>
 
 <script src="js/map/world_map.js"></script>
 <script src="js/map/population_density_display.js"></script>
 <script src="js/slider/timer_slider.js"></script>
 <script src="js/map/zoomable_circles.js"></script>
-<script src="js/complimentary_functions/csv_generatioN.js"></script>
+<script src="js/slider/color_slider.js"></script>
 
 </body>
 </html>

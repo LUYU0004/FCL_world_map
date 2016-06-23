@@ -1,4 +1,13 @@
 
+.time_slider {
+    /*margin: 5px 5px 0px 0px;
+    padding:2px;
+    border: 1px solid #d0d0d0;
+    border-radius:5px;*/
+    overflow: visible;
+    z-index: 10;
+
+}
 
 .axis {
     font: 10px sans-serif;
@@ -29,4 +38,45 @@
     stroke-opacity: .5;
     stroke-width: 1.25px;
     cursor: crosshair;
+}
+
+/*regarding the year-label*/
+.label {
+    fill: #777;
+}
+
+.year.label {
+    font: 100 90px "Helvetica Neue";
+    fill: #ddd;
+}
+
+.year.label.active {
+    fill: #feff8a;
+}
+
+.overlay {
+    fill: none;
+    z-index:50;
+    pointer-events: all;
+    cursor: ew-resize;
+}
+
+
+
+.area {
+    fill: steelblue;
+    clip-path: url(#clip);
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.brush .extent {
+    stroke: #fff;
+    fill-opacity: .125;
+    shape-rendering: crispEdges;
 }

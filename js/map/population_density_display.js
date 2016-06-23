@@ -1,5 +1,5 @@
 /**
- * Created by yuhao on 18/5/16.
+ * Created by yuhao on 18/5/16. #E2E3E8
  */
 
 var property, world_country_size,category,catNo;
@@ -22,25 +22,31 @@ function load_DData(_category){
 
     switch(category){
         case "Population Density":          //remove_layer();
-                                            draw_time_slider('pop_layer');
+                                            //draw_time_slider('pop_layer');
                                             color_split = [500, 400, 300, 200, 100, 50, 10, 0];
                                             max_property=1000;
                                             draw_legend(max_property,"pop_layer");
                                             read_popData("pop_layer");
+                                            setup_slider(1964, 2014,"pop_layer");//1964-2014
+                                            draw_color_slider('pop_layer');
                                             break;
         
         case "CO2 Emission":        //remove_layer();
-                                    draw_time_slider('co2_layer');
-                                    color_split = [50, 20, 10, 5, 1, 0.1, 0];//1964-2011
+                                    //draw_time_slider('co2_layer');
+                                                color_split = [50, 20, 10, 5, 1, 0.1, 0];//1964-2011
                                                 max_property=100;
                                                 draw_legend(max_property,"co2_layer");
                                                 read_co2Data();
+                                                setup_slider(1964, 2011,"co2_layer");
                                                 break;
 
         case "FCL Projects":        //remove_layer();
                                     draw_project_legend();
-                                   generate_DistMatrix();//draw_points(); //draw_circles();//draw_circles();
+                                   generate_project_DistMatrix();
                                         break;
+
+        case "Global Network":    generate_network_DistMatrix();
+                                    break;
         default: break;
     }
 
@@ -48,7 +54,7 @@ function load_DData(_category){
 
 
 /*create or update population density on map*/
-function display_Density(cur_year){
+function display_Density(cur_year, min_range,max_range){
 
     var densityMultiplier = 1;
 
@@ -73,15 +79,18 @@ function display_Density(cur_year){
             var density = year_property / c_size*densityMultiplier;
 
             for (var index = 0; index < color_split.length; index++) {
-                if (density > color_split[index]){
+                if(density>=min_range&&density<=max_range) {
+                    if (density > color_split[index]) {
 
-                    return colors[index];
+                        return colors[index];
+                    }
+
                 }
             }
 
             return colors[1];
         } else {
-            return colors[colors.length - 1];
+            return '#E2E3E8';
         }
 
     }).on("mousemove",null);
@@ -281,12 +290,12 @@ function draw_time_slider(className){
 
     //d3.select("#time_slider").remove();
 
-    var body = d3.select("#content_holder");
+    var body = d3.select("#year_label");//d3.select("#content_holder");
     
     var time_slider = body.append("div")
         .attr('class','time_slider '+ className);
 
-
+/*
     var playBtn_Image = new Image();
     playBtn_Image.src = "img/Play_button.png";
     var stopBtn_Image = new Image();
@@ -294,7 +303,7 @@ function draw_time_slider(className){
     var replayBtn_Image = new Image();
     replayBtn_Image.src = 'img/replay_button.png';
 
-    var replay = false;
+    //var replay = false;
     var play_stop_btn = body.append("a")
         .classed(className,true)
         .attr("href","#");
@@ -316,9 +325,8 @@ function draw_time_slider(className){
         })
         .on('click',function(){
 
-            if(status ==0){
+            if(status ==0){ 
                 d3.select("#play_stopBtn").attr('src' ,stopBtn_Image.src);
-                console.log("status "+status);
                 status = 1;
                 animate_time();
             }else{
@@ -352,7 +360,7 @@ function draw_time_slider(className){
         d3.select("#play_stopBtn").attr("src",stopBtn_Image.src);
         animate_time();
 
-    });
+    });*/
 
 }
 
@@ -389,22 +397,20 @@ function read_popData(className){
 
 function read_population(className){
     d3.csv("data/fitted/population.csv", function (error, data) {
-        var start_year, end_year;
+        var start_year=1964;
         switch(className){
             case 'pop_layer':     property =  data;
-                        start_year = 1964;
-                        end_year = 2014;
+                            
                         break;
             case 'co2_layer':     world_country_size = data;
-                        start_year = 1964;
-                        end_year = 2011;
+                
                         break;
 
             default:    alert("wrong category !");break;
         }
 
         display_Density(start_year);
-        setup_slider(start_year, end_year);//1964-2014
+        //setup_slider(start_year, end_year,className);//1964-2014
         //animate_time();
 
     });

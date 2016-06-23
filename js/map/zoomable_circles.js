@@ -4,7 +4,7 @@
 
 
 /*calculate distance between any two project locations*/
-function generate_DistMatrix(){
+function generate_project_DistMatrix(){
     SC.projectNo =0;
 
     d3.csv("data/fcl/1. Projects.csv", function (err, projects) {
@@ -22,8 +22,7 @@ function generate_DistMatrix(){
             positionA.push(pointA.Longitude, pointA.Latitude);
             matrix.push([]);
             SC.projectNo++;
-            //No,FCL_Project,Case_study,Latitude,Longitude,Title,Description,Image_Credit,City,Country
-            projectObj["name"] = pointA.FCL_Project+" "+pointA.Case_study;
+            projectObj["name"] = pointA.Index+" "+pointA.Name;
             lat_unit  = Number(pointA.Latitude) >=0 ? Math.abs(pointA.Latitude) +'°N':Math.abs(pointA.Latitude) +'°S';
             lon_unit = Number(pointA.Longitude) >=0 ? Math.abs(pointA.Longitude) +'°E':Math.abs(pointA.Longitude) +'°W';
             projectObj["text"] = pointA.Title+"<br>"+lat_unit+" , "+lon_unit+"<br>"+pointA.City+" , "+pointA.Country+"<br>"
@@ -38,40 +37,84 @@ function generate_DistMatrix(){
             projects.forEach(function(pointB){
                 positionB = [];
                 positionB.push(pointB.Longitude, pointB.Latitude);
+                
+                distance = d3.geo.distance(positionA, positionB)* distance_Multiplier;
+                matrix[pointA.No-1].push(distance);
+            })
+        });
+
+        SC.project_matrix = matrix;
+        find_last_tier(100,zoom.scale(),'project_layer'); // draw tier1
+
+
+
+    });
+
+    
+}
+
+/*calculate distance between any two project locations*/
+function generate_network_DistMatrix(){
+    SC.networkNo =0;
+
+    d3.csv("data/fcl/2. Global Network.csv", function (err, items) {
+        var positionA = [];
+        var positionB = [];
+        var matrix = [];
+        var distance;
+        var distance_Multiplier = 1000; // km to m??
+        var Obj = {};
+        var lon_unit;
+        var lat_unit;
+
+        items.forEach(function (pointA) {
+            positionA = [];
+            positionA.push(pointA.Longitude, pointA.Latitude);
+            matrix.push([]);
+            SC.networkNo++;
+            Obj["name"] = pointA.Name;
+            lat_unit  = Number(pointA.Latitude) >=0 ? Math.abs(pointA.Latitude) +'°N':Math.abs(pointA.Latitude) +'°S';
+            lon_unit = Number(pointA.Longitude) >=0 ? Math.abs(pointA.Longitude) +'°E':Math.abs(pointA.Longitude) +'°W';
+            Obj["text"] = pointA.Title+"<br>"+lat_unit+" , "+lon_unit+"<br>"+pointA.Country;
+            Obj["latitude"] = pointA.Latitude;
+            Obj["longitude"] = pointA.Longitude;
+            Obj["country"] = pointA.Country;
+            SC.network.push(Obj);
+            Obj = {};
+
+            items.forEach(function(pointB){
+                positionB = [];
+                positionB.push(pointB.Longitude, pointB.Latitude);
 
                 distance = d3.geo.distance(positionA, positionB)* distance_Multiplier;
                 matrix[pointA.No-1].push(distance);
             })
         });
 
-        find_last_tier(matrix,100,1); // draw tier1
+        SC.network_matrix = matrix;
+        find_last_tier(100,zoom.scale(),'network_layer'); // draw tier1
 
-
-        SC.matrix = matrix;
     });
 
-    
+
 }
 
-var radius_unit = 5;
+
 var area_unit =200;
 //function to add points and text to the map (used in plotting capitals)
-function addpoint(color_status, lat, lon, title,text, projectNo, imgNo,scale) {
+function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
 
 
-    if(projectNo == undefined) projectNo = 1;
+    if(area == undefined) area = 1;
     if(imgNo == undefined) imgNo = 0;
-    if(color_status==undefined) color_status = 2;
 
 
-    var gpoint = g.append("g").attr("class","projects project_layer");
+    var gpoint = g.append("g").attr("class","items "+className);
     var x = projection([lon,lat])[0];
     var y = projection([lon, lat])[1];
-    var color_scheme = ["#CCFF99","#00FF00","#0000FF","#FFFF00","#00FFFF" ,
-        "#FF00FF","#C0C0C0","#FFFFF1","#780000 ","996633"];
     
     gpoint.selectAll("circle")
-        .data([{"projectNo":projectNo}])
+        .data([{"area":area}])
         .enter()
         .append("svg:circle")
         .style("stroke","#000")
@@ -79,10 +122,10 @@ function addpoint(color_status, lat, lon, title,text, projectNo, imgNo,scale) {
         .attr("cx", x)
         .attr("cy", y)
         .attr("class", "point")
-        .style("fill", 'yellow'//function () {return color_scheme[color_status];}
+        .style("fill", color//function () {return color_scheme[color_status];}
         ).style("opacity",0.7)
         .attr("r", function (d) {
-            return Math.sqrt(d["projectNo"]*area_unit/Math.PI);
+            return Math.sqrt(d["area"]*area_unit/Math.PI)/scale;
         })
         .on("mouseover", function () {
 
@@ -145,17 +188,14 @@ function addpoint(color_status, lat, lon, title,text, projectNo, imgNo,scale) {
 
 
 //function to add clusters of projects
-function add_zoomable_cluster(color_status, lat, lon, title,text, projectNo,scale,clusterObj) {
+function add_zoomable_cluster(color, lat, lon, title,text, area,scale,clusterObj,className) {
 
-    if(projectNo == undefined) projectNo = 2;
-    if(color_status==undefined) color_status = 6;
+    if(area == undefined) area = 2;
 
 
-    var gpoint = g.append("g").attr("class","projects project_layer");
+    var gpoint = g.append("g").attr("class","items "+className);
     var x = projection([lon,lat])[0];
     var y = projection([lon, lat])[1];
-    var color_scheme = ["#CCFF99","#00FF00","#0000FF","#FFFF00","#00FFFF" ,
-        "#FF00FF","#C0C0C0","#FFFFF1","#780000 ","996633"];
 
 
     gpoint.selectAll("circle")
@@ -167,10 +207,10 @@ function add_zoomable_cluster(color_status, lat, lon, title,text, projectNo,scal
         .attr("class", "cluster")
         .style("stroke","#000")
         .style("stroke-width", '0.5px')
-        .style("fill", 'yellow'//function () {return color_scheme[color_status];}
+        .style("fill", color//function () {return color_scheme[color_status];}
         ).style("opacity",0.4)
         .attr("r", function(d){
-            return Math.sqrt(d["projectNo"]*area_unit/Math.PI);
+            return Math.sqrt(d["area"]*area_unit/Math.PI)/scale;
         })
         .on("mouseover", function () {
 
@@ -211,7 +251,26 @@ function add_zoomable_cluster(color_status, lat, lon, title,text, projectNo,scal
 
 /*for the last tier, to create tree-structure zoomable circles for projects with same 
 or very close coordinates*/
-function find_last_tier(matrix, tier_range,scale){
+function find_last_tier(tier_range,scale,className){
+    
+    var max_No;
+    var items;
+    var matrix;
+    var color;
+    switch(className){
+        case 'project_layer':
+                                matrix = SC.project_matrix;
+                                max_No = SC.projectNo;
+                                items = SC.projects;
+                                color = 'yellow';
+                            break;
+        case 'network_layer':   matrix = SC.network_matrix;
+                                max_No = SC.networkNo;
+                                items = SC.network;
+                                color = 'blue';
+                            break;
+        default: break;
+    }
 
     var tier_status=[];// 1 indicates the corresponding project is included in tier1 already
     var check_status = []; //1 indicates checked alr for neighbours
@@ -221,10 +280,10 @@ function find_last_tier(matrix, tier_range,scale){
 
 
     //to create a neighbour matrix holding neighbours to each project
-    for(var index =0;index<SC.projectNo;index++){
+    for(var index =0;index<max_No;index++){
 
         neighbours.push([]);
-        for(var i=0; i<SC.projectNo;i++){
+        for(var i=0; i<max_No;i++){
             value = matrix[index][i];
             if(value<=tier_range && index !=i){ //index != i  to avoid same project distance
                 neighbours[index].push(i);
@@ -233,7 +292,7 @@ function find_last_tier(matrix, tier_range,scale){
     }
 
     //to classify projects into cluster
-    for (var j=0;j<SC.projectNo;j++){
+    for (var j=0;j<max_No;j++){
         tier_status.push(0);
         check_status.push(0);
 
@@ -254,7 +313,7 @@ function find_last_tier(matrix, tier_range,scale){
     cluster_aver_lat.push(0);
     cluster_aver_lon.push(0);
 
-    for(index = 0;index<SC.projectNo;index++){
+    for(index = 0;index<max_No;index++){
         if(check_status[index]==0){
             if(looptime>1) {
                 clusterIndex++;
@@ -301,85 +360,83 @@ function find_last_tier(matrix, tier_range,scale){
     clusterNumber.pop();
 
     var clusters = [];
-
-    var projects = SC.projects;
-    var project ;
+    
+    var item ;
 
     for(i=0;i<clusterNumber.length;i++){
         clusters.push([]);
 
     }
 
-    //sort projects in tier1_status according to cluster number, clusters[0] collects all projects with no cluster
-    for(i=0;i< SC.projectNo;i++){
+    //sort items in tier1_status according to cluster number, clusters[0] collects all items with no cluster
+    for(i=0;i< max_No;i++){
         index = tier_status[i];
-        clusters[index].push(i+1); //represents actual project numbers, from 1 to 55
-        project = projects[i];
-        cluster_aver_lat[index] += Number(project["latitude"]);
-        cluster_aver_lon[index] += Number(project["longitude"]);
+        clusters[index].push(i+1); //represents actual item numbers, from 1 to 55
+        item = items[i];
+        cluster_aver_lat[index] += Number(item["latitude"]);
+        cluster_aver_lon[index] += Number(item["longitude"]);
     }
 
 
     //add in cluster objects
-    var projectNo ;
+    var area ;
     var name;
     var text;
     var clusterSort = [];
     var clusterObj = {};
-    var projectObj = {};
+    var itemObj = {};
 
     for(i=1;i<clusterNumber.length;i++){
-        projectNo = clusterNumber[i];
-        cluster_aver_lat[i] = cluster_aver_lat[i]/projectNo;
-        cluster_aver_lon[i] = cluster_aver_lon[i]/projectNo;
+        area = clusterNumber[i];
+        cluster_aver_lat[i] = cluster_aver_lat[i]/area;
+        cluster_aver_lon[i] = cluster_aver_lon[i]/area;
 
-        clusterSort.push([i,projectNo]);
+        clusterSort.push([i,area]);
     }
     clusterSort.sort(function(a, b) {return b[1]-a[1];});
 
     //draw clusters, clusterIndex start from 1
-    var circle_diameter = 50;
-    setup_circles(circle_diameter);
+    setup_circles(className);
 
     for(i=0; i< clusterSort.length;i++){
         clusterIndex = clusterSort[i][0];
-        projectNo = clusterSort[i][1];
+        area = clusterSort[i][1];
         name = "Cluster "+clusterIndex;
-        text ="Number of Projects : "+projectNo;
+        text ="Number : "+area;
         clusterObj["name"] = name;
         clusterObj["text"] = text;
         clusterObj["longitude"] = cluster_aver_lon[clusterIndex];
         clusterObj["latitude"] = cluster_aver_lat[clusterIndex];
-        clusterObj["projectNo"] = projectNo;
+        clusterObj["area"] = area;
         clusterObj["children"] = [];
 
         //add in children for each cluster object
         for(j=0;j<clusters[clusterIndex].length;j++){
 
-            projectIndex = clusters[clusterIndex][j]-1;
-            project = projects[projectIndex];
-            projectObj["name"] = project["name"];
-            projectObj["projectIndex"] = projectIndex+1;
-            projectObj["text"] = project["text"];
-            projectObj["longitude"] = project["longitude"];
-            projectObj["latitude"] = project["latitude"];
-            projectObj["size"] = 1;
-            clusterObj["children"].push(projectObj);
-            projectObj ={};
+            itemIndex = clusters[clusterIndex][j]-1;
+            item = items[itemIndex];
+            itemObj["name"] = item["name"];
+            itemObj["itemIndex"] = itemIndex+1;
+            itemObj["text"] = item["text"];
+            itemObj["longitude"] = item["longitude"];
+            itemObj["latitude"] = item["latitude"];
+            itemObj["size"] = 1;
+            clusterObj["children"].push(itemObj);
+            itemObj ={};
         }
 
-        add_zoomable_cluster(6,cluster_aver_lat[clusterIndex],cluster_aver_lon[clusterIndex],name,text,projectNo,scale,clusterObj);
+        add_zoomable_cluster(color,cluster_aver_lat[clusterIndex],cluster_aver_lon[clusterIndex],name,text,area,scale,clusterObj,className);
         //draw_circles(clusterObj);
         clusterObj = {};
     }
 
-    //draw non-clustered projects
+    //draw non-clustered items
     var length = clusters[0].length;
-    var projectIndex;
+    var itemIndex;
     for (i=0;i<length;i++){
-        projectIndex = clusters[0][i]-1;
-        project = projects[projectIndex];
-        addpoint(2,project["latitude"],project["longitude"],project["name"],project["text"],1,projectIndex+1,scale);
+        itemIndex = clusters[0][i]-1;
+        item = items[itemIndex];
+        addpoint(color,item["latitude"],item["longitude"],item["name"],item["text"],1,itemIndex+1,scale,className);
     }
 
 }
@@ -393,10 +450,10 @@ var cg_g;
 var cg ;
 
 //to setup for draw_Circles at the first use
-function setup_circles(){
+function setup_circles(className){
+
     cg = svg.append("g")
-        .attr("class","project_layer")
-        .attr("id","zoomable_circles");
+        .attr("class",className);
 }
 
 //implement each cluster drawing to zoomable circles
@@ -407,7 +464,7 @@ function draw_circles(root){
         .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
         .interpolate(d3.interpolateHcl);
 
-    diameter = Math.sqrt(root["projectNo"]*area_unit/(Math.PI))/zoom.scale() *2;
+    diameter = Math.sqrt(root["area"]*area_unit/(Math.PI))/zoom.scale() *2;
     var pack = d3.layout.pack()
         .padding(2)
         .size([diameter , diameter ])
@@ -418,7 +475,7 @@ function draw_circles(root){
     var root_y = projection([root["longitude"],root["latitude"]])[1];
 
     cg_g = cg.append("g")
-        .attr("class","projects zoomable")
+        .attr("class","items zoomable")
         .attr("transform", "translate(" + root_x + "," + root_y  + ")")  //2
         .attr("style", "border: 1px solid #d0d0d0;");
 
@@ -465,10 +522,10 @@ function draw_circles(root){
 
 
                 //add in picture for the project
-                var project_img = new Image();
-                project_img.src = "img/project_img/" + d["projectIndex"] + "_fcl_vis.jpg";
-                //console.log("project_img.src = "+project_img.src);
-                d3.select("#tooltip_pic").attr("src", project_img.src);
+                var item_img = new Image();
+                item_img.src = "img/project_img/" + d["itemIndex"] + "_fcl_vis.jpg";
+
+                d3.select("#tooltip_pic").attr("src", item_img.src);
 
                 var width =tooltip.node().getBoundingClientRect().width;
                 var height =tooltip.select("#tooltip_text").node().getBoundingClientRect().height;
@@ -508,10 +565,10 @@ function draw_circles(root){
                         "<div id='tooltip_text'><b>" + d["name"] + "</b><br><br><p>" + d["text"] + "</div></div>");
 
                 //add in picture for the project
-                var project_img = new Image();
-                project_img.src = "img/project_img/"+d["projectIndex"]+"_fcl_vis.jpg";
-                //console.log("project_img.src = "+project_img.src);
-                d3.select("#tooltip_pic").attr("src",project_img.src);
+                var item_img = new Image();
+                item_img.src = "img/project_img/"+d["itemIndex"]+"_fcl_vis.jpg";
+
+                d3.select("#tooltip_pic").attr("src",item_img.src);
 
                 var width =tooltip.node().getBoundingClientRect().width;
                 var height =tooltip.select("#tooltip_text").node().getBoundingClientRect().height;
@@ -564,6 +621,7 @@ function draw_circles(root){
 function zoom_Circles(d) {
 
     focus = d;
+    console.log("zoom_circles() "+d);
 
     var transition = d3.transition()
         .duration(d3.event.altKey ? 7500 : 750)
@@ -599,11 +657,12 @@ function draw_project_legend(){
     var project_legend = body.append("div")
         .attr('class','legend project_layer');
 
-    var wFactor = 8,
+    var wFactor = 10,
         hFactor = 2;
 
-    var wBox = map_width / wFactor,
-        hBox = map_height / hFactor;
+
+    var wBox = 1280/wFactor,//map_width / wFactor,
+        hBox = 702/hFactor;//map_height / hFactor;
 
     var svg = project_legend
         .attr("z-index", 40)
@@ -638,7 +697,6 @@ function draw_project_legend(){
         }).attr('fill', 'yellow'//function (d, i) {return '#C0C0C0';}
     ).attr('r',function (d,i) {
         var s = zoom.scale();
-        console.log("legend_scale = "+s);
         return Math.sqrt(d*area_unit/(Math.PI));
     }).attr("opacity",0.5);
 
@@ -653,5 +711,5 @@ function draw_project_legend(){
     sg.append("text")
         .attr("dx",15)
         .attr("dy", function(d){return (hBox/6 *3+30);})
-        .text("Number of Project");
+        .text("Number");
 }
