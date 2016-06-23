@@ -142,7 +142,6 @@ function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
             //add in picture for the project
             var project_img = new Image();
             project_img.src = "img/project_img/"+imgNo+"_fcl_vis.jpg";
-            //console.log("project_img.src = "+project_img.src);
             d3.select("#tooltip_pic").attr("src",project_img.src);
 
         })
@@ -167,7 +166,7 @@ function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
             //add in picture for the project
             var project_img = new Image();
             project_img.src = "img/project_img/"+imgNo+"_fcl_vis.jpg";
-            //console.log("project_img.src = "+project_img.src);
+         
             d3.select("#tooltip_pic").attr("src",project_img.src);
 
             var width =tooltip.node().getBoundingClientRect().width;
@@ -621,7 +620,6 @@ function draw_circles(root){
 function zoom_Circles(d) {
 
     focus = d;
-    console.log("zoom_circles() "+d);
 
     var transition = d3.transition()
         .duration(d3.event.altKey ? 7500 : 750)
@@ -655,10 +653,10 @@ function draw_project_legend(){
     var body = d3.select("#content_holder");
 
     var project_legend = body.append("div")
-        .attr('class','legend project_layer');
+        .attr('class','legend project_layer project_legend');
 
-    var wFactor = 8,
-        hFactor = 3;
+    var wFactor = 10,
+        hFactor = 2;
 
 
     var wBox = 1280/wFactor,//map_width / wFactor,
@@ -669,7 +667,8 @@ function draw_project_legend(){
         .append("svg")
         .attr("width", wBox)
         .attr("height", hBox)
-        .append("g");
+        .append("g")
+        .attr("transform","translate(10,100)");
 
     var legend = svg
         .append('g')  
@@ -686,7 +685,6 @@ function draw_project_legend(){
     var area = [5,10,20];
 
     sg.selectAll('circle').data(area).enter().append('circle')
-        .attr("class","project_legend")
         .attr('cx',wBox/2)//wBox/2)
         .style("stroke","#000")
         .style("stroke-width","0.5px")
@@ -709,7 +707,7 @@ function draw_project_legend(){
         .text(function(d){return d});
 
     sg.append("text")
-        .attr("dx",15)
+        .attr("dx",wRect*2)
         .attr("dy", function(d){return (hBox/6 *3+30);})
         .text("Number");
 }

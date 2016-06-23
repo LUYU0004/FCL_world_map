@@ -28,7 +28,6 @@ function load_DData(_category){
                                             read_popData("pop_layer");
                                             setup_slider(1964, 2014,"pop_layer");//1964-2014
 
-            console.log("draw_legend()");
                                             break;
         
         case "CO2 Emission":
@@ -221,8 +220,6 @@ function draw_legend(max_property,className) {
     var color_legend = body
         .attr("class","legend "+className);
 
-    console.log(color_legend);
-
     var svg = color_legend
         .attr("z-index", 40)
         .append("svg")
@@ -274,83 +271,6 @@ function draw_legend(max_property,className) {
 
 }
 
-function draw_time_slider(className){
-
-    //d3.select("#time_slider").remove();
-
-    var body = d3.select("#year_label");//d3.select("#content_holder");
-    
-    var time_slider = body.append("div")
-        .attr('class','time_slider '+ className);
-
-/*
-    var playBtn_Image = new Image();
-    playBtn_Image.src = "img/Play_button.png";
-    var stopBtn_Image = new Image();
-    stopBtn_Image.src = "img/stop_button.png";
-    var replayBtn_Image = new Image();
-    replayBtn_Image.src = 'img/replay_button.png';
-
-    //var replay = false;
-    var play_stop_btn = body.append("a")
-        .classed(className,true)
-        .attr("href","#");
-
-
-
-
-    play_stop_btn.append("img")
-        .attr("class", "play_stopBtn")
-        .attr("src","img/Play_button.png")
-        .attr("alt","click");
-
-
-    play_stop_btn
-        .on("mouseover", function () {
-            d3.select("#play_stopBtn").style('borderColor','gold');
-        }).on("mouseout",function () {
-            d3.select("#play_stopBtn").style('borderColor', 'transparent');
-        })
-        .on('click',function(){
-
-            if(status ==0){ 
-                d3.select("#play_stopBtn").attr('src' ,stopBtn_Image.src);
-                status = 1;
-                animate_time();
-            }else{
-                d3.select("#play_stopBtn").attr('src' ,playBtn_Image.src);
-                status = 0;
-                stop_animateTime();
-            }
-    });
- 
- var replay_btn = body.append("a")
- .classed(className,true)
- .attr("href","#");
-
- replay_btn.append("img")
- .attr("class", "replay_Btn")
- .attr("src","img/replay_button.png")
- .attr("alt","click");
-
-    replay_btn
-        .on("mouseover", function () {
-            d3.select("#replay_Btn").style('borderColor','gold');
-        }).on("mouseout",function () {
-        d3.select("#replay_Btn").style('borderColor', 'transparent');
-    })
-        .on('click',function(){
-
-        cur_year = start_year;
-        status =0;
-        stop_animateTime();
-        status = 1;
-        d3.select("#play_stopBtn").attr("src",stopBtn_Image.src);
-        animate_time();
-
-    });*/
-
-}
 
 function find_country_property(country_name) {
 
