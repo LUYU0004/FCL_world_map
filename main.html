@@ -40,8 +40,16 @@
 
 
                         if(res){
-                            pop_layer = true;
+                            //remove the co2_layer to avoid multi-layer exist at the same time
+                            remove_layer('.co2_layer');
+                            if(co2_layer){
+                                d3.select("#co2_emissionBtn").classed("selectedBtn",false);
+                                co2_layer = false;
+                                d3.select("#co2_emissionBtn").selectAll("ul").style("height","0");
 
+                            }
+
+                            pop_layer = true;
                             load_DData(category);
                         }else{
                             pop_layer = false;
@@ -54,11 +62,19 @@
                     var res  = d3.select(this).classed("selectedBtn");
 
                     if(res){
+                        if(pop_layer){
+
+                            document.getElementById("pop_densityBtn").classList.toggle("selectedBtn");
+                            pop_layer = false;
+                            d3.select("#pop_densityBtn").selectAll("ul").style("height","0");
+                            remove_layer('.pop_layer');
+                        }
+
                         co2_layer = true;
                         the_ul.style("height","93px");
                         load_DData(category);
                     }else{
-                        pop_layer = false;
+                        co2_layer = false;
                         the_ul.style("height","0");
                         remove_layer('.co2_layer');
                     }
@@ -124,16 +140,13 @@
             <h4><a>  Population Density</a></h4>
             <ul>
                 <li><div class="color_slider"></div></li>
-
             </ul>
         </div>
 
         <div class="menu-item navg_button" id="co2_emissionBtn">
             <h4><a>  CO2 Emission Per Capita</a></h4>
             <ul>
-                <li><a href="#">Phone</a></li>
-                <li><a href="#">Email</a></li>
-                <li><a href="#">Location</a></li>
+                <li></li>
             </ul>
         </div>
 
@@ -171,7 +184,7 @@ document.getElementById('global_networkBtn').addEventListener("click", newInput)
 <script src="js/map/population_density_display.js"></script>
 <script src="js/slider/timer_slider.js"></script>
 <script src="js/map/zoomable_circles.js"></script>
-<script src="js/slider/color_slider.js"></script>
+
 
 </body>
 </html>

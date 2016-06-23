@@ -68,7 +68,7 @@ function setup() {
         .append("g");
 
     g = svg.append("g").attr("id","country_holder");
-
+    
 }
 
 function draw_worldmap() {
@@ -116,8 +116,8 @@ function draw_worldmap() {
     }).on("mouseout", function (d, i) {
         return tooltip.attr("style", "visibility: hidden");
     });
-
-    remove_layer('.pop_layer');
+    
+    
     category = "Population Density";
     document.getElementById("pop_densityBtn").classList.toggle("selectedBtn");
     pop_layer = true;

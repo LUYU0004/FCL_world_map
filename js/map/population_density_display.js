@@ -21,18 +21,17 @@ function load_DData(_category){
 
 
     switch(category){
-        case "Population Density":          //remove_layer();
-                                            //draw_time_slider('pop_layer');
+        case "Population Density":        
                                             color_split = [500, 400, 300, 200, 100, 50, 10, 0];
                                             max_property=1000;
                                             draw_legend(max_property,"pop_layer");
                                             read_popData("pop_layer");
                                             setup_slider(1964, 2014,"pop_layer");//1964-2014
-                                            draw_color_slider('pop_layer');
+
+            console.log("draw_legend()");
                                             break;
         
-        case "CO2 Emission":        //remove_layer();
-                                    //draw_time_slider('co2_layer');
+        case "CO2 Emission":
                                                 color_split = [50, 20, 10, 5, 1, 0.1, 0];//1964-2011
                                                 max_property=100;
                                                 draw_legend(max_property,"co2_layer");
@@ -54,7 +53,7 @@ function load_DData(_category){
 
 
 /*create or update population density on map*/
-function display_Density(cur_year, min_range,max_range){
+function display_Density(cur_year){
 
     var densityMultiplier = 1;
 
@@ -79,12 +78,9 @@ function display_Density(cur_year, min_range,max_range){
             var density = year_property / c_size*densityMultiplier;
 
             for (var index = 0; index < color_split.length; index++) {
-                if(density>=min_range&&density<=max_range) {
-                    if (density > color_split[index]) {
-
-                        return colors[index];
-                    }
-
+                if (density > color_split[index]){
+                    
+                    return colors[index];
                 }
             }
 
@@ -199,31 +195,33 @@ function display_Density(cur_year, min_range,max_range){
  */
 function draw_legend(max_property,className) {
 
-    //d3.selectAll(".legend").remove();
-
-    var wFactor = 10,
-        hFactor = 2;
-
-    var wBox = map_width / wFactor,
-        hBox = map_height / hFactor;
-
-
-    var wRect = wBox / (wFactor * 0.75),
-        offsetText = wRect / 2,
-        offsetY = map_height - hBox * 2,//0.9
-        tr = 'translate(' + offsetText + ',' + offsetText * 3 + ')';
+    var wBox = 190,
+        hBox = 100;
 
     var steps = color_split.length,
-        hLegend = hBox - hBox / (hFactor * 1.8),
-        hRect = hLegend / steps,
-        offsetYFactor = hFactor / hRect;
+        hRect = 15,
+        offsetY = 30;
 
-    var label_height = 15;
+    var wRect = wBox / steps,
+        offsetText = wRect / 2;
 
-    var body = d3.select("#content_holder");
+    var body;
+    var unit_text;
 
-    var color_legend = body.append("div")
+    switch(className){
+        case 'pop_layer': body = d3.select("#pop_densityBtn").selectAll("li").append("div");
+            unit_text = "People per sq.km";
+            break;
+        case 'co2_layer': body = d3.select("#co2_emissionBtn").selectAll("li").append("div");
+            unit_text = "Tons per person";
+            break;
+        default: break;
+    }
+
+    var color_legend = body
         .attr("class","legend "+className);
+
+    console.log(color_legend);
 
     var svg = color_legend
         .attr("z-index", 40)
@@ -239,49 +237,39 @@ function draw_legend(max_property,className) {
 
 
     var sg = legend.append('g')
-        .attr('transform', tr);
+        .attr('transform', "translate(2,15)");
 
     var partial_colors = colors.slice(0, color_split.length);
+
     sg.selectAll('rect').data(partial_colors ).enter().append('rect')
-        .attr('y', function (d, i) {
-            return i * hRect+label_height;
-        }).attr('fill', function (d, i) {
+        .attr('x', function (d, i) {
+            return i * wRect;
+        })
+        .attr('y', offsetY)
+        .attr('fill', function (d, i) {
         return colors[i];
     }).attr('width', wRect).attr('height', hRect);
 
-    //var max_population = 1398790000;
+
 
     // Draw color scale labels.
-    sg.selectAll('text').data(partial_colors).enter().append('text').text(function (d, i) {
-        // The last element in the colors list corresponds to the lower threshold.
-        //var label = formatNum(color_split[i]);
-
+    sg.selectAll('text').data(partial_colors).enter().  append('text').text(function (d, i) {
         return color_split[i];
     }).attr('class', function (d, i) {
         return 'text-' + i;
-    }).attr('x', wRect + offsetText)
-        .attr('y', function (d, i) {
-            return i * hRect+ (hRect + hRect * offsetYFactor)+label_height;
-        });
+    }).attr('x', function(d,i){
+        return (i+1) * wRect;})
+        .attr('y', offsetY+hRect+ offsetText);
 
     //Draw label for end of extent.
     sg.append('text').text(function () {
         //var text = formatNum(max_population);
         return max_property;
 
-    }).attr('x', wRect + offsetText).attr('y', offsetText * offsetYFactor * 2+label_height);
+    }).attr('x', 0).attr('y', offsetY-3);
 
-    sg.append('text').text(function () {
-        switch (className){
-            case "pop_layer":          return "People per sq.km";
-                break;
-
-            case "co2_layer":            return "Tons per person";
-                break;
-        }
-
-    }).attr('x', 2).attr('y', function(){
-        return 0;//(color_split.length+1) * hRect;
+    sg.append('text').text(unit_text).attr('x', 2).attr('y', function(){
+        return 0;
     });
 
 }

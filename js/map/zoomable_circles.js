@@ -657,8 +657,8 @@ function draw_project_legend(){
     var project_legend = body.append("div")
         .attr('class','legend project_layer');
 
-    var wFactor = 10,
-        hFactor = 2;
+    var wFactor = 8,
+        hFactor = 3;
 
 
     var wBox = 1280/wFactor,//map_width / wFactor,

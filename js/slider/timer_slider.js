@@ -9,9 +9,6 @@ var overlay,label,box;
 
 function setup_slider(start_y, end_y, className){
 
-/*<div class="menu-item" style="height: 140px;" id ="label_slider">
-    </div>*/
-    //console.log("setup_slider("+start_y+" , "+end_y+") ");
     d3.selectAll(".menu_bar").append("div")
         .attr("class","menu-item "+className)
         .attr("height",140)
@@ -122,7 +119,7 @@ function setup_slider(start_y, end_y, className){
 }
 
 function enableInteraction() {
-    console.log("enableInteraction!");
+
     var yearScale = d3.scale.linear()
         .domain([start_year, end_year])
         .range([box.x + 10, box.x + box.width - 10])
@@ -140,7 +137,6 @@ function enableInteraction() {
         .on("touchmove", mousemove);
 
     function mouseover() {
-        console.log("active");
         label.classed("active", true);
     }
 
@@ -154,7 +150,6 @@ function enableInteraction() {
             stop_animateTime();
 
         }
-        console.log("mousemove");
         label.classed("active", true);
         cur_year = yearScale.invert(d3.mouse(this)[0]);
         brushed();
@@ -163,7 +158,6 @@ function enableInteraction() {
 
 
 function animate_time() {
-    //console.log("animate_time()");
 
     slider
         .call(brush.event)
@@ -188,7 +182,6 @@ function stop_animateTime(){
 
 function update(value){
     cur_year = Math.round(value);
-    //console.log("update- cur_year: "+ cur_year);
     display_Density(cur_year);
     label.text(cur_year);
 }
@@ -196,19 +189,16 @@ function update(value){
 function brushed() {
 
     var value = brush.extent()[0];
-        //console.log("brushed! value: "+value);
 
         if (d3.event.sourceEvent) { // not a programmatic event
             value = x.invert(d3.mouse(this)[0]);
-            console.log("d3.event.sourceEvent"+d3.event.sourceEvent+ ",  brush",value);
             brush.extent([value, value]);
         }else{
             if(status == 0){
                 value = cur_year;
                 brush.extent([cur_year, cur_year]);
-                console.log("status ==0  "+ cur_year);
+
             }
-            console.log("nothing "+value);
         }
 
     handle.attr("cx", x(value));

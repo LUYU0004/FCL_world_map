@@ -8,8 +8,8 @@
 function draw_color_slider(className) {
 
     var margin = {top: 430, right: 10, bottom: 100, left: 40},
-        width = 960 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+        width = 200 - margin.left - margin.right,
+        height = 50 - margin.top - margin.bottom;
 
     var parseDate = d3.time.format("%b %Y").parse;
 

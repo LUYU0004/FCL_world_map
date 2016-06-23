@@ -133,11 +133,11 @@ nav{
     height: 0; /*Collapses the menu*/
 
     /*Animation*/
-    -webkit-transition: height 1s ease;
-    -moz-transition: height 1s ease;
-    -o-transition: height 1s ease;
-    -ms-transition: height 1s ease;
-    transition: height 1s ease;
+    -webkit-transition: height 0.2s ease;
+    -moz-transition: height 0.2s ease;
+    -o-transition: height 0.2s ease;
+    -ms-transition: height 0.2s ease;
+    transition: height 0.2s ease;
 
 }
 
@@ -155,13 +155,9 @@ nav{
     border-bottom: 1px solid #eee;
 }
 
-.menu-item li:hover {
-    background: #eee;
-}
-
 
 .selectedBtn {
-    background-color: #a6a6a6;
+    background-color: #cccccc;
 }
 
 #map_container {
@@ -174,13 +170,9 @@ nav{
 
 }
 
-.legend {
-    bottom: 10px;
-    left: 40px;
-    margin: 5px 5px 0px 0px;
-    padding:2px;
+legend {
     z-index: 10;
-    position: absolute;
+    font-size: 12px;
 
 }
 
