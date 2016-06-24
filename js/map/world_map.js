@@ -8,10 +8,15 @@
 window.SC = {};
 SC.projectNo =0;
 SC.networkNo = 0;
+SC.staffNo = 0;
+
 SC.projects = [];
 SC.network = [];
+SC.staff = [];
+
 SC.project_matrix = [];
 SC.network_matrix = [];
+SC.staff_matrix = [];
 
 
 var world_topo;
@@ -153,6 +158,7 @@ function move(t,s) {
         svg.selectAll(".items").remove();
         if(project_layer)find_last_tier(tier_range,scale,'project_layer');
         if(network_layer)find_last_tier(tier_range,scale,'network_layer');
+        if(staff_layer)find_last_tier(tier_range,scale,'staff_layer');
        
     }else if(s>=tier3_scale){
         
@@ -161,6 +167,7 @@ function move(t,s) {
         svg.selectAll(".items").remove();
         if(project_layer)find_last_tier(tier_range,scale,'project_layer');
         if(network_layer)find_last_tier(tier_range,scale,'network_layer');
+        if(staff_layer)find_last_tier(tier_range,scale,'staff_layer');
 
     }else if(s>=tier2_scale){
         tier_range = 25;
@@ -168,6 +175,7 @@ function move(t,s) {
         svg.selectAll(".items").remove();
         if(project_layer)find_last_tier(tier_range,scale,'project_layer');
         if(network_layer)find_last_tier(tier_range,scale,'network_layer');
+        if(staff_layer)find_last_tier(tier_range,scale,'staff_layer');
 
     }else if(s>=tier1_scale){
         
@@ -176,6 +184,7 @@ function move(t,s) {
         svg.selectAll(".items").remove();
         if(project_layer)find_last_tier(tier_range,scale,'project_layer');
         if(network_layer)find_last_tier(tier_range,scale,'network_layer');
+        if(staff_layer)find_last_tier(tier_range,scale,'staff_layer');
 
     }else{
 
@@ -184,6 +193,7 @@ function move(t,s) {
         svg.selectAll(".items").remove();
         if(project_layer)find_last_tier(tier_range,scale,'project_layer');
         if(network_layer)find_last_tier(tier_range,scale,'network_layer');
+        if(staff_layer)find_last_tier(tier_range,scale,'staff_layer');
     }
     
     

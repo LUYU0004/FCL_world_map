@@ -53,7 +53,7 @@ function generate_project_DistMatrix(){
     
 }
 
-/*calculate distance between any two project locations*/
+/*calculate distance between any two partner locations*/
 function generate_network_DistMatrix(){
     SC.networkNo =0;
 
@@ -98,6 +98,54 @@ function generate_network_DistMatrix(){
 
 
 }
+
+
+/*calculate distance between any two staff country
+Nationality,Based,Latitude,Longitude*/
+function generate_staff_DistMatrix(){
+    SC.staffNo =0;
+
+    d3.csv("data/fcl/3. Academic staff.csv", function (err, items) {
+        var positionA = [];
+        var positionB = [];
+        var matrix = [];
+        var distance;
+        var distance_Multiplier = 1000; // km to m??
+        var Obj = {};
+        var lon_unit;
+        var lat_unit;
+
+        items.forEach(function (pointA) {
+            positionA = [];
+            positionA.push(pointA.Longitude, pointA.Latitude);
+            matrix.push([]);
+            SC.staffNo++;
+            Obj["name"] = pointA.Nationality;
+            lat_unit  = Number(pointA.Latitude) >=0 ? Math.abs(pointA.Latitude) +'°N':Math.abs(pointA.Latitude) +'°S';
+            lon_unit = Number(pointA.Longitude) >=0 ? Math.abs(pointA.Longitude) +'°E':Math.abs(pointA.Longitude) +'°W';
+            Obj["text"] = lat_unit+" , "+lon_unit;
+            Obj["latitude"] = pointA.Latitude;
+            Obj["longitude"] = pointA.Longitude;
+            SC.staff.push(Obj);
+            Obj = {};
+
+            items.forEach(function(pointB){
+                positionB = [];
+                positionB.push(pointB.Longitude, pointB.Latitude);
+
+                distance = d3.geo.distance(positionA, positionB)* distance_Multiplier;
+                matrix[pointA.No-1].push(distance);
+            })
+        });
+
+        SC.staff_matrix = matrix;
+        find_last_tier(100,zoom.scale(),'staff_layer'); // draw tier1
+
+    });
+
+
+}
+
 
 
 var area_unit =200;
@@ -268,6 +316,11 @@ function find_last_tier(tier_range,scale,className){
                                 items = SC.network;
                                 color = 'blue';
                             break;
+        case 'staff_layer':   matrix = SC.staff_matrix;
+            max_No = SC.staffNo;
+            items = SC.staff;
+            color = 'pink';
+            break;
         default: break;
     }
 
@@ -646,14 +699,24 @@ function zoomTo(v) {
     });
 }
 
-function draw_project_legend(){
+function draw_project_legend(className){
 
    // d3.selectAll(".legend").remove();
+    var color;
+    switch(className){
+        case 'project_layer':  color = 'yellow';
+            break;
+        case 'network_layer':  color = 'blue';
+            break;
+        case 'staff_layer': color = 'pink';
+            break;
+        default: break;
+    }
 
     var body = d3.select("#content_holder");
 
     var project_legend = body.append("div")
-        .attr('class','legend project_layer project_legend');
+        .attr('class','legend project_legend '+className);
 
     var wFactor = 10,
         hFactor = 2;
@@ -692,7 +755,7 @@ function draw_project_legend(){
             var y=hBox/6 *i+d;
 
             return y;
-        }).attr('fill', 'yellow'//function (d, i) {return '#C0C0C0';}
+        }).attr('fill', color//function (d, i) {return '#C0C0C0';}
     ).attr('r',function (d,i) {
         var s = zoom.scale();
         return Math.sqrt(d*area_unit/(Math.PI));

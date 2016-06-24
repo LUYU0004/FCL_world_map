@@ -22,6 +22,7 @@
     var co2_layer = false;
     var project_layer = false;
     var network_layer = false;
+    var staff_layer = false;
 
     function newInput(){
 
@@ -105,6 +106,19 @@
                     }
                     break;
 
+                case 'academic_staffBtn': //category = "Global Network";
+                    this.classList.toggle("selectedBtn");
+                    var res  = d3.select(this).classed("selectedBtn");
+
+                    if(res){
+                        staff_layer = true;
+                        load_DData("Academic Staff");
+                    }else{
+                        staff_layer = false;
+                        remove_layer('.staff_layer');
+                    }
+                    break;
+
                 default: break;
             }
 
@@ -118,7 +132,7 @@
 
     /* Set the width of the side navigation to 250px */
     function openNav() {
-        document.getElementById("mySidenav").style.width = "200px";
+        document.getElementById("mySidenav").style.width = "160px";
     }
 
     /* Set the width of the side navigation to 0 */
@@ -155,11 +169,11 @@
 
 
     <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="border-bottom:0px solid red;">&times;</a>
         <a href="#" id="fcl_projectsBtn"> FCL Projects</a>
         <a href="#" id="global_networkBtn">Global Network</a>
-        <a href="#">Staff</a>
-        <a href="http://www.fcl.ethz.ch/" target="_blank">Website</a>
+        <a href="#" id="academic_staffBtn">Academic Staff</a>
+        <a href="http://www.fcl.ethz.ch/" target="_blank" style="text-decoration:underline;color:dodgerblue;">FCL Website</a>
     </div>
 
     <!-- Use any element to open the sidenav -->
@@ -178,6 +192,7 @@ document.getElementById('pop_densityBtn').addEventListener("click", newInput);
 document.getElementById('co2_emissionBtn').addEventListener("click", newInput);
 document.getElementById('fcl_projectsBtn').addEventListener("click", newInput);
 document.getElementById('global_networkBtn').addEventListener("click", newInput);
+document.getElementById('academic_staffBtn').addEventListener("click", newInput);
 </script>
 
 <script src="js/map/world_map.js"></script>

@@ -39,11 +39,16 @@ function load_DData(_category){
                                                 break;
 
         case "FCL Projects":        //remove_layer();
-                                    draw_project_legend();
+                                    draw_project_legend('project_layer');
                                    generate_project_DistMatrix();
                                         break;
 
-        case "Global Network":    generate_network_DistMatrix();
+        case "Global Network":      draw_project_legend('network_layer');
+                                    generate_network_DistMatrix();
+                                    break;
+        
+        case "Academic Staff":      draw_project_legend('staff_layer');
+                                    generate_staff_DistMatrix();
                                     break;
         default: break;
     }
