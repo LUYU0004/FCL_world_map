@@ -57,6 +57,7 @@
                             pop_layer = false;
                             the_ul.style("height","0");
                             remove_layer('.pop_layer');
+                            if(!(pop_layer|co2_layer)) draw_worldmap();
                         }
                     break;
                 case 'co2_emissionBtn': category = "CO2 Emission";
@@ -79,11 +80,12 @@
                         co2_layer = false;
                         the_ul.style("height","0");
                         remove_layer('.co2_layer');
+                        if(!(pop_layer|co2_layer)) draw_worldmap();
                     }
                     break;
                 case  'fcl_projectsBtn': //category = "FCL Projects";
 
-                    if(!(pop_layer|co2_layer)) draw_worldmap();
+                    //if(!(pop_layer|co2_layer)) draw_worldmap();
                     this.classList.toggle("selectedBtn");
                     var res  = d3.select(this).classed("selectedBtn");
 
@@ -96,7 +98,7 @@
                     }
                     break;
                 case 'global_networkBtn': //category = "Global Network";
-                    if(!(pop_layer|co2_layer)) draw_worldmap();
+                    //if(!(pop_layer|co2_layer)) draw_worldmap();
                     this.classList.toggle("selectedBtn");
                     var res  = d3.select(this).classed("selectedBtn");
 
@@ -110,7 +112,7 @@
                     break;
 
                 case 'academic_staffBtn': //category = "Global Network";
-                    if(!(pop_layer|co2_layer)) draw_worldmap();
+
                     this.classList.toggle("selectedBtn");
                     var res  = d3.select(this).classed("selectedBtn");
 
@@ -185,6 +187,7 @@
 
 
     <div id="map_container">
+        <!--<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7830112895026!2d103.78620331459703!3d1.3052853620809883!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da1a431841d5f1%3A0x160f705c61acdff3!2ssixty40!5e0!3m2!1sen!2ssg!4v1466989919758" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>-->
     </div>
 
 </div>
