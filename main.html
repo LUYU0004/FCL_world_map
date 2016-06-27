@@ -9,9 +9,11 @@
     <link rel="stylesheet" href="css/zoomable_circles.css"/>
     <link rel="stylesheet" href="css/tooltip.css"/>
     <link rel="stylesheet" href="css/sliding_menuBar.css"/>
+    <link rel="stylesheet" href="css/google_map.css"/>
 
     <script src="//d3js.org/d3.v3.min.js"></script>
     <script src="js/lib/topojson.v1.min.js"></script>
+
 </head>
 
 <body>
@@ -23,6 +25,7 @@
     var project_layer = false;
     var network_layer = false;
     var staff_layer = false;
+    var google_layer = false;
 
     function newInput(){
 
@@ -57,7 +60,7 @@
                             pop_layer = false;
                             the_ul.style("height","0");
                             remove_layer('.pop_layer');
-                            if(!(pop_layer|co2_layer)) draw_worldmap();
+                            if(!(pop_layer|co2_layer)) redraw_worldmap();
                         }
                     break;
                 case 'co2_emissionBtn': category = "CO2 Emission";
@@ -80,9 +83,10 @@
                         co2_layer = false;
                         the_ul.style("height","0");
                         remove_layer('.co2_layer');
-                        if(!(pop_layer|co2_layer)) draw_worldmap();
+                        if(!(pop_layer|co2_layer)) redraw_worldmap();
                     }
                     break;
+
                 case  'fcl_projectsBtn': //category = "FCL Projects";
 
                     //if(!(pop_layer|co2_layer)) draw_worldmap();
@@ -91,12 +95,14 @@
 
                     if(res){
                         project_layer = true;
+                        load_google_map();
                         load_DData("FCL Projects");
                     }else{
                         project_layer = false;
                         remove_layer('.project_layer');
                     }
                     break;
+
                 case 'global_networkBtn': //category = "Global Network";
                     //if(!(pop_layer|co2_layer)) draw_worldmap();
                     this.classList.toggle("selectedBtn");
@@ -124,6 +130,7 @@
                         remove_layer('.staff_layer');
                     }
                     break;
+
 
                 default: break;
             }
@@ -153,7 +160,7 @@
 
     <nav class = "menu_bar">
         <div class="menu-item" style="padding: 10px; border-top: 0">
-            <img id="fcl_logo" src="res/fcl_logo.png" alt="fcl_logo" width="180px" height="40px">
+            <img id="fcl_logo" src="img/Logo_FCLwhite.png" alt="fcl_logo" width="180px" height="40px">
         </div>
 
         <div class="menu-item navg_button" id="pop_densityBtn">
@@ -175,10 +182,11 @@
 
 
     <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="border-bottom:0px solid red;">&times;</a>
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="border-bottom:0 solid red;">&times;</a>
         <a href="#" id="fcl_projectsBtn"> FCL Projects</a>
         <a href="#" id="global_networkBtn">Global Network</a>
         <a href="#" id="academic_staffBtn">Academic Staff</a>
+        <a href="#" id="google_mapBtn">Google Map</a>
         <a href="http://www.fcl.ethz.ch/" target="_blank" style="text-decoration:underline;color:dodgerblue;">FCL Website</a>
     </div>
 
@@ -200,13 +208,14 @@ document.getElementById('co2_emissionBtn').addEventListener("click", newInput);
 document.getElementById('fcl_projectsBtn').addEventListener("click", newInput);
 document.getElementById('global_networkBtn').addEventListener("click", newInput);
 document.getElementById('academic_staffBtn').addEventListener("click", newInput);
+document.getElementById('google_mapBtn').addEventListener("click",newInput);
 </script>
 
 <script src="js/map/world_map.js"></script>
 <script src="js/map/population_density_display.js"></script>
 <script src="js/slider/timer_slider.js"></script>
 <script src="js/map/zoomable_circles.js"></script>
-
+<script src="js/google_map/google_map.js"></script>
 
 </body>
 </html>

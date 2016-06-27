@@ -5,10 +5,10 @@ span#openBtn{
     right: 0px;
     position:absolute;
     text-align: center;
-    z-index: 20;
-    border: 2px solid #818181;
-    background-color: #a6a6a6;
-    box-shadow: 1px 1px 5px #adadad;
+    z-index: 25;
+    border: 2px solid #1f2933;
+    background-color: #1f2933;
+    box-shadow: 1px 1px 5px #626262;
 }
 
 /* The side navigation menu */
@@ -18,8 +18,8 @@ span#openBtn{
     position: fixed; /* Stay in place */
     z-index: 30; /* Stay on top */
     bottom: 80px;
-    right: 0;
-    background-color: #a6a6a6;
+    right: 0px;
+    background-color: #1f2933;
     box-shadow: 1px 1px 5px #adadad;
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 50px; /* Place content 60px from the top */
@@ -33,7 +33,7 @@ span#openBtn{
     font-size: 16px;
     color: white;
     display: block;
-    border-bottom: 2px solid #646464;
+    border-bottom: 2px solid #010101;
     transition: 0.3s
 }
 

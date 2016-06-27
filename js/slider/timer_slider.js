@@ -39,8 +39,9 @@ function setup_slider(start_y, end_y, className){
         .extent([start_year, start_year])
         .on("brush", brushed);
 
-    var body = d3.select("#label_slider");//d3.select("#content_holder");
+    var body = d3.select("#label_slider"); //d3.select("#content_holder");
 
+    
     /*Add the year label; the value is set on transition.*/
     var label_svg = body//d3.select("#year_label")
         .attr("z-index", 30)
@@ -89,6 +90,7 @@ function setup_slider(start_y, end_y, className){
     slider_svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate("+slider_margin.left+"," + slider_height / 3 + ")")
+        .style("color","white")
         .call(d3.svg.axis()
             .scale(x)
             .orient("bottom")

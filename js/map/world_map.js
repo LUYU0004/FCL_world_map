@@ -39,7 +39,7 @@ var map_width , map_height;
 var projection, path, svg, g, graticule;
 var tooltip, one_tooltip, fcl_tooltip;
 
-var zoom = d3.behavior.zoom().scaleExtent([1, 8])
+var zoom = d3.behavior.zoom().scaleExtent([1, 4])
             .on("zoom",move);
 
 
@@ -49,7 +49,7 @@ function setup() {
     offsetT = document.getElementById("map_container").offsetTop + 10;
 
     tooltip = d3.select("#map_container").append("div")//.attr("class", "tooltip")
-        .attr("style","fill: none");//
+        .attr("style","fill: none");
 
     fcl_tooltip = tooltip.append("div").attr("style","fill: none").attr("z-index",20);
     one_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden").attr("z-index",50);
@@ -75,6 +75,8 @@ function setup() {
         .call(zoom)
         .on("click", click)
         .append("g");
+
+    console.log(map_width,map_height);
 
     g = svg.append("g").attr("id","country_holder");
     
@@ -124,9 +126,33 @@ function draw_worldmap() {
         return one_tooltip.attr("style", "visibility: hidden");
     });
     
+    
+}
 
-    
-    
+function redraw_worldmap(){
+    var country = g.selectAll(".country").data(this.world_topo);
+
+    country.attr("fill",
+        function (d) {
+            return "#DEEBF7";
+        });
+
+    country.on("mouseover", function(){
+        return one_tooltip.attr("style","visibility: visible;borderColor: #F5F5DC");})
+        .on("mousemove", function (d,i) {
+            var mouse = d3.mouse(svg.node()).map(function (d) {
+                return parseInt(d);
+            });
+
+            return one_tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
+                .html(d.properties.name);
+
+
+
+        }).on("mouseout", function (d, i) {
+        return one_tooltip.attr("style", "visibility: hidden");
+    });
+
 }
 
 function draw_pop_layer(){
@@ -139,8 +165,7 @@ function draw_pop_layer(){
 }
 
 
-
-
+var callcount = 0;
 function move(t,s) {
     if(t ==undefined || s== undefined){
         s = d3.event.scale ;
@@ -149,15 +174,28 @@ function move(t,s) {
     }
 
     var tier1_scale = 2;
-    var tier2_scale = 4;
-    var tier3_scale = 6;
-    var tier4_scale =7;
+    var tier2_scale = 2.5;
+    var tier3_scale = 3;
+    var tier4_scale =3.5;
+    var google_map_scale = 4;
     var tier_range = 100;
     var scale =2;
 
 
-    if(s>= tier4_scale) {
-        
+    if(s>=google_map_scale){
+
+        if(project_layer){
+            callcount++;
+            console.log(callcount);
+            if(callcount==1)load_google_map();
+
+        }
+    }else if(s>= tier4_scale) {
+
+        if(project_layer&&callcount>0){
+            callcount=0;
+            d3.select("#google_map").remove();
+        }
         tier_range = 3;
         scale = tier4_scale;
         svg.selectAll(".items").remove();
