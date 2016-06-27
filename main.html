@@ -26,8 +26,9 @@
 
     function newInput(){
 
-        tooltip.style("visibility","hidden");
+        //tooltip.style("visibility","hidden");
         //d3.selectAll(".navg_button").classed("selectedBtn",false);
+
         if(this.id){
             var the_ul = d3.select(this).selectAll("ul");
 
@@ -82,6 +83,7 @@
                     break;
                 case  'fcl_projectsBtn': //category = "FCL Projects";
 
+                    if(!(pop_layer|co2_layer)) draw_worldmap();
                     this.classList.toggle("selectedBtn");
                     var res  = d3.select(this).classed("selectedBtn");
 
@@ -94,6 +96,7 @@
                     }
                     break;
                 case 'global_networkBtn': //category = "Global Network";
+                    if(!(pop_layer|co2_layer)) draw_worldmap();
                     this.classList.toggle("selectedBtn");
                     var res  = d3.select(this).classed("selectedBtn");
 
@@ -107,6 +110,7 @@
                     break;
 
                 case 'academic_staffBtn': //category = "Global Network";
+                    if(!(pop_layer|co2_layer)) draw_worldmap();
                     this.classList.toggle("selectedBtn");
                     var res  = d3.select(this).classed("selectedBtn");
 

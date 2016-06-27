@@ -31,9 +31,9 @@ No,Nationality,Based,Latitude,Longitude
 30,Germany,Switzerland,51.165691,10.451526
 31,Turkey,Singapore,38.963745,35.243322
 32,Switzerland,USA,46.818188,8.227512
-33,Netherlands,Singapore,,52.132633,5.291266
+33,Netherlands,Singapore,52.132633,5.291266
 34,United Kingdom,Singapore,55.378051,-3.435973
-35,Netherlands,Singapore,,52.132633,5.291266
+35,Netherlands,Singapore,52.132633,5.291266
 36,Germany,Singapore,51.165691,10.451526
 37,Switzerland,Switzerland,46.818188,8.227512
 38,Switzerland,Switzerland,46.818188,8.227512
@@ -59,7 +59,7 @@ No,Nationality,Based,Latitude,Longitude
 58,Germany,Switzerland,51.165691,10.451526
 59,Canada,Switzerland,56.130366,-106.346771
 60,Russia,Singapore,61.52401,105.318756
-61,Netherlands,Singapore,,52.132633,5.291266
+61,Netherlands,Singapore,52.132633,5.291266
 62,Germany,Singapore,51.165691,10.451526
 63,United Kingdom,United Kingdom,55.378051,-3.435973
 64,Singapore,Singapore,1.352083,103.819836

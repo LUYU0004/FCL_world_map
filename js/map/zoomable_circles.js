@@ -2,6 +2,13 @@
  * Created by yuhao on 27/5/16.
  */
 
+    // https://github.com/wbkd/d3-extended
+    d3.selection.prototype.moveToFront = function() {
+      return this.each(function(){
+        this.parentNode.appendChild(this);
+      });
+    };
+
 
 /*calculate distance between any two project locations*/
 function generate_project_DistMatrix(){
@@ -147,7 +154,7 @@ function generate_staff_DistMatrix(){
 }
 
 
-
+var fcl_tooltip_list = [];
 var area_unit =200;
 //function to add points and text to the map (used in plotting capitals)
 function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
@@ -181,21 +188,20 @@ function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
             var top= zoom.translate()[1];
             var sc = zoom.scale();
 
-
-            tooltip.attr("style", "right:" + (innerWidth-x*sc-left)+ "px;bottom:" +(innerHeight-y*sc-top)+ "px;visibility: visible")
-                .classed("tooltip_short",true)
-                .html("<div id='tooltip_holder' class='tooltip_short'><div id='tooltip_button'>button</div><div id='pic_holder' class='Centerer'><img id='tooltip_pic' class='Centered' src='res/fcl_logo.png'></div>" +
-                    "<div id='tooltip_text'><b>" + title + "</b></div></div>");
-
             //add in picture for the project
             var project_img = new Image();
             project_img.src = "img/project_img/"+imgNo+"_fcl_vis.jpg";
-            d3.select("#tooltip_pic").attr("src",project_img.src);
+
+            return one_tooltip.attr("style", "right:" + (innerWidth-x*sc-left)+ "px;bottom:" +(innerHeight-y*sc-top)+ "px;visibility: visible")
+                .html("<div class='tooltip_holder' ><div class='pic_holder Centerer'><img class='tooltip_pic Centered' src='"+project_img.src+"'> </div>" +
+                    "<div class='tooltip_text'><b>" + title + "</b></div></div>");
+
+
 
         })
        .on("mouseout", function () {
-        return tooltip.selectAll(".tooltip_short").attr("style","visibility: hidden");
-    })
+           return one_tooltip.attr("style","visibility: hidden");
+        })
         .on("click",function () {
 
             var shift_x =   innerWidth/2 - projection([lon,lat])[0] *scale ;
@@ -203,32 +209,61 @@ function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
             var t = [shift_x,shift_y];
             move(t,scale);
 
-            var left = zoom.translate()[0];
-            var top= zoom.translate()[1];
+            var name = className+imgNo;
 
-            tooltip.attr("style", "right:" + (innerWidth-x*scale-left)+ "px;bottom:" +(innerHeight - y*scale-top)+ "px;visibility: visible")
-                .classed("tooltip_short",false)
-                .html("<div id='tooltip_holder'><div id='pic_holder' class='Centerer'><img id='tooltip_pic' class='Centered' src='res/fcl_logo.png'></div>" +
-                    "<div id='tooltip_text'><b>" + title + "</b><p>" + text + "</div></div>");
+             var filtered = fcl_tooltip_list.filter(function(f){
+                return f == name;
+             });
 
-            //add in picture for the project
-            var project_img = new Image();
-            project_img.src = "img/project_img/"+imgNo+"_fcl_vis.jpg";
-         
-            d3.select("#tooltip_pic").attr("src",project_img.src);
+             if(filtered.length<=0){
+                 /*var positionObj = {};
+                 positionObj["type"] ='singleton';
+                 positionObj["x"] = x;
+                 positionObj["y"] = y;    */
 
-            var width =tooltip.node().getBoundingClientRect().width;
-            var height =tooltip.select("#tooltip_text").node().getBoundingClientRect().height;
-            var area = width *height;
+                 fcl_tooltip_list.push(name);
 
-            if(width>300){
-                height = area/300;
-                if(height>300){
-                    tooltip.attr("style", "right:" + (innerWidth-x*scale-left)+ "px;bottom:" +(innerHeight-y*scale-top)+ "px;visibility: visible;width:300px;height:300px")
-                }else{
-                    tooltip.attr("style", "right:" + (innerWidth-x*scale-left)+ "px;bottom:" +(innerHeight-y*scale-top)+ "px;visibility: visible;width:300px");
-                }
-            }
+                 var left = zoom.translate()[0];
+                var top= zoom.translate()[1];
+
+                 //add in picture for the project
+                 var project_img = new Image();
+                project_img.src = "img/project_img/"+imgNo+"_fcl_vis.jpg";
+
+                var the = fcl_tooltip
+                        /*.selectAll("div")
+                        .data([positionObj])
+                        .enter()         */
+                        .append("div")
+                        .attr("class","tooltip "+className)
+                        .attr("style", "right:" + (innerWidth-x*scale-left)+ "px;bottom:" +(innerHeight - y*scale-top)+ "px;visibility: visible")
+                        .html("<div class='tooltip_holder'><div class='pic_holder Centerer'><img class='tooltip_pic Centered' src='"+project_img.src+"'></div>" +
+                                 "<div class='tooltip_text'><b>" + title + "</b><p>" + text + "</div></div>")
+                        .on("click",function () {
+                            this.remove();
+                            var index = fcl_tooltip_list.indexOf(name);
+
+
+                            if(index != -1) {
+                                fcl_tooltip_list.splice(index, 1);
+                             }
+                         });//<a href="javascript:void(0)" class="closebtn" onclick="close('+country_name+')" style="border-bottom:0px solid red;">&times;</a>
+
+
+                    var width =the.node().getBoundingClientRect().width;
+                    var height =the.node().getBoundingClientRect().height;
+                    var area = width *height;
+
+                    if(width>300){
+                        height = area/300;
+                        if(height>300){
+                        the.attr("style", "right:" + (innerWidth-x*scale-left)+ "px;bottom:" +(innerHeight-y*scale-top)+ "px;visibility: visible;width:300px;height:300px")
+                     }else{
+                         the.attr("style", "right:" + (innerWidth-x*scale-left)+ "px;bottom:" +(innerHeight-y*scale-top)+ "px;visibility: visible;width:300px");
+                    }
+                    }
+             }
+
     });
 
 }
@@ -266,13 +301,12 @@ function add_zoomable_cluster(color, lat, lon, title,text, area,scale,clusterObj
             var sc = zoom.scale();
 
 
-            tooltip.attr("style", "right:" + (innerWidth-x*sc-left)+ "px;bottom:" +(innerHeight-y*sc-top)+ "px;visibility: visible")
-                .classed("tooltip_short",false)
+            one_tooltip.attr("style", "right:" + (innerWidth-x*sc-left)+ "px;bottom:" +(innerHeight-y*sc-top)+ "px;visibility: visible")
                 .html("<div id='tooltip_holder'>" +
                     "<div id='tooltip_text'>"+text+"</div></div>");})
 
         .on("mouseout", function () {
-            return tooltip.selectAll(".tooltip_short").attr("style","visibility: hidden");
+            return one_tooltip.attr("style","visibility: hidden");
     })
         .on("click",function () {
 
@@ -285,11 +319,11 @@ function add_zoomable_cluster(color, lat, lon, title,text, area,scale,clusterObj
             var sc = zoom.scale();
 
 
-            tooltip.attr("style", "right:" + (innerWidth-x*sc-left)+ "px;bottom:" +(innerHeight-y*sc-top)+ "px;visibility: visible");
+            one_tooltip.attr("style", "right:" + (innerWidth-x*sc-left)+ "px;bottom:" +(innerHeight-y*sc-top)+ "px;visibility: visible");
 
 
             //this.attr("style", "visibility: hidden");
-            draw_circles(clusterObj);
+            draw_circles(clusterObj,className);
 
         });
 
@@ -509,7 +543,7 @@ function setup_circles(className){
 }
 
 //implement each cluster drawing to zoomable circles
-function draw_circles(root){
+function draw_circles(root,className){
 
     var color = d3.scale.linear()
         .domain([-1, 5])
@@ -554,11 +588,6 @@ function draw_circles(root){
             var scale = zoom.scale();
 
             if(d.parent ==undefined){ //root
-                /*tooltip.attr("style", "visibility:visible;right:" + (innerWidth-root_x*scale-left) + "px;bottom:" + (innerHeight-root_y*scale-top) + "px")
-                    .html("<div id='tooltip_holder'>" +
-                        "<div id='tooltip_text' class='tooltip_short'><b class='text_title'>"+d["name"]+"</b><p>"+d["text"]+"</p></div></div>");
-               
-               // tooltip.style("visibility","hidden");*/
                 return null;
             }else {
 
@@ -566,75 +595,114 @@ function draw_circles(root){
                 var left_adjust = (d.x - root.x) * k*scale;
                 var bottom_adjust = (d.y - root.y) * k*scale;
 
-               tooltip.attr("style", "visibility:visible;right:" + (innerWidth - root_x * scale - left - left_adjust) + "px;bottom:" + (innerHeight - root_y * scale - top - bottom_adjust) + "px")
-                   .classed("tooltip_short",true)
-                   .html("<div id='tooltip_holder' ><span id='pic_holder' class='Centerer' ><img id='tooltip_pic' class='Centered' src='res/fcl_logo.png'></span>" +
-                        "<div id='tooltip_text'><b>" + d["name"] + "</b></div></div>");
-
-
-
                 //add in picture for the project
                 var item_img = new Image();
                 item_img.src = "img/project_img/" + d["itemIndex"] + "_fcl_vis.jpg";
 
-                d3.select("#tooltip_pic").attr("src", item_img.src);
 
-                var width =tooltip.node().getBoundingClientRect().width;
-                var height =tooltip.select("#tooltip_text").node().getBoundingClientRect().height;
+                one_tooltip.attr("style", "visibility:visible;right:" + (innerWidth - root_x * scale - left - left_adjust) + "px;bottom:" + (innerHeight - root_y * scale - top - bottom_adjust) + "px")
+                   .html("<div class='tooltip_holder' ><span  class='Centerer pic_holder' ><img class='Centered tooltip_pic' src='"+item_img.src+"'></span>" +
+                        "<div class='tooltip_text'><b>" + d["name"] + "</b></div></div>");
+
+
+
+
+
+                var width =one_tooltip.node().getBoundingClientRect().width;
+                var height =one_tooltip.select("#tooltip_text").node().getBoundingClientRect().height;
                 var area = width *height;
 
                 if(width>300){
                     height = area/300;
                     if(height>300){
-                        tooltip.attr("style", "right:" + (innerWidth-root_x*scale-left-left_adjust)+ "px;bottom:" +(innerHeight-root_y*scale-top-bottom_adjust)+ "px;visibility: visible;width:300px;height:300px")
+                        one_tooltip.attr("style", "right:" + (innerWidth-root_x*scale-left-left_adjust)+ "px;bottom:" +(innerHeight-root_y*scale-top-bottom_adjust)+ "px;visibility: visible;width:300px;height:300px")
                     }else{
-                        tooltip.attr("style", "right:" + (innerWidth-root_x*scale-left-left_adjust)+ "px;bottom:" +(innerHeight-root_y*scale-top-bottom_adjust)+ "px;visibility: visible;width:300px");
+                        one_tooltip.attr("style", "right:" + (innerWidth-root_x*scale-left-left_adjust)+ "px;bottom:" +(innerHeight-root_y*scale-top-bottom_adjust)+ "px;visibility: visible;width:300px");
                     }
                 }
             }
 
         })
         .on("mouseout", function (d, i) {
-            return tooltip.selectAll(".tooltip_short").attr("style", "visibility: hidden;opacity:0;transition: opacity 1s;");
+            return one_tooltip.attr("style", "visibility: hidden;opacity:0;transition: opacity 1s;");
         })
         .on("click", function (d) {
 
-            var left = zoom.translate()[0];
-            var top= zoom.translate()[1];
-            var sc = zoom.scale();
-
-
             if(d.parent == undefined){
                 cg_g.remove();
-            }else{
-                var k = diameter / (root.r * 2);
-                var left_adjust = (d.x - root.x)*k*sc;
-                var bottom_adjust = (d.y-root.y)*k*sc;
+            }else {
 
-                tooltip.attr("style", "right:" + (innerWidth-root_x*sc-left-left_adjust)+ "px;bottom:" +(innerHeight-root_y*sc-top-bottom_adjust)+ "px;visibility: visible")
-                    .classed("tooltip_short",false)
-                    .html("<div id='tooltip_holder' style='vertical-align: middle'><div id='pic_holder' class='Centerer'><img id='tooltip_pic' class='Centered' src='res/fcl_logo.png'></div>" +
-                        "<div id='tooltip_text'><b>" + d["name"] + "</b><br><br><p>" + d["text"] + "</div></div>");
+                one_tooltip.style("visibility","hidden");
+                var name = d["name"];
 
-                //add in picture for the project
-                var item_img = new Image();
-                item_img.src = "img/project_img/"+d["itemIndex"]+"_fcl_vis.jpg";
+                var filtered = fcl_tooltip_list.filter(function (f) {
+                    return f == name;
+                });
 
-                d3.select("#tooltip_pic").attr("src",item_img.src);
+                if (filtered.length <= 0) {
+                    fcl_tooltip_list.push(name);
 
-                var width =tooltip.node().getBoundingClientRect().width;
-                var height =tooltip.select("#tooltip_text").node().getBoundingClientRect().height;
-                var area = width *height;
+                    var left = zoom.translate()[0];
+                    var top = zoom.translate()[1];
+                    var sc = zoom.scale();
 
-                if(width>300){
-                    height = area/300;
-                    if(height>300){
-                        tooltip.attr("style", "right:" + (innerWidth-root_x*sc-left-left_adjust)+ "px;bottom:" +(innerHeight-root_y*sc-top-bottom_adjust)+ "px;visibility: visible;width:300px;height:300px")
-                    }else{
-                        tooltip.attr("style", "right:" + (innerWidth-root_x*sc-left-left_adjust)+ "px;bottom:" +(innerHeight-root_y*sc-top-bottom_adjust)+ "px;visibility: visible;width:300px");
+                    var k = diameter / (root.r * 2);
+                    var left_adjust = (d.x - root.x) * k * sc;
+                    var bottom_adjust = (d.y - root.y) * k * sc;
+
+                    //add in picture for the project
+                    var item_img = new Image();
+                    item_img.src = "img/project_img/" + d["itemIndex"] + "_fcl_vis.jpg";
+
+                   /* var positionObj = {};
+                    positionObj["type"] ='cluster';
+                    positionObj["root_x"] = root_x;
+                    positionObj["root_y"] = root_y;
+                    positionObj["x"]   = d.x;
+                    positionObj["y"] = d.y;
+                    positionObj["k"] = k;    */
+
+
+
+                    var the = fcl_tooltip
+                        /*.selectAll("div")
+                            .data([positionObj])
+                            .enter()  */
+                            .append("div")
+                        .attr("class", "tooltip " + className)
+                        .attr("style", "right:" + (innerWidth - root_x * sc - left - left_adjust) + "px;bottom:" + (innerHeight - root_y * sc - top - bottom_adjust) + "px;visibility: visible")
+                        .html("<div class='tooltip_holder' style='vertical-align: middle'><div class='pic_holder Centerer'><img class='tooltip_pic Centered' src='" + item_img.src + "'></div>" +
+                            "<div class='tooltip_text'><b>" + d["name"] + "</b><br><br><p>" + d["text"] + "</div></div>")
+                        .on("mouseover",function(){
+                            d3.select(this).moveToFront();
+
+                        }).on("click", function () {
+                            this.remove();
+                            var index = fcl_tooltip_list.indexOf(name);
+
+
+                            if (index != -1) {
+                                fcl_tooltip_list.splice(index, 1);
+                            }
+                        });//<a href="javascript:void(0)" class="closebtn" onclick="close('+country_name+')" style="border-bottom:0px solid red;">&times;</a>
+
+
+                    var width = the.node().getBoundingClientRect().width;
+                    var height = the.node().getBoundingClientRect().height;
+                    var area = width * height;
+
+                    if (width > 300) {
+                        height = area / 300;
+                        if (height > 300) {
+                            the.attr("style", "right:" + (innerWidth - root_x * sc - left - left_adjust) + "px;bottom:" + (innerHeight - root_y * sc - top - bottom_adjust) + "px;visibility: visible;width:300px;height:300px");
+
+                        } else {
+                            the.attr("style", "right:" + (innerWidth - root_x * sc - left - left_adjust) + "px;bottom:" + (innerHeight - root_y * sc - top - bottom_adjust) + "px;visibility: visible;width:300px");
+                        }
                     }
-                }
 
+
+                }
             }
 
         });
@@ -654,10 +722,10 @@ function draw_circles(root){
             return d.name;
         });
 
-    cg_g
+   /* cg_g
         .on("click", function () {
             zoom_Circles(root);
-        });
+        });*/
 
 
     node = cg_g.selectAll("circle ,text");//
@@ -748,7 +816,7 @@ function draw_project_legend(className){
     var area = [5,10,20];
 
     sg.selectAll('circle').data(area).enter().append('circle')
-        .attr('cx',wBox/2)//wBox/2)
+        .attr('cx',-20)//wBox/2)
         .style("stroke","#000")
         .style("stroke-width","0.5px")
         .attr('cy', function (d, i) {
@@ -764,13 +832,10 @@ function draw_project_legend(className){
     sg.selectAll('text').data(area).enter().append("text")
         .attr("dx",function(d){
             var x_adjust = d>=10? 7:4;
-            return wBox/2-x_adjust;
+            return -15;
         })
         .attr("dy", function(d,i){return (hBox/6 *i+d+4);})
         .text(function(d){return d});
 
-    sg.append("text")
-        .attr("dx",wRect*2)
-        .attr("dy", function(d){return (hBox/6 *3+30);})
-        .text("Number");
+
 }

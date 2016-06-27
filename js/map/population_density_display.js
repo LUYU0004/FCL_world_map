@@ -129,8 +129,8 @@ function display_Density(cur_year){
                     default: break;
                 }
 
-                tooltip
-                    .html("<div id='tooltip_country'>|<b>"+d.properties.name + "</b><br>|<b>" + category + ":</b>"
+                one_tooltip
+                    .html("<div>|<b>"+d.properties.name + "</b><br>|<b>" + category + ":</b>"
                         + formatNum(year_property) + "<br>|<b>Size:</b>" + cur_country_size + "<br>|<b>Density:</b>"
                         + density+density_unit+"</div>");
 
@@ -141,10 +141,10 @@ function display_Density(cur_year){
                 var left = mouse[0]*scale + offsetL+left_adjust;
                 var top = mouse[1]*scale + offsetT+top_adjust;
 
-                return tooltip.attr("style", "right:"+(innerWidth - left)+"px;bottom:"+(innerHeight - top)+"px;visibility: visible;");
+                return one_tooltip.attr("style", "right:"+(innerWidth - left)+"px;bottom:"+(innerHeight - top)+"px;visibility: visible;");
 
             }else{
-                return tooltip.attr("style", "right:" + (innerWidth-mouse[0] - offsetL) + "px;bottom:" + (innerHeight - mouse[1] - offsetT) + "px;visibility:visible")
+                return one_tooltip.attr("style", "right:" + (innerWidth-mouse[0] - offsetL) + "px;bottom:" + (innerHeight - mouse[1] - offsetT) + "px;visibility:visible")
                     .html(d.properties.name);
             }
         })
@@ -163,7 +163,7 @@ function display_Density(cur_year){
                 var window_margin = 16;
                 var buffer = 5;
 
-                var tooltip_right = tooltip.node().getBoundingClientRect().width + left;
+                var tooltip_right = one_tooltip.node().getBoundingClientRect().width + left;
                 var window_right = innerWidth - window_margin - buffer;
 
                 if(tooltip_right > window_right){
@@ -174,7 +174,7 @@ function display_Density(cur_year){
 
                 }
 
-                var tooltip_height = tooltip.node().getBoundingClientRect().height;
+                var tooltip_height = one_tooltip.node().getBoundingClientRect().height;
 
                 var tooltip_bottom = top+tooltip_height;
 
@@ -182,13 +182,13 @@ function display_Density(cur_year){
                     top = mouse[1]-tooltip_height-offsetT;
                 }
 
-                return tooltip.attr("style","left:"+ left+"px;top:"+top+"px;visibility: visible;");
+                return one_tooltip.attr("style","left:"+ left+"px;top:"+top+"px;visibility: visible;");
 
 
 
     }).on("mouseout", function (d, i) {
         looptime = 0;
-        return tooltip.attr("style", "visibility: hidden");
+        return one_tooltip.attr("style", "visibility: hidden");
     });
 
 }
@@ -278,7 +278,7 @@ function draw_legend(max_property,className) {
 
 
 function find_country_property(country_name) {
-
+    
     var m =  property.filter(function (f) {
         //return f.country == country_id;
         return f.Country_Name == country_name;

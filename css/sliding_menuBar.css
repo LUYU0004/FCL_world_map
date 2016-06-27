@@ -1,5 +1,5 @@
 span#openBtn{
-    bottom:250px;
+    bottom:200px;
     width:20px;
     color: #fff;
     right: 0px;
@@ -13,16 +13,16 @@ span#openBtn{
 
 /* The side navigation menu */
 .sidenav {
-    height: 200px; /* 100% Full-height */
+    height: 170px; /* 100% Full-height */
     width: 0; /* 0 width - change this with JavaScript */
     position: fixed; /* Stay in place */
     z-index: 30; /* Stay on top */
-    bottom: 50px;
+    bottom: 80px;
     right: 0;
     background-color: #a6a6a6;
     box-shadow: 1px 1px 5px #adadad;
     overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 60px; /* Place content 60px from the top */
+    padding-top: 50px; /* Place content 60px from the top */
     transition: 0.2s; /* 0.5 second transition effect to slide in the sidenav */
 }
 
@@ -44,11 +44,14 @@ span#openBtn{
 
 /* Position and style the close button (top right corner) */
 .closebtn {
-    position: absolute;
+   /* position: absolute;
     top: 0;
-    right: 5px;
-    font-size: 36px !important;
-    margin: 5px 10px;
+    right: 5px;*/
+    float: right;
+    margin-top: -40px;
+    font-size: 25px !important;
+    width: 25px;
+    height:25px;
 
 }
 
