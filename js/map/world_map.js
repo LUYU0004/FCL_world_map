@@ -76,8 +76,6 @@ function setup() {
         .on("click", click)
         .append("g");
 
-    console.log(map_width,map_height);
-
     g = svg.append("g").attr("id","country_holder");
     
 }
@@ -161,7 +159,7 @@ function draw_pop_layer(){
     document.getElementById("pop_densityBtn").classList.toggle("selectedBtn");
     pop_layer = true;
     load_DData(category);
-    d3.select("#pop_densityBtn").selectAll("ul").style("height","93px");
+    d3.select("#pop_densityHolder").selectAll("ul").style("height","93px");
 }
 
 

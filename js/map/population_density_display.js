@@ -24,7 +24,8 @@ function load_DData(_category){
         case "Population Density":        
                                             color_split = [500, 400, 300, 200, 100, 50, 10, 0];
                                             max_property=1000;
-                                            draw_legend(max_property,"pop_layer");
+                                            //draw_legend(max_property,"pop_layer");
+                                            draw_colorSlider('pop_layer');
                                             read_popData("pop_layer");
                                             setup_slider(1964, 2014,"pop_layer");//1964-2014
 
@@ -33,7 +34,8 @@ function load_DData(_category){
         case "CO2 Emission":
                                                 color_split = [50, 20, 10, 5, 1, 0.1, 0];//1964-2011
                                                 max_property=100;
-                                                draw_legend(max_property,"co2_layer");
+                                                draw_colorSlider('co2_layer');
+                                                //draw_legend(max_property,"co2_layer");
                                                 read_co2Data();
                                                 setup_slider(1964, 2011,"co2_layer");
                                                 break;
@@ -213,10 +215,10 @@ function draw_legend(max_property,className) {
     var unit_text;
 
     switch(className){
-        case 'pop_layer': body = d3.select("#pop_densityBtn").selectAll("li").append("div");
+        case 'pop_layer': body = d3.select("#pop_densityHolder").selectAll("li").append("div");
             unit_text = "People per sq.km";
             break;
-        case 'co2_layer': body = d3.select("#co2_emissionBtn").selectAll("li").append("div");
+        case 'co2_layer': body = d3.select("#co2_emissionHolder").selectAll("li").append("div");
             unit_text = "Tons per person";
             break;
         default: break;
@@ -254,9 +256,12 @@ function draw_legend(max_property,className) {
 
 
 
+    console.log(partial_colors);
     // Draw color scale labels.
-    sg.selectAll('text').data(partial_colors).enter().  append('text').text(function (d, i) {
-        return color_split[i];
+    sg.selectAll('text').data(partial_colors).enter()
+        .append('text')
+        .text(function (d, i) {
+             return color_split[i];
     }).attr('class', function (d, i) {
         return 'text-' + i;
     }).attr('x', function(d,i){

@@ -33,11 +33,13 @@
         //d3.selectAll(".navg_button").classed("selectedBtn",false);
 
         if(this.id){
-            var the_ul = d3.select(this).selectAll("ul");
+            var holder = this.parentNode.id;
+            var the_ul = d3.select("#"+holder).selectAll("ul");
 
 
             switch(this.id){
                 case 'pop_densityBtn':
+
                             category = "Population Density";
                              this.classList.toggle("selectedBtn");
                              the_ul.style("height","93px");
@@ -46,15 +48,17 @@
 
                         if(res){
                             //remove the co2_layer to avoid multi-layer exist at the same time
-                            remove_layer('.co2_layer');
+
                             if(co2_layer){
                                 d3.select("#co2_emissionBtn").classed("selectedBtn",false);
                                 co2_layer = false;
-                                d3.select("#co2_emissionBtn").selectAll("ul").style("height","0");
+                                d3.select("#co2_emissionHolder").selectAll("ul").style("height","0");
+                                remove_layer('.co2_layer');
 
                             }
 
                             pop_layer = true;
+                            the_ul.style("height","93px");
                             load_DData(category);
                         }else{
                             pop_layer = false;
@@ -72,7 +76,7 @@
 
                             document.getElementById("pop_densityBtn").classList.toggle("selectedBtn");
                             pop_layer = false;
-                            d3.select("#pop_densityBtn").selectAll("ul").style("height","0");
+                            d3.select("#pop_densityHolder").selectAll("ul").style("height","0");
                             remove_layer('.pop_layer');
                         }
 
@@ -163,15 +167,15 @@
             <img id="fcl_logo" src="img/Logo_FCLwhite.png" alt="fcl_logo" width="180px" height="40px">
         </div>
 
-        <div class="menu-item navg_button" id="pop_densityBtn">
-            <h4><a>  Population Density</a></h4>
+        <div class="menu-item navg_button" id="pop_densityHolder">
+            <h4 id ="pop_densityBtn"><a>  Population Density</a></h4>
             <ul>
                 <li><div class="color_slider"></div></li>
             </ul>
         </div>
 
-        <div class="menu-item navg_button" id="co2_emissionBtn">
-            <h4><a>  CO2 Emission Per Capita</a></h4>
+        <div class="menu-item navg_button" id="co2_emissionHolder">
+            <h4 id = "co2_emissionBtn"><a>  CO2 Emission Per Capita</a></h4>
             <ul>
                 <li></li>
             </ul>
@@ -214,6 +218,7 @@ document.getElementById('google_mapBtn').addEventListener("click",newInput);
 <script src="js/map/world_map.js"></script>
 <script src="js/map/population_density_display.js"></script>
 <script src="js/slider/timer_slider.js"></script>
+<script src="js/slider/color_slider.js"></script>
 <script src="js/map/zoomable_circles.js"></script>
 <script src="js/google_map/google_map.js"></script>
 

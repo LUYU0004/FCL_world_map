@@ -40,67 +40,6 @@ nav{
     text-align: left;
 }
 
-/*
-#fcl_logo {
-    padding: 10px;
-    width: 200px;;
-    height: 50px;
-    top: 20px;
-    right:25px;
-    overflow:hidden;
-    position: absolute;
-    z-index: 10;
-
-    background-color: #e2e3e8;
-    box-shadow: 1px 1px 5px #adadad;
-}
-
-#menuBar{
-    position: absolute;
-    top: 90px;
-    right:25px;
-    width : 220px;
-    height: 200px;
-    z-index: 10;
-    overflow: hidden;
-    background-color: #e2e3e8;
-    box-shadow: 1px 1px 5px #adadad;
-
-}
-*/
-/*
-#navg_bar {
-    height: 200px;
-    padding-left: 15px;
-    position: absolute;
-    top: 70px;
-    align-items:center;
-
-}
-
-
-.navg_button {
-    display: inline-block;
-    padding-top: 7px;
-
-    align-content: center;
-    width: 95%;
-    color: #818181;
-    font-size: 14px;
-    font-family: Helvetica,Arial,sans-serif;
-    font-weight: 200;
-    line-height: 1em;
-    cursor: pointer;
-
-    border-bottom: 2px solid #d0d0d0;
-    position:relative;
-}
-
-.navg_button:hover, .navg_button:focus {
-    color: #000;
-}*/
-
-
 .menu-item h4 a {
     margin-left:20px ;
     color: white;
@@ -114,17 +53,15 @@ nav{
     background-color: #d0d0d0;
 }
 
-
 /*ul Styles*/
 .menu-item ul {
-    background: #fff;
+    background: #1f2933;
     font-size: 13px;
     line-height: 30px;
     list-style-type: none;
     overflow: hidden;
     padding: 0;
     height: 0; /*Collapses the menu*/
-
     /*Animation*/
     -webkit-transition: height 0.2s ease;
     -moz-transition: height 0.2s ease;

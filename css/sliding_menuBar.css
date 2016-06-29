@@ -2,7 +2,7 @@ span#openBtn{
     bottom:200px;
     width:20px;
     color: #fff;
-    right: 0px;
+    right: 30px;
     position:absolute;
     text-align: center;
     z-index: 25;
@@ -18,7 +18,7 @@ span#openBtn{
     position: fixed; /* Stay in place */
     z-index: 30; /* Stay on top */
     bottom: 80px;
-    right: 0px;
+    right: 30px;
     background-color: #1f2933;
     box-shadow: 1px 1px 5px #adadad;
     overflow-x: hidden; /* Disable horizontal scroll */

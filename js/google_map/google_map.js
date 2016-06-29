@@ -2,39 +2,27 @@
  * Created by yuhao on 27/6/16.
  */
 
-
+var gmap;
 function initMap() {
     
     // Create an array of styles.
     var styles = [
 
-        {  featureType: "all",
-            stylers: [
-                { hue: "#00ffe6"},//
-                { saturation: -100 }
-            ]
-        },
-
         {
-            featureType: "administrative.country",
-            elementType: "geometry.fill",
-            stylers: [
-                {color:"white"},
-                { saturation: 10 },
-                { visibility: "simplified" }
-            ]
-        },{
-            featureType: "road",
+            featureType: "water",
             elementType: "geometry",
             stylers: [
-                //{ lightness: 100 },
-                { visibility: "simplified" }
+                { color: "#7d7d7d" },
+                { saturation: -100 },
+                { lightness: 61 }
             ]
-        },{
-            featureType: "road",
-            elementType: "labels",
+        },
+        {
+            featureType: "landscape",
+            elementType: "geometry",
             stylers: [
-                { visibility: "off" }
+                { "color": "#ffffff" },
+                { "lightness": 12 }
             ]
         }
     ];
@@ -48,7 +36,7 @@ function initMap() {
     // to the map type control.
     var mapOptions = {
         zoom: 11,
-        center: new google.maps.LatLng(1.352083,103.819836),//55.6468, 37.581
+        center: new google.maps.LatLng(1.353083,103.819836),//55.6468, 37.581
         mapTypeControlOptions: {
             mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
         }
@@ -57,20 +45,37 @@ function initMap() {
     var g_map = document.getElementById('google_map');
     
 
-    var map = new google.maps.Map(g_map,
+    gmap = new google.maps.Map(g_map,
         mapOptions);
 
     //Associate the styled map with the MapTypeId and set it to display.
-    map.mapTypes.set('map_style', styledMap);
-    map.setMapTypeId('map_style');
+    gmap.mapTypes.set('map_style', styledMap);
+    gmap.setMapTypeId('map_style');
 
     // Define the LatLng coordinates for the polygon's path.
     var triangleCoords = [
-        {lat: 25.774, lng: -80.190},
-        {lat: 18.466, lng: -66.118},
-        {lat: 32.321, lng: -64.757},
-        {lat: 25.774, lng: -80.190}
+        {lat: 1.352083, lng: 103.82}, //1.352083,103.819836
+        {lat: 1.352083, lng: 103.81},
+        {lat: 1.342083, lng: 103.79},
+        {lat: 1.352083, lng: 103.819836}
     ];
+
+    var markerPos = triangleCoords[0];
+        draw_polygon(triangleCoords,markerPos);
+
+
+    var triangleCoords2 = [
+        {lat: 1.3534, lng: 103.90}, //1.352083,103.819836
+        {lat: 1.353083, lng: 103.93},
+        {lat: 1.339083, lng: 103.92},
+        {lat: 1.3534, lng: 103.90}
+    ];
+    markerPos = triangleCoords2[0];
+    draw_polygon(triangleCoords2,markerPos);
+
+}
+
+function draw_polygon(triangleCoords,markerPos){
 
     // Construct the polygon.
     var bermudaTriangle = new google.maps.Polygon({
@@ -81,17 +86,42 @@ function initMap() {
         fillColor: '#FF0000',
         fillOpacity: 0.35
     });
-    bermudaTriangle.setMap(map);
+
+    bermudaTriangle.setMap(gmap);
+
+    var project_img = new Image();
+    project_img.src = "img/project_img/"+2+"_fcl_vis.jpg";
+
+    var contentString = " <div><div class='pic_holder Centerer'><img class='tooltip_pic' src='"+project_img.src+"'></div>" +
+        "<div class='tooltip_text'><b>" + "The Singapore Project" + "</b><br> Introduction to the extraodinary life of Singaporean People</div></div>";
+
+    var infowindow = new google.maps.InfoWindow({
+        content: contentString,
+        maxWidth: 300
+    });
+
+    var marker = new google.maps.Marker({
+        position: markerPos,
+        map: gmap,
+        title: 'The Info Window'
+    });
+
+    marker.addListener('click', function() {
+        infowindow.open(gmap, marker);
+    });
 }
 
 function load_google_map() {
     var googlem_holder = d3.select("#map_container").append("div").attr("id","googlem_holder")
-        .attr("class","project_layer");
+        .attr("class","project_layer")
+        .style("width",map_width/2+'px')
+        .style("height",map_height/2+'px')
+        .style("position","absolute");
 
     //min button
     var closeBtn = document.createElement('div');
     closeBtn.innerHTML = "close";
-    closeBtn.style = "border:2px solid red;width:30px;height:30px;float:right";
+    closeBtn.style = "width:40px;height:30px;float:left;background-color:grey;margin-left:10px;";
     closeBtn.id = "closebtn_GM";
 
     document.getElementById("googlem_holder").appendChild(closeBtn);
@@ -100,7 +130,7 @@ function load_google_map() {
     //max button
     var openBtn = document.createElement('div');
     openBtn.innerHTML = "max";
-    openBtn.style = "border:2px solid red;width:30px;height:30px;float:right";
+    openBtn.style = "width:40px;height:30px;float:left;background-color:grey;";
     openBtn.id = "openbtn_GM";
 
     document.getElementById("googlem_holder").appendChild(openBtn);
@@ -108,7 +138,9 @@ function load_google_map() {
     //closeBtn.text("&times");
 
     googlem_holder.append("div") //<a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="border-bottom:0 solid red;">&times;</a>
-        .attr("id","google_map");
+        .attr("id","google_map")
+        .style("width",map_width/2-18+'px')
+        .style("height",map_height-40+'px');
 
 
 
@@ -133,10 +165,10 @@ function open_GoogleMap() {
     d3.select("#googlem_holder").remove();
     load_google_map();
 
-    document.getElementById("googlem_holder").style.width = "1250px";
-    document.getElementById("googlem_holder").style.height = "730px";
+    document.getElementById("googlem_holder").style.width = map_width+"px";
+    document.getElementById("googlem_holder").style.height = map_height+"px";
 
-    document.getElementById("google_map").style.width = "1250px";
-    document.getElementById("google_map").style.height = "700px";
+    document.getElementById("google_map").style.width = map_width-18+"px";
+    document.getElementById("google_map").style.height = map_height-40+"px";
 
 }

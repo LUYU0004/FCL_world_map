@@ -202,7 +202,7 @@ function brushed() {
 
             }
         }
-
+    
     handle.attr("cx", x(value));
 
     update(value);
