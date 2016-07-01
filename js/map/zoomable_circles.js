@@ -192,6 +192,7 @@ function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
             var project_img = new Image();
             project_img.src = "img/project_img/"+imgNo+"_fcl_vis.jpg";
 
+            console.log("x="+x);
             return one_tooltip.attr("style", "right:" + (innerWidth-x*sc-left)+ "px;bottom:" +(innerHeight-y*sc-top)+ "px;visibility: visible")
                 .html("<div class='tooltip_holder' ><div class='pic_holder Centerer'><img class='tooltip_pic Centered' src='"+project_img.src+"'> </div>" +
                     "<div class='tooltip_text'><b>" + title + "</b></div></div>");
@@ -204,6 +205,7 @@ function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
         })
         .on("click",function () {
 
+            //one_tooltip.style("visibility","hidden");
             var shift_x =   innerWidth/2 - projection([lon,lat])[0] *scale ;
             var shift_y = innerHeight/2 - projection([lon,lat])[1] *scale;
             var t = [shift_x,shift_y];
@@ -309,7 +311,6 @@ function add_zoomable_cluster(color, lat, lon, title,text, area,scale,clusterObj
             return one_tooltip.attr("style","visibility: hidden");
     })
         .on("click",function () {
-
             var shift_x =   innerWidth/2 - projection([lon,lat])[0] *scale ;
             var shift_y = innerHeight/2 - projection([lon,lat])[1] *scale;
             move([shift_x,shift_y],scale);
@@ -319,6 +320,7 @@ function add_zoomable_cluster(color, lat, lon, title,text, area,scale,clusterObj
             var sc = zoom.scale();
 
 
+            console.log("x="+x);
             one_tooltip.attr("style", "right:" + (innerWidth-x*sc-left)+ "px;bottom:" +(innerHeight-y*sc-top)+ "px;visibility: visible");
 
 
@@ -794,7 +796,7 @@ function draw_project_legend(className){
         hBox = 702/hFactor;//map_height / hFactor;
 
     var svg = project_legend
-        .attr("z-index", 40)
+        .attr("z-index", 3)
         .append("svg")
         .attr("width", wBox)
         .attr("height", hBox)

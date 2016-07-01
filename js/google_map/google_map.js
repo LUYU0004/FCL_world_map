@@ -14,7 +14,7 @@ function initMap() {
             stylers: [
                 { color: "#7d7d7d" },
                 { saturation: -100 },
-                { lightness: 61 }
+                { lightness: 81 }
             ]
         },
         {
@@ -24,7 +24,22 @@ function initMap() {
                 { "color": "#ffffff" },
                 { "lightness": 12 }
             ]
+        },
+        {
+            featureType: "road",
+            elementType: "geometry",
+            stylers: [
+                { lightness: 20 },
+                { visibility: "simplified" }
+            ]
         }
+        /*,{
+         featureType: "road",
+         elementType: "labels",
+         stylers: [
+         { visibility: "off" }
+         ]
+         }*/
     ];
 
     // Create a new StyledMapType object, passing it the array of styles,
@@ -54,14 +69,18 @@ function initMap() {
 
     // Define the LatLng coordinates for the polygon's path.
     var triangleCoords = [
-        {lat: 1.352083, lng: 103.82}, //1.352083,103.819836
+        {lat: 1.3534, lng: 103.90}, //1.352083,103.819836
+        {lat: 1.353083, lng: 103.93},
+        {lat: 1.339083, lng: 103.90},
+        {lat: 1.3534, lng: 103.90}
+       /*{lat: 1.352083, lng: 103.82}, //1.352083,103.819836
         {lat: 1.352083, lng: 103.81},
         {lat: 1.342083, lng: 103.79},
-        {lat: 1.352083, lng: 103.819836}
+        {lat: 1.352083, lng: 103.819836}*/
     ];
 
     var markerPos = triangleCoords[0];
-        draw_polygon(triangleCoords,markerPos);
+        draw_polygon(triangleCoords,markerPos,'#1E90FF');
 
 
     var triangleCoords2 = [
@@ -71,19 +90,19 @@ function initMap() {
         {lat: 1.3534, lng: 103.90}
     ];
     markerPos = triangleCoords2[0];
-    draw_polygon(triangleCoords2,markerPos);
+    draw_polygon(triangleCoords2,markerPos,'#FF0000');
 
 }
 
-function draw_polygon(triangleCoords,markerPos){
+function draw_polygon(triangleCoords,markerPos,fillcolor){
 
     // Construct the polygon.
     var bermudaTriangle = new google.maps.Polygon({
         paths: triangleCoords,
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
+        strokeColor: fillcolor,
+        strokeOpacity: 0.35,
         strokeWeight: 2,
-        fillColor: '#FF0000',
+        fillColor: fillcolor,
         fillOpacity: 0.35
     });
 
@@ -120,8 +139,8 @@ function load_google_map() {
 
     //min button
     var closeBtn = document.createElement('div');
-    closeBtn.innerHTML = "close";
-    closeBtn.style = "width:40px;height:30px;float:left;background-color:grey;margin-left:10px;";
+    closeBtn.innerHTML = "x";
+    closeBtn.style = "width:40px;height:30px;float:left;background-color:grey;margin-left:10px;text-align:center;padding-top:7px;";
     closeBtn.id = "closebtn_GM";
 
     document.getElementById("googlem_holder").appendChild(closeBtn);
@@ -129,18 +148,19 @@ function load_google_map() {
 
     //max button
     var openBtn = document.createElement('div');
-    openBtn.innerHTML = "max";
-    openBtn.style = "width:40px;height:30px;float:left;background-color:grey;";
+    openBtn.innerHTML = "O";
+    openBtn.style = "width:40px;height:30px;float:left;background-color:grey;text-align:center;padding-top:7px;";
     openBtn.id = "openbtn_GM";
 
     document.getElementById("googlem_holder").appendChild(openBtn);
     document.getElementById('openbtn_GM').addEventListener("click", open_GoogleMap);
     //closeBtn.text("&times");
 
-    googlem_holder.append("div") //<a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="border-bottom:0 solid red;">&times;</a>
+    googlem_holder.append("div")//<a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="border-bottom:0 solid red;">&times;</a>
+        .html("Google Map")
         .attr("id","google_map")
-        .style("width",map_width/2-18+'px')
-        .style("height",map_height-40+'px');
+        .style("width",0.98*map_width/2+'px')
+        .style("height",0.9*map_height/2+'px');
 
 
 
@@ -153,7 +173,7 @@ function load_google_map() {
 
 function close_GoogleMap() {
 
-        document.getElementById("googlem_holder").style.width = "90px";
+        document.getElementById("googlem_holder").style.width = "100px";
         document.getElementById("googlem_holder").style.height = "30px";
        // document.getElementById("google_map").style.width = "1250px";
 
@@ -165,10 +185,10 @@ function open_GoogleMap() {
     d3.select("#googlem_holder").remove();
     load_google_map();
 
-    document.getElementById("googlem_holder").style.width = map_width+"px";
-    document.getElementById("googlem_holder").style.height = map_height+"px";
+    document.getElementById("googlem_holder").style.width = innerWidth+"px";
+    document.getElementById("googlem_holder").style.height = innerHeight+"px";
 
-    document.getElementById("google_map").style.width = map_width-18+"px";
-    document.getElementById("google_map").style.height = map_height-40+"px";
+    document.getElementById("google_map").style.width = innerWidth*0.98+"px";
+    document.getElementById("google_map").style.height = innerHeight*0.9+"px";
 
 }

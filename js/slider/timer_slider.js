@@ -7,13 +7,13 @@ var start_year, end_year, cur_year;
 var handle, brush, x,slider;
 var overlay,label,box;
 
-function setup_slider(start_y, end_y, className){
+function setup_slider(start_y, end_y){
 
-    d3.selectAll(".menu_bar").append("div")
-        .attr("class","menu-item "+className)
+    /*d3.select("#menu_bar").append("div")
+        .attr("class","menu-item ")
         .attr("height",140)
-        .attr("id","label_slider");
-
+        .attr("id","label_slider");*/
+    d3.select("#label_slider").selectAll("svg").remove();
     start_year = start_y;
         end_year = end_y;
 
@@ -44,9 +44,8 @@ function setup_slider(start_y, end_y, className){
     
     /*Add the year label; the value is set on transition.*/
     var label_svg = body//d3.select("#year_label")
-        .attr("z-index", 30)
+        .attr("z-index", 3)
         .append("svg")
-        .attr("class",className)
         .attr("width",200)
         .attr("height",90)
         .append("g");
@@ -54,6 +53,7 @@ function setup_slider(start_y, end_y, className){
     label = label_svg.append("text")
         .attr("class", "year label")
         .attr("text-anchor", "end")
+        .attr("font-weight","bold")
         .attr("y", 80)
         .attr("x", 100)
         .text(start_year);
@@ -74,13 +74,12 @@ function setup_slider(start_y, end_y, className){
 
     /*implement the slider*/
     var time_slider = body.append("div")
-        .attr('class','time_slider '+ className);
+        .attr('id','time_slider');
 
 
     var slider_svg = time_slider//d3.selectAll(".time_slider")
-        .attr("z-index", 30)
+        .attr("z-index", 3)
         .append("svg")
-        .attr("class",className)
         .attr("width", slider_width + slider_margin.left + slider_margin.right)
         .attr("height", slider_height  +slider_margin.top+slider_margin.bottom)
         .append("g");
@@ -90,7 +89,7 @@ function setup_slider(start_y, end_y, className){
     slider_svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate("+slider_margin.left+"," + slider_height / 3 + ")")
-        .style("color","white")
+        .attr("fill",label_color)
         .call(d3.svg.axis()
             .scale(x)
             .orient("bottom")
@@ -114,11 +113,13 @@ function setup_slider(start_y, end_y, className){
 
     handle = slider.append("circle")
         .attr("class", "handle")
+        .style("fill",label_color)
         .attr("transform", "translate("+slider_margin.left+"," + slider_height / 3 + ")")
         .attr("r", 9);
 
 
 }
+
 
 function enableInteraction() {
 
@@ -159,24 +160,6 @@ function enableInteraction() {
 }
 
 
-function animate_time() {
-
-    slider
-        .call(brush.event)
-        .transition() // gratuitous intro!
-        .duration(500* (end_year - start_year))
-        .call(brush.extent([end_year, end_year]))
-        //.call(brush.extent([end_year, end_year]))
-        .call(brush.event)
-        .each("end", function(){
-            status =0;
-
-        });
-
-
-
-}
-
 function stop_animateTime(){
 
     brushed();
@@ -184,7 +167,8 @@ function stop_animateTime(){
 
 function update(value){
     cur_year = Math.round(value);
-    display_Density(cur_year);
+    if(pop_layer)display_Density1(cur_year);
+    if(co2_layer)display_Density2(cur_year);
     label.text(cur_year);
 }
 
@@ -207,4 +191,19 @@ function brushed() {
 
     update(value);
 }
+
+/*function animate_time() {
+
+ slider
+ .call(brush.event)
+ .transition() // gratuitous intro!
+ .duration(500* (end_year - start_year))
+ .call(brush.extent([end_year, end_year]))
+ //.call(brush.extent([end_year, end_year]))
+ .call(brush.event)
+ .each("end", function(){
+ status =0;
+
+ });
+ }*/
 

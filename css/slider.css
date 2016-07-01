@@ -1,8 +1,12 @@
+#label_slider{
+    height:140px;
+}
+
 
 .time_slider {
     color: #ffffff;
     overflow: visible;
-    z-index: 10;
+    z-index: 3;
 
 }
 
@@ -55,7 +59,7 @@
 
 .overlay {
     fill: none;
-    z-index:50;
+    z-index:3;
     pointer-events: all;
     cursor: ew-resize;
 }

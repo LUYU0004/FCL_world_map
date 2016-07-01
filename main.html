@@ -27,6 +27,12 @@
     var staff_layer = false;
     var google_layer = false;
 
+    var map_width , map_height;
+    map_width = screen.width;//document.getElementById("content_holder").offsetWidth;//
+    map_height = screen.height;//window.innerHeight;//
+    console.log(map_height);
+    console.log(screen.height);
+
     function newInput(){
 
         //tooltip.style("visibility","hidden");
@@ -40,95 +46,80 @@
             switch(this.id){
                 case 'pop_densityBtn':
 
-                            category = "Population Density";
                              this.classList.toggle("selectedBtn");
                              the_ul.style("height","93px");
                              var res  = d3.select(this).classed("selectedBtn");
 
 
                         if(res){
-                            //remove the co2_layer to avoid multi-layer exist at the same time
-
-                            if(co2_layer){
-                                d3.select("#co2_emissionBtn").classed("selectedBtn",false);
-                                co2_layer = false;
-                                d3.select("#co2_emissionHolder").selectAll("ul").style("height","0");
-                                remove_layer('.co2_layer');
-
-                            }
-
                             pop_layer = true;
                             the_ul.style("height","93px");
-                            load_DData(category);
+                            load_DData("pop_layer");
                         }else{
                             pop_layer = false;
                             the_ul.style("height","0");
                             remove_layer('.pop_layer');
-                            if(!(pop_layer|co2_layer)) redraw_worldmap();
+                            if(!(pop_layer|co2_layer)){
+                                redraw_worldmap();
+                                //d3.select("#label_slider").remove();
+                            }
                         }
                     break;
-                case 'co2_emissionBtn': category = "CO2 Emission";
+                case 'co2_emissionBtn':
                     this.classList.toggle("selectedBtn");
                     var res  = d3.select(this).classed("selectedBtn");
 
                     if(res){
-                        if(pop_layer){
-
-                            document.getElementById("pop_densityBtn").classList.toggle("selectedBtn");
-                            pop_layer = false;
-                            d3.select("#pop_densityHolder").selectAll("ul").style("height","0");
-                            remove_layer('.pop_layer');
-                        }
 
                         co2_layer = true;
                         the_ul.style("height","93px");
-                        load_DData(category);
+                        load_DData("co2_layer");
                     }else{
                         co2_layer = false;
                         the_ul.style("height","0");
                         remove_layer('.co2_layer');
-                        if(!(pop_layer|co2_layer)) redraw_worldmap();
+                        if(!(pop_layer|co2_layer)){
+                            redraw_worldmap();
+                        }
                     }
                     break;
 
-                case  'fcl_projectsBtn': //category = "FCL Projects";
+                case  'fcl_projectsBtn':
 
-                    //if(!(pop_layer|co2_layer)) draw_worldmap();
                     this.classList.toggle("selectedBtn");
                     var res  = d3.select(this).classed("selectedBtn");
 
                     if(res){
                         project_layer = true;
-                        load_google_map();
-                        load_DData("FCL Projects");
+                        load_DData("project_layer");
                     }else{
                         project_layer = false;
                         remove_layer('.project_layer');
                     }
                     break;
 
-                case 'global_networkBtn': //category = "Global Network";
-                    //if(!(pop_layer|co2_layer)) draw_worldmap();
+                case 'global_networkBtn':
+
                     this.classList.toggle("selectedBtn");
                     var res  = d3.select(this).classed("selectedBtn");
 
                     if(res){
                         network_layer = true;
-                        load_DData("Global Network");
+                        load_DData("network_layer");
                     }else{
                         network_layer = false;
                         remove_layer('.network_layer');
                     }
                     break;
 
-                case 'academic_staffBtn': //category = "Global Network";
+                case 'academic_staffBtn':
 
                     this.classList.toggle("selectedBtn");
                     var res  = d3.select(this).classed("selectedBtn");
 
                     if(res){
                         staff_layer = true;
-                        load_DData("Academic Staff");
+                        load_DData("staff_layer");
                     }else{
                         staff_layer = false;
                         remove_layer('.staff_layer');
@@ -148,54 +139,154 @@
     }
 
     /* Set the width of the side navigation to 250px */
+    var sideBar_open = false;
     function openNav() {
-        document.getElementById("mySidenav").style.width = "160px";
+       // document.getElementById("fclSidenav").classList.toggle("show_side_bar");
+        var sidebar = d3.select("#fclSidenav");
+        if(sideBar_open){//clse the side_bar
+            sideBar_open = false;
+            d3.select("#fcl_projects").style("background-color","#FEFF8A").style("color","#000000");
+            sidebar.attr("style","height:0px");
+        }
+        else{//open the side bar
+            sideBar_open = true;
+            d3.select("#fcl_projects").style("background-color","#1f2933").style("color","#ffffff");
+            sidebar.attr("style","height:120px");
+
+        }
     }
 
-    /* Set the width of the side navigation to 0 */
-    function closeNav() {
-        document.getElementById("mySidenav").style.width = "0";
+
+
+    var mydragg = function(){
+        return {
+            move : function(divid,xpos,ypos){
+                document.getElementById(divid).style.right = xpos + 'px';
+                document.getElementById(divid).style.top = ypos + 'px';
+            },
+            startMoving : function(divid,container,evt){
+                evt = evt || window.event;
+                var posX = evt.clientX,
+                        posY = evt.clientY,
+                        divTop = document.getElementById(divid).offsetTop,
+                        divLeft = document.getElementById(divid).offsetLeft,
+                        eWi = parseInt(document.getElementById(divid).offsetWidth),
+                        eHe = parseInt(document.getElementById(divid).offsetHeight),
+                        cWi = parseInt(document.getElementById(container).offsetWidth),
+                        cHe = parseInt(document.getElementById(container).offsetHeight);
+               // document.getElementById(container).style.cursor='move';
+                //divTop = divTop.replace('px','');
+                //divLeft = divLeft.replace('px','');
+                var diffX = (divLeft+eWi) - posX,
+                        diffY = posY - divTop;
+                document.onmousemove = function(evt){
+                    evt = evt || window.event;
+                    var posX = evt.clientX,
+                            posY = evt.clientY,
+                            aX = cWi -(posX + diffX),  //right
+                            aY = posY - diffY;
+                    if (aX < 0) aX = 0;
+                    if (aY < 0) aY = 0;
+                    if (aX + eWi > cWi) aX = cWi - eWi;
+                    if (aY + eHe > cHe) aY = cHe -eHe;
+                    mydragg.move(divid,aX,aY);
+                }
+
+            },
+            stopMoving : function(container){
+                var a = document.createElement('script');
+                document.getElementById(container).style.cursor='default';
+                document.onmousemove = function(){}
+            },
+        }
+    }();
+
+
+    /*javascript for the modal*/
+    // When the user clicks on the button, open the modal
+    function modal_open() {
+        var modal = document.getElementById('myModal');
+        modal.style.display = "block";
     }
 
+    // When the user clicks on <span> (x), close the modal
+    function close_modal() {
+        var modal = document.getElementById('myModal');
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        var modal = document.getElementById('myModal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 
 </script>
 
-<div id="content_holder">
+<div id="content_holder" style="height:"+map_height+"px;width:"+map_width+"px;>
 
-    <nav class = "menu_bar">
-        <div class="menu-item" style="padding: 10px; border-top: 0">
-            <img id="fcl_logo" src="img/Logo_FCLwhite.png" alt="fcl_logo" width="180px" height="40px">
+    <nav id = "menu_bar" class="no_userselect" >
+        <div class ="holder">
+        <div class="menu-item" style="padding: 10px; border-top: 0" onmousedown='mydragg.startMoving("menu_bar","content_holder",event);' onmouseup='mydragg.stopMoving("content_holder");'>
+            <img id="fcl_logo" src="img/Logo_FCLwhite.png" alt="fcl_logo" width="180px" height="60px">
         </div>
-
+        <hr>
         <div class="menu-item navg_button" id="pop_densityHolder">
             <h4 id ="pop_densityBtn"><a>  Population Density</a></h4>
             <ul>
-                <li><div class="color_slider"></div></li>
+                <li></li>
             </ul>
         </div>
-
+        <hr><hr>
         <div class="menu-item navg_button" id="co2_emissionHolder">
             <h4 id = "co2_emissionBtn"><a>  CO2 Emission Per Capita</a></h4>
             <ul>
                 <li></li>
             </ul>
         </div>
+        <hr><hr>
+        <div class="menu-item" id="label_slider">
+        </div>
+        <hr><hr>
+            </div>
+        <div class="line_break"></div>
+        <div id="fclHolder">
+            <div style="background-color: #FEFF8A;    -webkit-box-shadow: 2px 2px 5px rgba(0,0,0,0.2);-moz-box-shadow: 2px 2px 5px rgba(0,0,0,0.2);">
+                <button id="fcl_modal" onclick="modal_open()">FCL Rationale</button> | <button id="fcl_projects" onclick="openNav()">FCL Projects</button>
+            </div>
+            <!-- side bar-->
+                    <div id="fclSidenav" class="no_userselect">
+                            <a href="#" id="fcl_projectsBtn"> FCL Projects</a>
+                            <a href="#" id="global_networkBtn">Global Network</a>
+                            <a href="#" id="academic_staffBtn">Academic Staff</a>
+                            <a href="http://www.fcl.ethz.ch/" target="_blank" style="text-decoration:underline;color:dodgerblue;">FCL Website</a>
+                    </div>
+        </div>
 
 
     </nav>
 
+    <!--the modal-->
+    <div id="myModal" class="modal">
 
-    <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="border-bottom:0 solid red;">&times;</a>
-        <a href="#" id="fcl_projectsBtn"> FCL Projects</a>
-        <a href="#" id="global_networkBtn">Global Network</a>
-        <a href="#" id="academic_staffBtn">Academic Staff</a>
-        <a href="#" id="google_mapBtn">Google Map</a>
-        <a href="http://www.fcl.ethz.ch/" target="_blank" style="text-decoration:underline;color:dodgerblue;">FCL Website</a>
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="close_modal()">×</span>
+                <h2>FCL Rationale</h2>
+            </div>
+            <div class="modal-body">
+                <p>Some text in the Modal Body</p>
+                <p>Some other text...</p>
+            </div>
+            <div class="modal-footer">
+                <h3>Footer</h3>
+            </div>
+        </div>
     </div>
 
-    <!-- Use any element to open the sidenav -->
-    <span id ="openBtn" onclick="openNav()">F<br>C<br>L</span>
 
 
     <div id="map_container">
@@ -212,7 +303,6 @@ document.getElementById('co2_emissionBtn').addEventListener("click", newInput);
 document.getElementById('fcl_projectsBtn').addEventListener("click", newInput);
 document.getElementById('global_networkBtn').addEventListener("click", newInput);
 document.getElementById('academic_staffBtn').addEventListener("click", newInput);
-document.getElementById('google_mapBtn').addEventListener("click",newInput);
 </script>
 
 <script src="js/map/world_map.js"></script>

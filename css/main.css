@@ -9,32 +9,45 @@
 }
 
 nav{
-    border: 2px solid #1f2933;
-    background-color: #1f2933;
-    box-shadow: 1px 1px 5px #606060;
     font-family: Helvetica, Arial, "Lucida Grande", sans-serif;
     line-height: 1.5;
     position: absolute;
-    z-index: 30;
-    top:10px;
+    z-index: 3;
+    top:0px;
     right: 40px;
     width: 200px;
-    -webkit-box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-    -moz-box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
 
 }
 
 .menu-item {
     width: 200px;
-    border-top: 2px solid #010101;
+    padding: 0px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 
+}
+
+.holder{
+    background-color:#1f2933 ;
+    box-shadow: 1px 1px 5px #606060;
+}
+
+hr {
+    display: block;
+    border:0px solid black;
+    background-color: #000000;
+    height:1px;
+    color: #000;
+    fill:black;
+    margin-left: 5%;
+    width: 90%;
 }
 
 /*Menu Header Styles*/
 .menu-item h4 {
 
     color: #fff;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 500;
 
     text-align: left;
@@ -80,10 +93,10 @@ nav{
     width: 200px;
 }
 
-/*li Styles*/
+/*li Styles
 .menu-item li {
     border-bottom: 1px solid #010101;
-}
+}*/
 
 
 .selectedBtn {
@@ -101,7 +114,7 @@ nav{
 }
 
 legend {
-    z-index: 30;
+    z-index: 3;
     font-size: 12px;
 
 }
@@ -114,7 +127,7 @@ legend {
     height: 20px;
     bottom:5%;
     right: 4%;
-    z-index: 10;
+    z-index: 1;
     position:absolute;
     border:2px;
     border-color: transparent;
@@ -126,7 +139,7 @@ legend {
     height: 30px;
     bottom:4.5%;
     right: 1%;
-    z-index: 10;
+    z-index: 1;
     position:absolute;
     border:2px;
     border-color: lightseagreen;
@@ -162,3 +175,142 @@ legend {
     stroke-width: 1px;
 }
 
+#fcl_logo{
+    padding-top: 15px;
+    pointer-events: none;
+}
+
+.no_userselect{
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;
+}
+
+.line_break{
+    fill-opacity: 0;
+    background-color: transparent;
+    box-shadow: 1px 1px 5px transparent;
+    width: 200px;
+    height:5px;
+    display: block;
+}
+
+
+#fclHolder {
+    box-shadow: none;
+    border:none;
+    width: 200px;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+
+}
+
+#fclHolder button{
+    width:92px;
+    height:30px;
+    font-size: 13px;
+    color: #010101;
+    margin:0 auto;
+    background-color: #FEFF8A;
+    border:0px;
+
+}
+
+#fclHolder button:hover{
+    color: #d0d0d0;
+
+}
+
+
+#fclHolder button:active {
+    color: #ffffff;
+    outline:0;
+    background: #1f2933;
+}
+
+#fclHolder button:focus {
+    color: #ffffff;
+    outline:0;
+    background: #1f2933;
+}
+
+/*style the fcl rationale modal*/
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 4; /* Sit on top */
+    left: 0;
+    top: 0;
+    padding-left: 10%;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color:#1f2933;
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/*the modal content*/
+
+/* Modal Header */
+.modal-header {
+    padding: 2px 16px;
+    background-color:#1f2933;
+    color: white;
+}
+
+/* Modal Body */
+.modal-body {padding: 2px 16px;}
+
+/* Modal Footer */
+.modal-footer {
+    padding: 2px 16px;
+    background-color:#1f2933;
+    color: white;
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    position: fixed;
+    bottom: 20px;
+    border: 1px solid #1f2933;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatebottom;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatebottom;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatebottom {
+    from {bottom: -300px; opacity: 0}
+    to {bottom: 20px; opacity: 1}
+}
+
+@keyframes animatebottom {
+    from {  bottom: -300px; opacity: 0}
+    to {bottom: 20px; opacity: 1}
+}

@@ -18,6 +18,8 @@ SC.project_matrix = [];
 SC.network_matrix = [];
 SC.staff_matrix = [];
 
+var worldmap_background = "#E2E3E8";
+
 
 var world_topo;
 
@@ -32,9 +34,9 @@ d3.json("data/topo/world-topo.json", function (error, world) {
 
 var offsetL,offsetT ;
 
-d3.select(window).on("resize", throttle);
+//d3.select(window).on("resize", throttle);
 
-var map_width , map_height;
+
 
 var projection, path, svg, g, graticule;
 var tooltip, one_tooltip, fcl_tooltip;
@@ -51,11 +53,11 @@ function setup() {
     tooltip = d3.select("#map_container").append("div")//.attr("class", "tooltip")
         .attr("style","fill: none");
 
-    fcl_tooltip = tooltip.append("div").attr("style","fill: none").attr("z-index",20);
-    one_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden").attr("z-index",50);
+    
 
-    map_width = document.getElementById("map_container").offsetWidth;
-    map_height = window.innerHeight;
+    fcl_tooltip = tooltip.append("div").attr("style","fill: none").attr("z-index",2);
+    one_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden").attr("z-index",3);
+    
 
     graticule = d3.geo.graticule();
     
@@ -77,6 +79,7 @@ function setup() {
         .append("g");
 
     g = svg.append("g").attr("id","country_holder");
+
     
 }
 
@@ -100,10 +103,7 @@ function draw_worldmap() {
         })
         .attr("title", function (d, i) {
             return d.properties.name;
-        }).attr("fill",
-        function (d) {
-            return "#DEEBF7";
-        });
+        }).attr("fill", worldmap_background);
 
 
 
@@ -123,17 +123,67 @@ function draw_worldmap() {
     }).on("mouseout", function (d, i) {
         return one_tooltip.attr("style", "visibility: hidden");
     });
+
+    setup_slider(1964,2014);
     
+}
+
+function draw_pop_country() {
     
+    var country = g.append("g").attr("id","pop_countries")
+                    .attr("class","pop_layer").selectAll(".country").data(this.world_topo);
+
+    country.enter().insert("path").attr("class", "country")
+        .attr("d", path)
+        /*.attr("id", function (d, i) {
+            return d.id;
+        })
+        .attr("title", function (d, i) {
+            return d.properties.name;
+        })*/.attr("fill", worldmap_background)
+        .style("opacity",0.6);
+
+
+    /*country.on("mouseover", function(){
+        return one_tooltip.attr("style","visibility: visible;borderColor: #F5F5DC");})
+        .on("mousemove", function (d,i) {
+            var mouse = d3.mouse(svg.node()).map(function (d) {
+                return parseInt(d);
+            });
+
+            return one_tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
+                .html(d.properties.name);
+
+
+
+        }).on("mouseout", function (d, i) {
+        return one_tooltip.attr("style", "visibility: hidden");
+    });*/
+
+
+}
+
+function draw_co2_country() {
+
+    var country = g.append("g").attr("id","co2_countries")
+        .attr("class","co2_layer").selectAll(".country").data(this.world_topo);
+
+    country.enter().insert("path").attr("class", "country")
+        .attr("d", path)
+        /*.attr("id", function (d, i) {
+         return d.id;
+         })
+         .attr("title", function (d, i) {
+         return d.properties.name;
+         })*/.attr("fill", worldmap_background)
+        .style("opacity",0.2);
+
 }
 
 function redraw_worldmap(){
     var country = g.selectAll(".country").data(this.world_topo);
 
-    country.attr("fill",
-        function (d) {
-            return "#DEEBF7";
-        });
+    country.attr("fill",worldmap_background);
 
     country.on("mouseover", function(){
         return one_tooltip.attr("style","visibility: visible;borderColor: #F5F5DC");})
@@ -154,12 +204,12 @@ function redraw_worldmap(){
 }
 
 function draw_pop_layer(){
-
-    category = "Population Density";
+    
     document.getElementById("pop_densityBtn").classList.toggle("selectedBtn");
     pop_layer = true;
-    load_DData(category);
     d3.select("#pop_densityHolder").selectAll("ul").style("height","93px");
+    load_DData("pop_layer");
+    
 }
 
 
@@ -249,18 +299,31 @@ function move(t,s) {
         Math.max(map_height * (1 - s) - h * s, t[1])
     );
 
-    one_tooltip.style("visibility","hidden");
+    /*//calculate the new position of one_tooltip
+    var cur_trans = zoom.translate();
+    var cur_sc = zoom.scale();
+    var sc_ratio = s/cur_sc;
+    var cur_right = one_tooltip.node().getBoundingClientRect().right;
+    var cur_bottom = one_tooltip.node().getBoundingClientRect().bottom;
+    var diffR = (innerWidth-cur_right-cur_trans[0])*(1-sc_ratio);
+    var diffB = (innerWidth-cur_bottom-cur_trans[1])*(1-sc_ratio);
+
+
+    var new_right = cur_right + diffR;
+    var new_bottom = cur_bottom+diffB;
+*/
+    //one_tooltip.style("visibility","hidden");
    // console.log(fcl_tooltip);
     //fcl_tooltip.style("visibility","hidden");
-    fcl_tooltip.selectAll(".tooltip").style("visibility","hidden");
-    fcl_tooltip_list =[];
+    //fcl_tooltip.selectAll(".tooltip").style("visibility","hidden");
+    //fcl_tooltip_list =[];
       //  .attr()
 
 
-
+    one_tooltip.attr("style","visibility: hidden");
+    fcl_tooltip.selectAll(".tooltip").attr("style","visibility: hidden");
     svg.attr("transform", "translate(" + t + ")scale(" + s + ")");
-    
-    
+
     /* SET NEW ZOOM POINT */
     zoom.translate(t);
     zoom.scale(s);
@@ -290,7 +353,7 @@ function move(t,s) {
     d3.selectAll("graticule").style("stroke-width", 0.5/s+'px');
 
 }
-
+/*
 var throttleTimer;
 
 function throttle() {
@@ -298,7 +361,7 @@ function throttle() {
     throttleTimer = window.setTimeout(function () {
         draw_worldmap(this.world_topo);
     }, 200);
-}
+}*/
 
 function click() {
     projection.invert(d3.mouse(this));
