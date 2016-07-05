@@ -169,6 +169,7 @@ function update(value){
     cur_year = Math.round(value);
     if(pop_layer)display_Density1(cur_year);
     if(co2_layer)display_Density2(cur_year);
+    if(gdp_layer)display_Density3(cur_year);
     label.text(cur_year);
 }
 

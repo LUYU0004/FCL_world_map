@@ -1,3 +1,30 @@
+#welcome_mask{
+
+    width: 100%;
+    height:100%;
+    background-color:white;
+    z-index:10;
+    opacity:1;
+
+    position:absolute;
+
+    -webkit-transition: opacity 2s ease-in-out;
+    -moz-transition: opacity 2s ease-in-out;
+    -ms-transition: opacity 2s ease-in-out;
+    -o-transition: opacity 2s ease-in-out;
+}
+div.welcome_msg{
+    position: absolute;
+    height: 60px;
+    background-color: #fff;
+    width: 50%;
+    top: 40%;
+    left: 37%;
+    text-align: center;
+    border-radius: 20px;
+
+}
+
 
 #content_holder {
     overflow:scroll;
@@ -15,12 +42,13 @@ nav{
     z-index: 3;
     top:0px;
     right: 40px;
-    width: 200px;
+    width: 220px;
+    text-align: center;
 
 }
 
 .menu-item {
-    width: 200px;
+    width: 100%;
     padding: 0px;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -202,7 +230,7 @@ legend {
 #fclHolder {
     box-shadow: none;
     border:none;
-    width: 200px;
+    width: 220px;
     text-align: center;
     position: relative;
     display: inline-block;
@@ -210,7 +238,7 @@ legend {
 }
 
 #fclHolder button{
-    width:92px;
+    width:95px;
     height:30px;
     font-size: 13px;
     color: #010101;

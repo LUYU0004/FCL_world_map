@@ -22,16 +22,17 @@
 
     var pop_layer = false;
     var co2_layer = false;
+    var gdp_layer = false;
+
     var project_layer = false;
     var network_layer = false;
     var staff_layer = false;
-    var google_layer = false;
 
     var map_width , map_height;
     map_width = screen.width;//document.getElementById("content_holder").offsetWidth;//
     map_height = screen.height;//window.innerHeight;//
-    console.log(map_height);
-    console.log(screen.height);
+
+    var point_layer_count = 0;
 
     function newInput(){
 
@@ -52,14 +53,18 @@
 
 
                         if(res){
+                            SC.layer_count++;
+                            SC.layer_stack[0]=SC.layer_count;
                             pop_layer = true;
                             the_ul.style("height","93px");
                             load_DData("pop_layer");
                         }else{
+                            SC.layer_count--;
+                            SC.layer_stack[0]=0;
                             pop_layer = false;
                             the_ul.style("height","0");
                             remove_layer('.pop_layer');
-                            if(!(pop_layer|co2_layer)){
+                            if(!(pop_layer|co2_layer|gdp_layer)){
                                 redraw_worldmap();
                                 //d3.select("#label_slider").remove();
                             }
@@ -70,15 +75,40 @@
                     var res  = d3.select(this).classed("selectedBtn");
 
                     if(res){
-
+                        SC.layer_count++;
+                        SC.layer_stack[1]=SC.layer_count;
                         co2_layer = true;
                         the_ul.style("height","93px");
                         load_DData("co2_layer");
                     }else{
+                        SC.layer_count--;
+                        SC.layer_stack[1]=0;
                         co2_layer = false;
                         the_ul.style("height","0");
                         remove_layer('.co2_layer');
-                        if(!(pop_layer|co2_layer)){
+                        if(!(pop_layer|co2_layer|gdp_layer)){
+                            redraw_worldmap();
+                        }
+                    }
+                    break;
+
+                case 'gdp_Btn':
+                    this.classList.toggle("selectedBtn");
+                    var res  = d3.select(this).classed("selectedBtn");
+
+                    if(res){
+                        SC.layer_count++;
+                        SC.layer_stack[2]=SC.layer_count;
+                        gdp_layer = true;
+                        the_ul.style("height","93px");
+                        load_DData("gdp_layer");
+                    }else{
+                        SC.layer_count--;
+                        SC.layer_stack[2]=0;
+                        gdp_layer = false;
+                        the_ul.style("height","0");
+                        remove_layer('.gdp_layer');
+                        if(!(pop_layer|co2_layer|gdp_layer)){
                             redraw_worldmap();
                         }
                     }
@@ -91,10 +121,13 @@
 
                     if(res){
                         project_layer = true;
+                       load_google_map();
                         load_DData("project_layer");
+                        point_layer_count ++;
                     }else{
                         project_layer = false;
                         remove_layer('.project_layer');
+                        point_layer_count--;
                     }
                     break;
 
@@ -106,9 +139,11 @@
                     if(res){
                         network_layer = true;
                         load_DData("network_layer");
+                        point_layer_count++;
                     }else{
                         network_layer = false;
                         remove_layer('.network_layer');
+                        point_layer_count--;
                     }
                     break;
 
@@ -120,9 +155,11 @@
                     if(res){
                         staff_layer = true;
                         load_DData("staff_layer");
+                        point_layer_count++;
                     }else{
                         staff_layer = false;
                         remove_layer('.staff_layer');
+                        point_layer_count--;
                     }
                     break;
 
@@ -225,7 +262,13 @@
 
 </script>
 
-<div id="content_holder" style="height:"+map_height+"px;width:"+map_width+"px;>
+<div id="welcome_mask">
+    <div class="welcome_msg">
+        <p style="background-color: yellow;width:400px;"><img src='img/project_img/0_fcl_vis.jpg'></p>
+    </div>
+</div>
+
+<div id="content_holder" style="height:"+map_height+"px;"width:"+map_width+"px;">
 
     <nav id = "menu_bar" class="no_userselect" >
         <div class ="holder">
@@ -246,6 +289,13 @@
                 <li></li>
             </ul>
         </div>
+            <hr><hr>
+            <div class="menu-item navg_button" id="gdpHolder">
+                <h4 id = "gdp_Btn"><a>  GDP Per Capita</a></h4>
+                <ul>
+                    <li></li>
+                </ul>
+            </div>
         <hr><hr>
         <div class="menu-item" id="label_slider">
         </div>
@@ -258,9 +308,9 @@
             </div>
             <!-- side bar-->
                     <div id="fclSidenav" class="no_userselect">
-                            <a href="#" id="fcl_projectsBtn"> FCL Projects</a>
-                            <a href="#" id="global_networkBtn">Global Network</a>
-                            <a href="#" id="academic_staffBtn">Academic Staff</a>
+                      <img src="img/yellow.png" ><a href="#" id="fcl_projectsBtn">FCL Projects</a>
+                        <img src="img/blue.png"><a href="#" id="global_networkBtn">Global Network</a>
+                        <img src="img/pink.png" ><a href="#" id="academic_staffBtn">Academic Staff</a>
                             <a href="http://www.fcl.ethz.ch/" target="_blank" style="text-decoration:underline;color:dodgerblue;">FCL Website</a>
                     </div>
         </div>
@@ -300,6 +350,7 @@
 document.getElementById("content_holder").style.height=  window.innerHeight+'px';
 document.getElementById('pop_densityBtn').addEventListener("click", newInput);
 document.getElementById('co2_emissionBtn').addEventListener("click", newInput);
+document.getElementById('gdp_Btn').addEventListener("click", newInput);
 document.getElementById('fcl_projectsBtn').addEventListener("click", newInput);
 document.getElementById('global_networkBtn').addEventListener("click", newInput);
 document.getElementById('academic_staffBtn').addEventListener("click", newInput);

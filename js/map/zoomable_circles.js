@@ -610,8 +610,8 @@ function draw_circles(root,className){
 
 
 
-                var width =one_tooltip.node().getBoundingClientRect().width;
-                var height =one_tooltip.select("#tooltip_text").node().getBoundingClientRect().height;
+                var width = one_tooltip.node().getBoundingClientRect().width;
+                var height =one_tooltip.node().getBoundingClientRect().height;
                 var area = width *height;
 
                 if(width>300){
@@ -822,21 +822,30 @@ function draw_project_legend(className){
         .style("stroke","#000")
         .style("stroke-width","0.5px")
         .attr('cy', function (d, i) {
-            var y=hBox/6 *i+d;
-
-            return y;
-        }).attr('fill', color//function (d, i) {return '#C0C0C0';}
+            switch(i){
+                case 0: return 4;
+                case 1: return 60;
+                case 2: return 130;
+            }
+        }).attr('fill', 'none'//function (d, i) {return '#C0C0C0';}
     ).attr('r',function (d,i) {
-        var s = zoom.scale();
+        //var s = zoom.scale();
         return Math.sqrt(d*area_unit/(Math.PI));
     }).attr("opacity",0.5);
 
     sg.selectAll('text').data(area).enter().append("text")
         .attr("dx",function(d){
-            var x_adjust = d>=10? 7:4;
-            return -15;
+
+            return -18;
         })
-        .attr("dy", function(d,i){return (hBox/6 *i+d+4);})
+        .attr("dy", function(d,i){
+            //var res;
+            switch(i){
+                case 0: return 10;
+                case 1: return 65;
+                case 2: return 135;
+            }})
+           // return (hBox/6 *i+d+4);})
         .text(function(d){return d});
 
 

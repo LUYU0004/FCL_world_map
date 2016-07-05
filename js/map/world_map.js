@@ -17,29 +17,77 @@ SC.staff = [];
 SC.project_matrix = [];
 SC.network_matrix = [];
 SC.staff_matrix = [];
+SC.layer_count = 0;
+SC.layer_stack = [0,0,0]; // index 0 for pop_layer, index 1 for co2, index 2 for GDP;
+//// each contains the layer stack number from 1-3, 0 stands for non-exists
 
 var worldmap_background = "#E2E3E8";
 
 
 var world_topo;
 
+var country_pop, country_area;
+var country_co2_emission;
+var country_gdp;
+
 
 d3.json("data/topo/world-topo.json", function (error, world) {
     world_topo = topojson.feature(world, world.objects.countries).features;
 
+    var welcome = d3.select("#welcome_mask")
+        .style("opacity", 0);
+    setTimeout(function(){ welcome.remove();}, 2000);
+
+    read_popData();
     draw_worldmap();
-    draw_pop_layer();
+
+
 });
 
+function read_popData(){
+    d3.csv("data/fitted/country_size.csv", function (error, country_size_data) {
+        d3.csv("data/fitted/population.csv", function (error, pop_data) {
 
-var offsetL,offsetT ;
+            country_pop =  pop_data;
+            country_area = country_size_data;
+            console.log("progress: read_pop");
+            read_gdpData();
+
+        });
+
+    });
+}
+
+function read_gdpData(){
+    d3.csv("data/fitted/GDP.csv", function (error, gdp_data) {
+
+
+            country_gdp =  gdp_data;
+            console.log("progress: read_gdp");
+            read_co2Data();
+
+    });
+}
+
+function read_co2Data(){
+    d3.csv("data/raw/CO2 emissions (kt)/en.atm.co2e.kt_Indicator_en_csv_v2(edited).csv", function (error, co2_data) {
+
+            country_co2_emission = co2_data;
+            console.log("progress: read_co2");
+            draw_pop_layer();
+
+    });
+}
+
+
+var offsetL=10,offsetT=10 ;
 
 //d3.select(window).on("resize", throttle);
 
 
 
 var projection, path, svg, g, graticule;
-var tooltip, one_tooltip, fcl_tooltip;
+var tooltip, one_tooltip, country_info_tooltip, fcl_tooltip;
 
 var zoom = d3.behavior.zoom().scaleExtent([1, 4])
             .on("zoom",move);
@@ -57,7 +105,7 @@ function setup() {
 
     fcl_tooltip = tooltip.append("div").attr("style","fill: none").attr("z-index",2);
     one_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden").attr("z-index",3);
-    
+    country_info_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden").attr("z-index",3);
 
     graticule = d3.geo.graticule();
     
@@ -109,19 +157,26 @@ function draw_worldmap() {
 
     
     country.on("mouseover", function(){ 
-        return one_tooltip.attr("style","visibility: visible;borderColor: #F5F5DC");})
+        return country_info_tooltip.attr("style","visibility: visible;borderColor: #F5F5DC");})
         .on("mousemove", function (d,i) {
             var mouse = d3.mouse(svg.node()).map(function (d) {
                 return parseInt(d);
             });
-            
-            return one_tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
+
+            var scale = zoom.scale();
+            var t =zoom.translate();
+
+            var left = mouse[0]*scale + t[0]+offsetL;
+            var top = mouse[1]*scale + t[1]+offsetT;
+
+
+            return country_info_tooltip.attr("style", "left:" + left + "px;top:" + top + "px")
                     .html(d.properties.name);
             
 
 
     }).on("mouseout", function (d, i) {
-        return one_tooltip.attr("style", "visibility: hidden");
+        return country_info_tooltip.attr("style", "visibility: hidden");
     });
 
     setup_slider(1964,2014);
@@ -141,7 +196,10 @@ function draw_pop_country() {
         .attr("title", function (d, i) {
             return d.properties.name;
         })*/.attr("fill", worldmap_background)
-        .style("opacity",0.6);
+        .style("opacity",function(){
+            var res = 0.8-0.2*SC.layer_count;
+            return res;
+        });
 
 
     /*country.on("mouseover", function(){
@@ -176,7 +234,25 @@ function draw_co2_country() {
          .attr("title", function (d, i) {
          return d.properties.name;
          })*/.attr("fill", worldmap_background)
-        .style("opacity",0.2);
+        .style("opacity",function(){
+            var res = 0.8-0.2*SC.layer_count;
+            return res;
+        });
+
+}
+
+function draw_gdp_country() {
+
+    var country = g.append("g").attr("id","gdp_countries")
+        .attr("class","gdp_layer").selectAll(".country").data(this.world_topo);
+
+    country.enter().insert("path").attr("class", "country")
+        .attr("d", path)
+        .attr("fill", worldmap_background)
+        .style("opacity",function(){
+            var res = 0.8-0.2*SC.layer_count;
+            return res;
+        });
 
 }
 
@@ -186,30 +262,43 @@ function redraw_worldmap(){
     country.attr("fill",worldmap_background);
 
     country.on("mouseover", function(){
-        return one_tooltip.attr("style","visibility: visible;borderColor: #F5F5DC");})
+        return country_info_tooltip.attr("style","visibility: visible;borderColor: #F5F5DC");})
         .on("mousemove", function (d,i) {
             var mouse = d3.mouse(svg.node()).map(function (d) {
                 return parseInt(d);
             });
 
-            return one_tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
+            var scale = zoom.scale();
+            var t =zoom.translate();
+
+            var left = mouse[0]*scale + t[0]+offsetL;
+            var top = mouse[1]*scale + t[1]+offsetT;
+
+
+            return country_info_tooltip.attr("style", "left:" + left + "px;top:" + top + "px")
                 .html(d.properties.name);
 
 
 
         }).on("mouseout", function (d, i) {
-        return one_tooltip.attr("style", "visibility: hidden");
+        return country_info_tooltip.attr("style", "visibility: hidden");
     });
 
 }
 
 function draw_pop_layer(){
-    
     document.getElementById("pop_densityBtn").classList.toggle("selectedBtn");
     pop_layer = true;
     d3.select("#pop_densityHolder").selectAll("ul").style("height","93px");
+    console.log("progress: draw_pop_layer!");
+    SC.layer_count++;
+    SC.layer_stack[0]=SC.layer_count;
     load_DData("pop_layer");
-    
+
+}
+function remove(th){
+    console.log("end");
+    th.remove();
 }
 
 
@@ -235,7 +324,7 @@ function move(t,s) {
         if(project_layer){
             callcount++;
             console.log(callcount);
-            if(callcount==1)load_google_map();
+            //if(callcount==1)load_google_map();
 
         }
     }else if(s>= tier4_scale) {
@@ -316,7 +405,7 @@ function move(t,s) {
    // console.log(fcl_tooltip);
     //fcl_tooltip.style("visibility","hidden");
     //fcl_tooltip.selectAll(".tooltip").style("visibility","hidden");
-    //fcl_tooltip_list =[];
+    fcl_tooltip_list =[];
       //  .attr()
 
 
