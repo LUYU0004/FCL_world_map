@@ -12,6 +12,7 @@ var range1 ;
 var range2 ;
 var range3;
 
+
 /*load_countrySize_and_property */
 function load_DData(_category){
     
@@ -78,7 +79,7 @@ function display_Density1(cur_year){
     var min = range1[0];
     var max = range1[1];
 
-    var densityMultiplier = 1;
+
 
     /*modify colors of each countries based on population density*/
     var countries  = g.select("#pop_countries").selectAll(".country").data(this.world_topo);
@@ -92,7 +93,7 @@ function display_Density1(cur_year){
         if (country_properties.length > 0 && country_size.length > 0) {
             var year_property = country_properties[0][cur_year];
             var c_size = country_size[0][cur_year];
-            var density = year_property / c_size*densityMultiplier;
+            var density = year_property / c_size;
 
             if(density>=color_split1[min] && density<color_split1[max]) {
 
@@ -115,91 +116,123 @@ function display_Density1(cur_year){
     }).on("mousemove",null);
 
     /*modify tooltip to add in info about population and country size*/
-    var offsetL = document.getElementById("map_container").offsetLeft + 20;
-    var offsetT = document.getElementById("map_container").offsetTop + 10;
 
-
+    var color_layer_count = 0;
+    var undefined_count =0;
     countries
         .on("mouseover",function (d) {
-            var mouse = d3.mouse(svg.node()).map(function (d) {
-                return parseInt(d);
-            });
 
+            var popMultiplier = 1;
+            var co2Multiplier = 1000;
+            var gdpMultiplier = 1;
 
+            color_layer_count = 0;
+            undefined_count =0;
+
+            var format = d3.format(',.02f');
+
+            //this layer is pop_layer
             var name = d.properties.name;
-            var country_properties = find_country_pop(name);
-            var year_property = country_properties[0][cur_year];
-            var country_size = find_country_area(name);
-            var cur_country_size = country_size[0][cur_year];
+            var tooltip_content = "<b style='font-size:20px'>"+name+"</b><br>";
 
-            if (country_properties.length > 0 && country_size.length > 0) {
+            var pop_properties = find_country_pop(name);
+            var year_pop = pop_properties[0][cur_year];
+            var  country_properties= find_country_area(name);
+            var year_area = country_properties[0][cur_year];
 
-                var density = year_property / cur_country_size * densityMultiplier;
-                var density_unit;
+            color_layer_count++;
 
-                cur_country_size = cur_country_size + ' (sq.km)';
-                density_unit = ' people per (sq.km)';
+            if (year_pop.length > 0 && year_area.length > 0) {
 
-                var format = d3.format(',.02f');
+                var density = year_pop / year_area * popMultiplier;
 
-                country_info_tooltip
-                    .html("<div>|<b>"+d.properties.name + "</b><br>|<b>" + "Population Density :</b>"
-                        + format(year_property / 1000000) + "M people<br>|<b>Size:</b>" + cur_country_size + "<br>|<b>Density:</b>"
-                        + density+density_unit+"</div>");
+                tooltip_content +="<br><div><b>" + "Population in Total: </b>"
+                    + format(year_pop / 1000000) + " M people<br><b>Area: </b>" + year_area + " (sq.km)<br><b>Population Density: </b>"
+                    + format(density)+" people per (sq.km)</div><br><hr>";
 
-                var left_adjust = zoom.translate()[0];
-                var top_adjust = zoom.translate()[1];
-                var scale = zoom.scale();
-
-                var left = mouse[0];//mouse[0]*scale + offsetL+left_adjust;
-                var top = mouse[1];//*scale + offsetT+top_adjust;
-
-                return country_info_tooltip.attr("style", "right:"+(innerWidth - left)+"px;bottom:"+(innerHeight - top)+"px;visibility: visible;");
 
             }else{
-                return country_info_tooltip.attr("style", "right:" + (innerWidth-mouse[0] - offsetL) + "px;bottom:" + (innerHeight - mouse[1] - offsetT) + "px;visibility:visible")
-                    .html(d.properties.name);
+                tooltip_content +="<br>Population Density:  undefined<br><hr>";
+                undefined_count++;
             }
+
+            //check whether the other two layers are selected
+            if(co2_layer){
+                color_layer_count++;
+
+                var co2_properties = find_country_co2(name);
+                var year_co2 = co2_properties[0][cur_year];
+
+                if (year_co2.length > 0 && year_pop.length > 0) {
+
+                    density = year_co2 / year_pop * co2Multiplier;
+
+                    tooltip_content +="<br><div><b>" + "CO2 Emission in Total: </b>"
+                        + format(year_co2) + " K tons<br><b>Population: </b>" + format(year_pop/1000000) + " M people<br><b>CO2 Emission Density: </b>"
+                        + format(density)+" tons per person</div><br><hr>";
+
+                }else{
+                    tooltip_content +="<br>CO2 Density:  undefined<br><hr>";
+                    undefined_count++;
+                }
+            }
+
+            if(gdp_layer){
+                color_layer_count++;
+
+                var gdp_properties = find_country_co2(name);
+                var year_gdp = gdp_properties[0][cur_year];
+
+                if (year_gdp.length > 0 && year_pop.length > 0) {
+
+                    density = year_gdp / year_pop * gdpMultiplier;
+
+                    tooltip_content +="<br><div><b>" + "GDP in Total:</b>"
+                        + format(year_gdp) + " US$<br><b>Population: </b>" + format(year_pop/1000000) + " M people<br><b>GDP per capita: </b>"
+                        + format(density)+" US$ per person</div><br><hr>";
+
+                }else{
+                    undefined_count++;
+                    tooltip_content +="<br>GDP:  undefined<br><hr>";
+                }
+
+            }
+
+
+
+
+            var left =d3.event.pageX+offsetL;
+            var top = d3.event.pageY+offsetT;
+
+            country_info_tooltip
+                .html(tooltip_content)
+                .style("visibility","visible")
+                .style("left", left + "px")
+                .style("top", top + "px");
+
         })
         .on("mousemove", function (d,i) {
 
-            var left_adjust = zoom.translate()[0];
-            var top_adjust = zoom.translate()[1];
-            var scale = zoom.scale();
+            var left =d3.event.pageX+offsetL;
+            var top = d3.event.pageY+offsetT;
+
+
+            var width = 338;
+            var height = 44+(color_layer_count-undefined_count)*100+undefined_count*40;
+            if(left+width>innerWidth){
+                left = left-2*offsetL-width;
+            }
+
+            if(height+top > innerHeight){
+                  top =  top-2* offsetT - height;
+            }
+
+
+            country_info_tooltip
+            .style("left", left  + "px")
+                .style("top", top + "px");
             
-            var mouse = d3.mouse(svg.node()).map(function (d) {
-                return parseInt(d);
-            });
-
-                var left = mouse[0]*scale + offsetL+left_adjust;
-                var top = mouse[1]*scale + offsetT+top_adjust;
-                var window_margin = 16;
-                var buffer = 5;
-
-                var tooltip_right = country_info_tooltip.node().getBoundingClientRect().width + left;
-                var window_right = innerWidth - window_margin - buffer;
-
-                if(tooltip_right > window_right){
-
-                    var tooltip_Width = 275;
-
-                    left = mouse[0]-tooltip_Width-offsetL  ;
-
-                }
-
-                var tooltip_height = country_info_tooltip.node().getBoundingClientRect().height;
-
-                var tooltip_bottom = top+tooltip_height;
-
-                if(tooltip_bottom> (window.innerHeight-window_margin)){
-                    top = mouse[1]-tooltip_height-offsetT;
-                }
-
-                return country_info_tooltip.attr("style","left:"+ left+"px;top:"+top+"px;visibility: visible;");
-
-
-
-    }).on("mouseout", function (d, i) {
+        }).on("mouseout", function (d, i) {
         looptime = 0;
         return country_info_tooltip.attr("style", "visibility: hidden");
     });
@@ -253,99 +286,130 @@ function display_Density2(cur_year){
             return worldmap_background; //
         }
 
-    });/*.on("mousemove",null);
+    }).on("mousemove",null);
 
     //modify tooltip to add in info about population and country size
     var offsetL = document.getElementById("map_container").offsetLeft + 20;
     var offsetT = document.getElementById("map_container").offsetTop + 10;
+    var color_layer_count = 0;
+    var undefined_count =0;
 
 
     countries
         .on("mouseover",function (d) {
-            var mouse = d3.mouse(svg.node()).map(function (d) {
-                return parseInt(d);
-            });
+
+            var popMultiplier = 1;
+            var co2Multiplier = 1000;
+            var gdpMultiplier = 1;
+
+            color_layer_count = 0;
+            undefined_count =0;
 
 
+            var format = d3.format(',.02f');
+
+            //this layer is pop_layer
             var name = d.properties.name;
-            var country_properties = find_country_co2(name);
-            var year_property = country_properties[0][cur_year];
-            var country_size = find_country_pop(name);
-            var cur_country_size = country_size[0][cur_year];
+            var tooltip_content = "<b style='font-size:20px'>"+name+"</b><br>";
 
-            if (country_properties.length > 0 && country_size.length > 0) {
+            var co2_properties = find_country_co2(name);
+            var year_co2 = co2_properties[0][cur_year];
+            var  pop_properties= find_country_pop(name);
+            var year_pop = pop_properties[0][cur_year];
 
-                var density = year_property / cur_country_size * densityMultiplier;
-                var density_unit;
+            color_layer_count++;
 
-                cur_country_size = cur_country_size +' people';
-                density_unit = ' tons per person';
+            if (year_pop.length > 0 && year_co2.length > 0) {
 
+                var density = year_co2 / year_pop * co2Multiplier;
 
-                var format = d3.format(',.02f');
-
-                country_info_tooltip
-                    .html("<div>|<b>"+d.properties.name + "</b><br>|<b> CO2 Emission :</b>"
-                        + format(year_property) + " K tons<br>|<b>Size:</b>" + cur_country_size + "<br>|<b>Density:</b>"
-                        + density+density_unit+"</div>");
-
-                var left_adjust = zoom.translate()[0];
-                var top_adjust = zoom.translate()[1];
-                var scale = zoom.scale();
-
-                var left = mouse[0]*scale + offsetL+left_adjust;
-                var top = mouse[1]*scale + offsetT+top_adjust;
-
-                return country_info_tooltip.attr("style", "right:"+(innerWidth - left)+"px;bottom:"+(innerHeight - top)+"px;visibility: visible;");
+                tooltip_content +="<br><div><b>" + "CO2 Emission in Total: </b>"
+                    + format(year_co2) + " K tons<br><b>Population: </b>" + format(year_pop/1000000) + " M people<br><b>CO2 Emission Density: </b>"
+                    + format(density)+" tons per person</div><br><hr>";
 
             }else{
-                return country_info_tooltip.attr("style", "right:" + (innerWidth-mouse[0] - offsetL) + "px;bottom:" + (innerHeight - mouse[1] - offsetT) + "px;visibility:visible")
-                    .html(d.properties.name);
+                tooltip_content +="<br>Population Density:  undefined<br><hr>"
+                undefined_count++;
             }
+
+            //check whether the other two layers are selected
+            if(pop_layer){
+                color_layer_count++;
+
+                var  country_area= find_country_area(name);
+                var year_area = country_area[0][cur_year];
+
+
+                if (year_area.length > 0 && year_pop.length > 0) {
+
+                    density = year_pop / year_area * popMultiplier;
+
+                    tooltip_content +="<br><div><b>" + "Population in Total: </b>"
+                        + format(year_pop / 1000000) + " M people<br><b>Area: </b>" + year_area + " (sq.km)<br><b>Population Density: </b>"
+                        + format(density)+" people per (sq.km)</div><br><hr>";
+                }else{
+                    tooltip_content +="<br>CO2 Density:  undefined<br><hr>";
+                    undefined_count++;
+                }
+            }
+
+            if(gdp_layer){
+                color_layer_count++;
+
+                var gdp_properties = find_country_co2(name);
+                var year_gdp = gdp_properties[0][cur_year];
+
+                if (year_gdp.length > 0 && year_pop.length > 0) {
+
+                    density = year_gdp / year_pop * gdpMultiplier;
+
+                    tooltip_content +="<br><div><b>" + "GDP in Total:</b>"
+                        + format(year_gdp) + " US$<br><b>Population: </b>" + format(year_pop/1000000) + " M people<br><b>GDP per capita: </b>"
+                        + format(density)+" US$ per person</div><br><hr>";
+
+                }else{
+                    undefined_count++;
+                    tooltip_content +="<br>GDP:  undefined<hr>";
+                }
+
+            }
+
+
+            var left =d3.event.pageX+offsetL;
+            var top = d3.event.pageY+offsetT;
+
+            country_info_tooltip
+                .html(tooltip_content)
+                .style("visibility","visible")
+                .style("left", left + "px")
+                .style("top", top + "px");
         })
         .on("mousemove", function (d,i) {
 
-            var left_adjust = zoom.translate()[0];
-            var top_adjust = zoom.translate()[1];
-            var scale = zoom.scale();
+            var left =d3.event.pageX+offsetL;
+            var top = d3.event.pageY+offsetT;
 
-            var mouse = d3.mouse(svg.node()).map(function (d) {
-                return parseInt(d);
-            });
-
-            var left = mouse[0]*scale + offsetL+left_adjust;
-            var top = mouse[1]*scale + offsetT+top_adjust;
-            var window_margin = 16;
-            var buffer = 5;
-
-            var tooltip_right = country_info_tooltip.node().getBoundingClientRect().width + left;
-            var window_right = innerWidth - window_margin - buffer;
-
-            if(tooltip_right > window_right){
-
-                var tooltip_Width = 275;
-
-                left = mouse[0]-tooltip_Width-offsetL  ;
-
+            var width = 338;
+            var height = 44+(color_layer_count-undefined_count)*100+undefined_count*40;
+            if(left+width>innerWidth){
+                left = left-2*offsetL-width;
             }
 
-            var tooltip_height = country_info_tooltip.node().getBoundingClientRect().height;
-
-            var tooltip_bottom = top+tooltip_height;
-
-            if(tooltip_bottom> (window.innerHeight-window_margin)){
-                top = mouse[1]-tooltip_height-offsetT;
+            if(height+top > innerHeight){
+                top =  top-2* offsetT - height;
             }
 
-            return country_info_tooltip.attr("style","left:"+ left+"px;top:"+top+"px;visibility: visible;");
 
+            country_info_tooltip
+                .style("left", left  + "px")
+                .style("top", top + "px");
 
 
         }).on("mouseout", function (d, i) {
         looptime = 0;
         return country_info_tooltip.attr("style", "visibility: hidden");
     });
-    */
+
 
 }
 
@@ -396,94 +460,124 @@ function display_Density3(cur_year){
             return worldmap_background; //
         }
 
-    });
-/*.on("mousemove",null);
+    }).on("mousemove",null);
 
     //modify tooltip to add in info about population and country size
     var offsetL = document.getElementById("map_container").offsetLeft + 20;
     var offsetT = document.getElementById("map_container").offsetTop + 10;
 
+    var color_layer_count = 0;
+    var undefined_count =0;
+
 
     countries
         .on("mouseover",function (d) {
-            var mouse = d3.mouse(svg.node()).map(function (d) {
-                return parseInt(d);
-            });
+            var popMultiplier = 1;
+            var co2Multiplier = 1000;
+            var gdpMultiplier = 1;
+
+            color_layer_count = 0;
+            undefined_count =0;
 
 
+            var format = d3.format(',.02f');
+
+            //this layer is pop_layer
             var name = d.properties.name;
-            var country_properties = find_country_gdp(name);
-            if(country_properties.length<=0) console.log(name);
-            var year_property = country_properties[0][cur_year];
-            var country_size = find_country_pop(name);
-            var cur_country_size = country_size[0][cur_year];
+            var tooltip_content = "<b style='font-size:20px'>"+name+"</b><br>";
 
-            if (country_properties.length > 0 && country_size.length > 0) {
+            var gdp_properties = find_country_co2(name);
+            var year_gdp = gdp_properties[0][cur_year];
+            var  pop_properties= find_country_pop(name);
+            var year_pop = pop_properties[0][cur_year];
 
-                var density = year_property / cur_country_size * densityMultiplier;
-                var density_unit;
+            color_layer_count++;
 
-                cur_country_size = cur_country_size +' people';
-                density_unit = ' US dollar per person';
+            if (year_gdp.length > 0 && year_pop.length > 0) {
 
+                density = year_gdp / year_pop * gdpMultiplier;
 
-                var format = d3.format(',.02f');
-
-                country_info_tooltip
-                    .html("<div>|<b>"+d.properties.name + "</b><br>|<b> GDP :</b>"
-                        + format(year_property) + " US dollars<br>|<b>Size:</b>" + cur_country_size + " people<br>|<b>Density:</b>"
-                        + density+density_unit+"</div>");
-
-                var left_adjust = 0//zoom.translate()[0];
-                var top_adjust = 0//zoom.translate()[1];
-                var scale = zoom.scale();
-
-                var left = mouse[0];//mouse[0]*scale + offsetL+left_adjust;
-                var top = mouse[1]//*scale + offsetT+top_adjust;
-
-                return country_info_tooltip.attr("style", "right:"+(innerWidth - left)+"px;bottom:"+(innerHeight - top)+"px;visibility: visible;");
+                tooltip_content +="<br><div><b>" + "GDP in Total:</b>"
+                    + format(year_gdp) + " US$<br><b>Population: </b>" + format(year_pop/1000000) + " M people<br><b>GDP per capita: </b>"
+                    + format(density)+" US$ per person</div><hr>";
 
             }else{
-                return country_info_tooltip.attr("style", "right:" + (innerWidth-mouse[0] - offsetL) + "px;bottom:" + (innerHeight - mouse[1] - offsetT) + "px;visibility:visible")
-                    .html(d.properties.name);
+                tooltip_content +="<br>GDP:  undefined<hr>";
+                undefined_count++;
             }
+
+            //check whether the other two layers are selected
+            if(pop_layer){
+                color_layer_count++;
+
+                var  country_area= find_country_area(name);
+                var year_area = country_area[0][cur_year];
+
+
+                if (year_area.length > 0 && year_pop.length > 0) {
+
+                    density = year_pop / year_area * popMultiplier;
+
+                    tooltip_content +="<br><div><b>" + "Population in Total: </b>"
+                        + format(year_pop / 1000000) + " M people<br><b>Area: </b>" + year_area + " (sq.km)<br><b>Population Density: </b>"
+                        + format(density)+" people per (sq.km)</div><hr>";
+                }else{
+                    tooltip_content +="<br>CO2 Density:  undefined<hr>";
+                    undefined_count++;
+                }
+            }
+
+            if(co2_layer){
+                color_layer_count++;
+                var co2_properties = find_country_co2(name);
+                var year_co2 = co2_properties[0][cur_year];
+
+                if (year_pop.length > 0 && year_co2.length > 0) {
+
+                    var density = year_co2 / year_pop * co2Multiplier;
+
+                    tooltip_content +="<br><div><b>" + "CO2 Emission in Total: </b>"
+                        + format(year_co2) + " K tons<br><b>Population: </b>" + format(year_pop/1000000) + " M people<br><b>CO2 Emission Density: </b>"
+                        + format(density)+" tons per person</div><hr>";
+
+                }else{
+                    tooltip_content +="<br>Population Density:  undefined<hr>";
+                    undefined_count++;
+                }
+
+            }
+
+
+            var left =d3.event.pageX+offsetL;
+            var top = d3.event.pageY+offsetT;
+
+            country_info_tooltip
+                .html(tooltip_content)
+                .style("visibility","visible")
+                .style("left", left + "px")
+                .style("top", top + "px");
         })
         .on("mousemove", function (d,i) {
 
-            var left_adjust = zoom.translate()[0];
-            var top_adjust = zoom.translate()[1];
-            var scale = zoom.scale();
-
-            var mouse = d3.mouse(svg.node()).map(function (d) {
-                return parseInt(d);
-            });
-
-            var left = mouse[0]*scale + offsetL+left_adjust;
-            var top = mouse[1]*scale + offsetT+top_adjust;
-            var window_margin = 16;
-            var buffer = 5;
-
-            var tooltip_right = country_info_tooltip.node().getBoundingClientRect().width + left;
-            var window_right = innerWidth - window_margin - buffer;
-
-            if(tooltip_right > window_right){
-
-                var tooltip_Width = 275;
-
-                left = mouse[0]-tooltip_Width-offsetL  ;
-
+            var left =d3.event.pageX+offsetL;
+            var top = d3.event.pageY+offsetT;
+            var width = 338;
+            var height = 44+(color_layer_count-undefined_count)*77+undefined_count*40;
+            if(left+width>innerWidth){
+                left = left-2*offsetL-width;
             }
 
-            var tooltip_height = country_info_tooltip.node().getBoundingClientRect().height;
-
-            var tooltip_bottom = top+tooltip_height;
-
-            if(tooltip_bottom> (window.innerHeight-window_margin)){
-                top = mouse[1]-tooltip_height-offsetT;
+            if(height+top > innerHeight){
+                top =  top-2* offsetT - height;
             }
 
-            return country_info_tooltip.attr("style","left:"+ left+"px;top:"+top+"px;visibility: visible;");
 
+            country_info_tooltip
+                .style("left", left  + "px")
+                .style("top", top + "px");
+
+            var h =country_info_tooltip.node().getBoundingClientRect().height;
+            console.log(h);
 
 
         }).on("mouseout", function (d, i) {
@@ -491,7 +585,7 @@ function display_Density3(cur_year){
         return country_info_tooltip.attr("style", "visibility: hidden");
     });
 
-    */
+
 
 }
 
@@ -543,100 +637,4 @@ function remove_layer(className){
 }
 
 
-/*
- function formatNum_pop(num) {
- var format = d3.format(',.02f');
 
- return format(num / 1000000) + ' M people';
- }
-
- function formatNum_co2(num) {
- var format = d3.format(',.02f');
-
- return format(num) + ' K tons';
- }
-
- Add color legend to extra_layer
-
-function draw_legend(max_property,className) {
-
-    var wBox = 190,
-        hBox = 100;
-
-    var steps = color_split1.length,
-        hRect = 15,
-        offsetY = 30;
-
-    var wRect = wBox / steps,
-        offsetText = wRect / 2;
-
-    var body;
-    var unit_text;
-
-    switch(className){
-        case 'pop_layer': body = d3.select("#pop_densityHolder").selectAll("li").append("div");
-            unit_text = "People per sq.km";
-            break;
-        case 'co2_layer': body = d3.select("#co2_emissionHolder").selectAll("li").append("div");
-            unit_text = "Tons per person";
-            break;
-        default: break;
-    }
-
-    var color_legend = body
-        .attr("class","legend "+className);
-
-    var svg = color_legend
-        .attr("z-index", 40)
-        .append("svg")
-        .attr("width", wBox+20)
-        .attr("height", hBox)
-        .append("g");
-
-    var legend = svg
-        .append('g')  //svg.append('g')    //add the legend to extra_info.svg.g
-        .attr('width', wBox)
-        .attr('height', hBox);
-
-
-    var sg = legend.append('g')
-        .attr('transform', "translate(2,15)");
-
-    var partial_colors = colors1.slice(0, color_split.length);
-
-    sg.selectAll('rect').data(partial_colors ).enter().append('rect')
-        .attr('x', function (d, i) {
-            return i * wRect;
-        })
-        .attr('y', offsetY)
-        .attr('fill', function (d, i) {
-            return colors1[i];
-        }).attr('width', wRect).attr('height', hRect);
-
-
-
-    console.log(partial_colors);
-    // Draw color scale labels.
-    sg.selectAll('text').data(partial_colors).enter()
-        .append('text')
-        .text(function (d, i) {
-            return color_split[i];
-        }).attr('class', function (d, i) {
-        return 'text-' + i;
-    }).attr('x', function(d,i){
-        return (i+1) * wRect;})
-        .attr('y', offsetY+hRect+ offsetText);
-
-    //Draw label for end of extent.
-    sg.append('text').text(function () {
-        //var text = formatNum(max_population);
-        return max_property;
-
-    }).attr('x', 0).attr('y', offsetY-3);
-
-    sg.append('text').text(unit_text).attr('x', 2).attr('y', function(){
-        return 0;
-    });
-
-}
-*/
