@@ -25,7 +25,6 @@ div.tooltip {
 
 .tooltip_text{
     font-size: 14px;
-
     text-align: left;
     vertical-align: middle;
     font-family: Arial, Helvetica, sans-serif;
@@ -48,4 +47,30 @@ p{
 {
     display: inline-block;
     vertical-align: middle;
+}
+
+.point-chart{
+    font : 12px Arial;
+    fill: #000000;
+    stroke: none;
+}
+
+
+.value-point{
+    fill: none;/*#1f2933;*/
+}
+
+
+.line-path {
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+
+.line-axis path,
+.line-axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
 }

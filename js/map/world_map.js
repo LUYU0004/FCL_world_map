@@ -29,6 +29,7 @@ var world_topo;
 var country_pop, country_area;
 var country_co2_emission;
 var country_gdp;
+var pop_density,co2_density,gdp_density;
 
 
 d3.json("data/topo/world-topo.json", function (error, world) {
@@ -46,12 +47,14 @@ d3.json("data/topo/world-topo.json", function (error, world) {
 function read_popData(){
     d3.csv("data/fitted/country_size.csv", function (error, country_size_data) {
         d3.csv("data/fitted/population.csv", function (error, pop_data) {
+            d3.csv("data/fitted/population_density.csv", function (error, pop_density_data) {
 
-            country_pop =  pop_data;
-            country_area = country_size_data;
-            console.log("progress: read_pop");
-            read_gdpData();
-
+                country_pop = pop_data;
+                country_area = country_size_data;
+                pop_density  = pop_density_data;
+                console.log("progress: read_pop");
+                read_gdpData();
+            });
         });
 
     });
@@ -59,23 +62,25 @@ function read_popData(){
 
 function read_gdpData(){
     d3.csv("data/fitted/GDP.csv", function (error, gdp_data) {
+        d3.csv("data/fitted/GDP_per_capita.csv", function (error, gdp_density_data) {
 
-
-            country_gdp =  gdp_data;
+            country_gdp = gdp_data;
+            gdp_density = gdp_density_data;
             console.log("progress: read_gdp");
             read_co2Data();
-
+        });
     });
 }
 
 function read_co2Data(){
     d3.csv("data/raw/CO2 emissions (kt)/en.atm.co2e.kt_Indicator_en_csv_v2(edited).csv", function (error, co2_data) {
-
+        d3.csv("data/fitted/co2_per_capita.csv",function (error, co2_density_data) {
             country_co2_emission = co2_data;
+            co2_density = co2_density_data;
             console.log("progress: read_co2");
             draw_worldmap();
             draw_pop_layer();
-
+        });
     });
 }
 
@@ -87,7 +92,7 @@ var offsetL=10,offsetT=10 ;
 
 
 var projection, path, svg, g, graticule;
-var tooltip, one_tooltip, country_info_tooltip, fcl_tooltip;
+var tooltip, one_tooltip, country_info_tooltip, fcl_tooltip,country_chart_tooltip;
 
 var zoom = d3.behavior.zoom().scaleExtent([1, 4])
             .on("zoom",move);
@@ -106,7 +111,13 @@ function setup() {
     fcl_tooltip = tooltip.append("div").attr("style","fill: none").attr("z-index",2);
     one_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden").attr("z-index",3);
     country_info_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden").attr("z-index",3);
-
+    country_chart_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden")
+        .attr("z-index",3)
+        .on("click",function(){
+            country_chart_tooltip.selectAll("svg").remove();
+            country_chart_tooltip.style("visibility","hidden");
+        });
+    
     graticule = d3.geo.graticule();
     
     projection = d3.geo.mercator()

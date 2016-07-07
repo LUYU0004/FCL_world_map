@@ -13,6 +13,8 @@ var range2 ;
 var range3;
 
 
+
+
 /*load_countrySize_and_property */
 function load_DData(_category){
     
@@ -119,6 +121,10 @@ function display_Density1(cur_year){
 
     var color_layer_count = 0;
     var undefined_count =0;
+    var xy_pop_data;
+    var xy_co2_data;
+    var xy_gdp_data;
+
     countries
         .on("mouseover",function (d) {
 
@@ -136,6 +142,9 @@ function display_Density1(cur_year){
             var tooltip_content = "<b style='font-size:20px'>"+name+"</b><br>";
 
             var pop_properties = find_country_pop(name);
+            xy_pop_data = [];
+            xy_pop_data = convertToxy(name,'pop_layer');
+
             var year_pop = pop_properties[0][cur_year];
             var  country_properties= find_country_area(name);
             var year_area = country_properties[0][cur_year];
@@ -161,6 +170,7 @@ function display_Density1(cur_year){
                 color_layer_count++;
 
                 var co2_properties = find_country_co2(name);
+                xy_co2_data = convertToxy(name,'co2_layer');
                 var year_co2 = co2_properties[0][cur_year];
 
                 if (year_co2.length > 0 && year_pop.length > 0) {
@@ -181,6 +191,8 @@ function display_Density1(cur_year){
                 color_layer_count++;
 
                 var gdp_properties = find_country_co2(name);
+
+                xy_gdp_data = convertToxy(name,'gdp_layer');
                 var year_gdp = gdp_properties[0][cur_year];
 
                 if (year_gdp.length > 0 && year_pop.length > 0) {
@@ -212,7 +224,7 @@ function display_Density1(cur_year){
 
         })
         .on("mousemove", function (d,i) {
-
+            
             var left =d3.event.pageX+offsetL;
             var top = d3.event.pageY+offsetT;
 
@@ -231,10 +243,15 @@ function display_Density1(cur_year){
             country_info_tooltip
             .style("left", left  + "px")
                 .style("top", top + "px");
-            
-        }).on("mouseout", function (d, i) {
-        looptime = 0;
-        return country_info_tooltip.attr("style", "visibility: hidden");
+
+        })
+        .on("mouseout", function (d, i) {
+            //looptime = 0;
+            return country_info_tooltip.attr("style", "visibility: hidden");})
+
+        .on("click",function(d,i){
+            draw_charts(xy_pop_data,xy_co2_data,xy_gdp_data);
+            country_chart_tooltip.style("visibility","visible");;
     });
 
 }
@@ -576,8 +593,6 @@ function display_Density3(cur_year){
                 .style("left", left  + "px")
                 .style("top", top + "px");
 
-            var h =country_info_tooltip.node().getBoundingClientRect().height;
-            console.log(h);
 
 
         }).on("mouseout", function (d, i) {
@@ -611,8 +626,6 @@ function find_country_gdp(country_name) {
 
 function find_country_pop(country_name) {
 
-    if(country_pop==undefined)
-        console.log(country_name);
     var m =  country_pop.filter(function (f) {
         //return f.country == country_id;
         return f.Country_Name == country_name;
@@ -636,5 +649,319 @@ function remove_layer(className){
     extra_info.remove();
 }
 
+/*convert the csv objects into a plottable array,
+year as x axis, property as y axis*/
+function convertToxy(country_name,layer){
+
+    var data;
+    var factor = 1;
+    switch(layer){
+        case 'pop_layer': data = pop_density;
+            factor=1;
+            break;
+        case 'co2_layer': data = co2_density;break;
+        case 'gdp_layer': data = gdp_density;break;
+        default:        data = pop_density; break;
+    }
+
+
+
+                var property =  data.filter(function (f) {
+                    return f.Country_Name == country_name;
+                });
+
+                var start_year = 1960;
+                var end_year = 2016;
+                var xyObjArr = [];
+                var Obj = {};
+
+                if(property != undefined && property.length>0){
+                    for(var i=start_year;i<=end_year;i++){
+                        var value = property[0][i] ;
+                        if(value!=undefined && value.length>0){
+                            Obj["year"] = i;
+                            Obj["value"] = Number(value)/factor;
+                            xyObjArr.push(Obj);
+                            Obj = {};
+                        }
+                    }
+                }
+
+                return xyObjArr;
+
+
+
+}
+
+
+/*draw the point charts for each country, onclick*/
+function draw_charts(xy_pop_data, xy_co2_data, xy_gdp_data){
+
+    console.log(xy_pop_data);
+    console.log(xy_co2_data);
+    console.log(xy_gdp_data);
+
+    // Set the dimensions of the canvas / graph
+    var margin = {top: 10, right: 10, bottom: 30, left: 40},
+        width = 400 - margin.left - margin.right,
+        height = 270 - margin.top - margin.bottom;
+
+    // Set the ranges
+    var x = d3.scale.linear().range([0, width]);
+    var y = d3.scale.linear().range([height, 0]);
+
+    // Define the axes
+    var formatAxis = d3.format("  0");
+
+    var xAxis = d3.svg.axis().scale(x)
+        .tickFormat(formatAxis)
+        .orient("bottom").ticks(10);
+
+    var yAxis = d3.svg.axis().scale(y)
+        .orient("left")
+        .tickFormat(formatAxis)
+        .ticks(5);
+
+    // Define the line
+    var valueline = d3.svg.line()
+        .x(function(v) { return x(v.year); })
+        .y(function(v) { return y(v.value); });
+
+    var total_width = width + margin.left + margin.right;
+    var count = 0;
+//////////////////////////needs for each chart
+
+    if(pop_layer) {
+
+
+        // Adds the svg canvas
+        var svg = country_chart_tooltip
+            .append("svg")
+            .attr("class", "point-chart")
+            .attr("width", total_width)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform",
+                "translate(" + (margin.left+total_width*count) + "," + margin.top + ")");
+
+
+        // Scale the range of the data
+        var x_ext = d3.extent(xy_pop_data, function (v) {
+            return v.year;
+        });
+        var min_y = d3.min(xy_pop_data, function (v) {
+            return v.value;
+        });
+        var max_y = d3.max(xy_pop_data, function (v) {
+            return v.value;
+        });
+
+        x.domain(x_ext);
+        y.domain([min_y, max_y]);
+
+        // Add the valueline path.
+        svg.append("path")
+            .attr("class", "line-path")
+            .attr("d", valueline(xy_pop_data));
+
+        var mobileScreen = (window.innerWidth < 500);
+        svg.append("g")
+            .append("text")
+            //.attr("class", "x title")
+            .attr("text-anchor", "end")
+            .style("font-size", (mobileScreen ? 8 : 12) + "px")
+            .attr("transform", "translate(" + width + "," + (height - 10 ) + ")")
+            .text("Year");
+
+        svg.append("g")
+            .append("text")
+            //.attr("class", "x title")
+            .attr("text-anchor", "end")
+            .style("font-size", (mobileScreen ? 8 : 12) + "px")
+            .attr("transform", "translate(" + 140 + "," + 0 + ")")
+            .text("Million People" +
+                " per sq.km");
+
+
+        // Add the scatterplot
+        svg.selectAll("dot")
+            .data(xy_pop_data)
+            .enter().append("circle")
+            .attr("class", "value-point")
+            .attr("r", 3)
+            .attr("cx", function (v) {
+                var x_value = x(v.year);
+                return x_value;
+            })
+            .attr("cy", function (v) {
+                var y_ = y(v.value);
+                return y_;
+            });
+
+        // Add the X Axis
+        svg.append("g")
+            .attr("class", "line-axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        // Add the Y Axis
+        svg.append("g")
+            .attr("class", "line-axis")
+            .call(yAxis);
+
+        count++;
+    }
+
+   if(co2_layer){
+
+        // Adds the svg canvas
+        var svg2 = country_chart_tooltip
+            .append("svg")
+            .attr("class", "point-chart")
+            .attr("width", total_width)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+
+        // Scale the range of the data
+        var x_ext2 = d3.extent(xy_co2_data, function (v) {
+            return v.year;
+        });
+        var min_y2 = d3.min(xy_co2_data, function (v) {
+            return v.value;
+        });
+        var max_y2 = d3.max(xy_co2_data, function (v) {
+            return v.value;
+        });
+
+        x.domain(x_ext2);
+        y.domain([min_y2, max_y2]);
+
+        // Add the valueline path.
+        svg2.append("path")
+            .attr("class", "line-path")
+            .attr("d", valueline(xy_co2_data));
+        
+        svg2.append("g")
+            .append("text")
+            //.attr("class", "x title")
+            .attr("text-anchor", "end")
+            .style("font-size", (mobileScreen ? 8 : 12) + "px")
+            .attr("transform", "translate(" + width + "," + (height - 10 ) + ")")
+            .text("Year");
+
+        svg2.append("g")
+            .append("text")
+            //.attr("class", "x title")
+            .attr("text-anchor", "end")
+            .style("font-size", (mobileScreen ? 8 : 12) + "px")
+            .attr("transform", "translate(" + (125+margin.left) + "," + 0 + ")")
+            .text("CO2 Emission tons per capita");
+
+
+        // Add the scatterplot
+        svg2.selectAll("dot")
+            .data(xy_co2_data)
+            .enter().append("circle")
+            .attr("class", "value-point")
+            .attr("r", 3)
+            .attr("cx", function (v) {
+                return x(v.year);
+            })
+            .attr("cy", function (v) {
+                return y(v.value);
+            });
+
+        // Add the X Axis
+        svg2.append("g")
+            .attr("class", "line-axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        // Add the Y Axis
+        svg2.append("g")
+            .attr("class", "line-axis")
+            .call(yAxis);
+
+    }
+
+    if(gdp_layer){
+
+        // Adds the svg canvas
+        var svg3 = country_chart_tooltip
+            .append("svg")
+            .attr("class", "point-chart")
+            .attr("width", total_width)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+
+        // Scale the range of the data
+        var x_ext3 = d3.extent(xy_gdp_data, function (v) {
+            return v.year;
+        });
+        var min_y3 = d3.min(xy_gdp_data, function (v) {
+            return v.value;
+        });
+        var max_y3 = d3.max(xy_gdp_data, function (v) {
+            return v.value;
+        });
+
+        x.domain(x_ext3);
+        y.domain([min_y3, max_y3]);
+
+        // Add the valueline path.
+        svg3.append("path")
+            .attr("class", "line-path")
+            .attr("d", valueline(xy_gdp_data));
+
+        svg3.append("g")
+            .append("text")
+            //.attr("class", "x title")
+            .attr("text-anchor", "end")
+            .style("font-size", (mobileScreen ? 8 : 12) + "px")
+            .attr("transform", "translate(" + width + "," + (height - 10 ) + ")")
+            .text("Year");
+
+        svg3.append("g")
+            .append("text")
+            //.attr("class", "x title")
+            .attr("text-anchor", "end")
+            .style("font-size", (mobileScreen ? 8 : 12) + "px")
+            .attr("transform", "translate(" + 85 + "," + 0 + ")")
+            .text("USD per capita");
+
+
+        // Add the scatterplot
+        svg3.selectAll("dot")
+            .data(xy_gdp_data)
+            .enter().append("circle")
+            .attr("class", "value-point")
+            .attr("r", 3)
+            .attr("cx", function (v) {
+                return x(v.year);
+            })
+            .attr("cy", function (v) {
+                return y(v.value);
+            });
+
+        // Add the X Axis
+        svg3.append("g")
+            .attr("class", "line-axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        // Add the Y Axis
+        svg3.append("g")
+            .attr("class", "line-axis")
+            .call(yAxis);
+
+    }
+
+}
 
 

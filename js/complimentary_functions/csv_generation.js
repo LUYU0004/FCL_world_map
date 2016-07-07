@@ -3,7 +3,7 @@
  */
 
 
-//<a href='#' onclick='downloadCSV({ filename: "project_Cluster_Info.csv" });'>Download CSV</a>
+//<a href='#' onclick='downloadCSV({ filename: "population_density.csv" });'>Download CSV</a>
 function convertArrayOfObjectsToCSV(args) {
     var result, ctr, keys, columnDelimiter, lineDelimiter, data;
 
@@ -41,8 +41,9 @@ function convertArrayOfObjectsToCSV(args) {
 function downloadCSV(args) {
     var data, filename, link;
 
+    var rawdata = calculate_pop_density();
     var csv = convertArrayOfObjectsToCSV({
-        data: SC.clustersCollection
+        data:rawdata
     });
     if (csv == null) return;
 
@@ -205,3 +206,35 @@ function sort_CSV(data, comparator, order) {
 
 
 //g.append("use").attr("xlink","href="+top_node);//<use xlink:href="#one"/>
+
+
+
+function calculate_pop_density(){
+    var obj = {};
+    var data = [];
+    
+    country_area.forEach(function(d){
+       var name =  d.Country_Name;
+        var pop_properties = find_country_pop(name);
+        var area_properties = find_country_area(name);
+        obj["Country_Name"] = name;
+        if(pop_properties!=undefined && area_properties!=undefined&&pop_properties.length>0&&area_properties.length>0){
+            for(var i=1960;i<2016;i++){
+                var pop_value = pop_properties[0][i];
+                var area_value = area_properties[0][i];
+                if(pop_value!=undefined&&area_value!=undefined&&pop_value.length>0&&area_value.length>0){
+
+                    obj[i] = Number(pop_value)/Number(area_value);
+
+
+                }
+            }
+            data.push(obj);
+            obj={};
+        }
+
+    });
+    
+    return data;
+    
+}
