@@ -21,7 +21,7 @@ function load_DData(_category){
 
     switch(_category){
         case "pop_layer":                   //if(SC.layer_count>0)adjust_opacity(_category);
-                                            color_split1 = [1000, 500, 400, 300, 200, 100, 50, 10, 0];//max_property=1000;
+                                            color_split1 = [1500, 500, 400, 300, 200, 100, 50, 10, 0];//max_property=1000;
                                             draw_pop_country();
                                            
                                             display_Density1(1964); //read_popData();
@@ -902,7 +902,7 @@ function draw_charts(xy_pop_data, xy_co2_data, xy_gdp_data,country_name){
         // Add the valueline path.
         svg.append("path")
             .attr("class", "line-path")
-            .style("stroke","steelblue")//stroke: steelblue;
+            .style("stroke","#000000")//stroke: steelblue;
             .attr("d", valueline(xy_pop_data));
 
 
@@ -920,7 +920,7 @@ function draw_charts(xy_pop_data, xy_co2_data, xy_gdp_data,country_name){
             .attr("text-anchor", "end")
             .style("font-size", (mobileScreen ? 8 : 12) + "px")
             .attr("transform", "translate(" + 140 + "," + 0 + ")")
-            .text("Million People" +
+            .text("People" +
                 " per sq.km");
 
         svg.append("g").append("text")
@@ -947,7 +947,34 @@ function draw_charts(xy_pop_data, xy_co2_data, xy_gdp_data,country_name){
             .attr("cy", function (v) {
                 var y_ = y(v.value);
                 return y_;
+            }).style("fill", function(v) {
+            var density = v.value;
+            var max = 0;
+            var min = color_split1.length;
+
+            if(density>=color_split1[min-1] && density<color_split1[max]) {
+
+
+                for (var index = 0; index < min; index++) {
+
+                    if (density >= color_split1[index]) {
+                        return colors1[index];
+                    }
+                }
+
+                return colors1[1];
+            }})
+            .on("mouseover", function(v) {
+
+                country_info_tooltip.style("visibility","visible")
+                    .html("Population Density: "+ v.value + "<br>Year: "+v.year)
+                    .style("left", (d3.event.pageX + 5) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                country_info_tooltip.style("visibility","hidden");
             });
+
 
         // Add the X Axis
         svg.append("g")
@@ -992,7 +1019,7 @@ function draw_charts(xy_pop_data, xy_co2_data, xy_gdp_data,country_name){
         // Add the valueline path.
         svg2.append("path")
             .attr("class", "line-path")
-            .style("stroke","#A10B1C")
+            .style("stroke","#000000")//#A10B1C
             .attr("d", valueline(xy_co2_data));
         
         svg2.append("g")
@@ -1033,6 +1060,32 @@ function draw_charts(xy_pop_data, xy_co2_data, xy_gdp_data,country_name){
             })
             .attr("cy", function (v) {
                 return y(v.value);
+            })
+            .style("fill", function(v) {
+            var density = v.value;
+            var max = 0;
+            var min = color_split2.length;
+
+            if(density>=color_split2[min-1] && density<color_split2[max]) {
+
+
+                for (var index = 0; index < min; index++) {
+                    if (density >= color_split2[index]) {
+                        return colors2[index];
+                    }
+                }
+
+                return colors2[1];
+            }})
+            .on("mouseover", function(v) {
+
+                country_info_tooltip.style("visibility","visible")
+                    .html("CO2 Emission per capita: "+ v.value + "<br>Year: "+v.year)
+                    .style("left", (d3.event.pageX + 5) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                country_info_tooltip.style("visibility","hidden");
             });
 
         // Add the X Axis
@@ -1077,7 +1130,7 @@ function draw_charts(xy_pop_data, xy_co2_data, xy_gdp_data,country_name){
         // Add the valueline path.
         svg3.append("path")
             .attr("class", "line-path")
-            .style("stroke","#0DD014")//0DD014
+            .style("stroke","#000000")//0DD014
             .attr("d", valueline(xy_gdp_data));
 
         svg3.append("g")
@@ -1117,8 +1170,35 @@ function draw_charts(xy_pop_data, xy_co2_data, xy_gdp_data,country_name){
                 return x(v.year);
             })
             .attr("cy", function (v) {
-                return y(v.value);
-            });
+                return y(v.value)})
+            .style("fill", function(v) {
+                    var density = v.value;
+                    var max = 0;
+                    var min = color_split3.length;
+                    if(density>=color_split3[min-1] && density<color_split3[max]) {
+
+
+                        for (var index = 0; index < min; index++) {
+
+                            if (density >= color_split3[index]) {
+
+                                return colors3[index];
+                            }
+                        }
+
+                        return colors3[1];
+                    }})
+                    .on("mouseover", function(v) {
+
+                        country_info_tooltip.style("visibility","visible")
+                            .html("GDP per Capita (US$): "+ v.value + "<br>Year: "+v.year)
+                            .style("left", (d3.event.pageX + 5) + "px")
+                            .style("top", (d3.event.pageY - 28) + "px");
+                    })
+                    .on("mouseout", function(d) {
+                        country_info_tooltip.style("visibility","hidden");
+                    });
+
 
         // Add the X Axis
         svg3.append("g")

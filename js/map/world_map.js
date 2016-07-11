@@ -109,13 +109,12 @@ function setup() {
     
 
     fcl_tooltip = tooltip.append("div").attr("style","fill: none").attr("z-index",2);
-    one_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden").attr("z-index",3);
-    country_info_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden").attr("z-index",1);
+    one_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden").attr("z-index",4);
 
     country_chart_tooltip = tooltip.append("div").attr("class","tooltip")
         .attr("id","chart_tooltip")
         .attr("style","visibility:hidden;display:inline;")
-        .attr("z-index",3)
+        .attr("z-index",2)
         .on("mousedown",function(){
             country_chart_tooltip.style("visibility","visible");
             mydragg_L.startMoving("chart_tooltip","content_holder",event)
@@ -131,6 +130,9 @@ function setup() {
             //close
             country_chart_tooltip.style("visibility","hidden");
         });
+
+    country_info_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden").attr("z-index",4);
+
     //<span class="close" onclick="close_modal()">×</span>
 
     graticule = d3.geo.graticule();

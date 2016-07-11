@@ -82,7 +82,7 @@ function generate_network_DistMatrix(){
             Obj["name"] = pointA.Name;
             lat_unit  = Number(pointA.Latitude) >=0 ? Math.abs(pointA.Latitude) +'°N':Math.abs(pointA.Latitude) +'°S';
             lon_unit = Number(pointA.Longitude) >=0 ? Math.abs(pointA.Longitude) +'°E':Math.abs(pointA.Longitude) +'°W';
-            Obj["text"] = pointA.Title+"<br>"+lat_unit+" , "+lon_unit+"<br>"+pointA.Country;
+            Obj["text"] = pointA.Title+"<br>"+lat_unit+" , "+lon_unit+"<br>"+pointA.Country+"<br>";
             Obj["latitude"] = pointA.Latitude;
             Obj["longitude"] = pointA.Longitude;
             Obj["country"] = pointA.Country;

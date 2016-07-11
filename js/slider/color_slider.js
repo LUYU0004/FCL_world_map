@@ -73,7 +73,7 @@ function draw_colorSlider_1(className){
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom+text_height);
 
-    svg.append("g").append("text").text("sq.km").attr("fill",label_color).attr("y",13);
+    svg.append("g").append("text").text("people per sq.km").attr("fill",label_color).attr("y",13);
 
 
     /*svg.append("defs")
@@ -551,7 +551,7 @@ function draw_colorSlider_3(className){
         .attr("width",widthOfcontainer+20)
         .attr("height",50)
         .append("g")
-        .attr("transform","translate(10,0)");;
+        .attr("transform","translate(10,0)");
 
     labels.selectAll("text").data(data)
         .enter()
