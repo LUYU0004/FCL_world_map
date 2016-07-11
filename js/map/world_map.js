@@ -37,7 +37,7 @@ d3.json("data/topo/world-topo.json", function (error, world) {
 
     var welcome = d3.select("#welcome_mask")
         .style("opacity", 0);
-    setTimeout(function(){ welcome.remove();}, 2000);
+    setTimeout(function(){ welcome.remove();}, 3000);
 
     read_popData();
 
@@ -110,14 +110,29 @@ function setup() {
 
     fcl_tooltip = tooltip.append("div").attr("style","fill: none").attr("z-index",2);
     one_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden").attr("z-index",3);
-    country_info_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden").attr("z-index",3);
-    country_chart_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden")
+    country_info_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden").attr("z-index",1);
+
+    country_chart_tooltip = tooltip.append("div").attr("class","tooltip")
+        .attr("id","chart_tooltip")
+        .attr("style","visibility:hidden;display:inline;")
         .attr("z-index",3)
+        .on("mousedown",function(){
+            country_chart_tooltip.style("visibility","visible");
+            mydragg_L.startMoving("chart_tooltip","content_holder",event)
+        }).on("mouseup",function(){
+            country_chart_tooltip.style("visibility","visible");
+            mydragg_L.stopMoving("content_holder");
+        });
+
+    country_chart_tooltip.append("span")
+        .attr("class","close")
+        .html("x")
         .on("click",function(){
-            country_chart_tooltip.selectAll("svg").remove();
+            //close
             country_chart_tooltip.style("visibility","hidden");
         });
-    
+    //<span class="close" onclick="close_modal()">×</span>
+
     graticule = d3.geo.graticule();
     
     projection = d3.geo.mercator()
@@ -275,8 +290,6 @@ function redraw_worldmap(){
 
         var left =d3.event.pageX+offsetL;
         var top = d3.event.pageY+offsetT;
-
-        console.log("left:"+left+"  top:"+top);
 
         country_info_tooltip
             .style("visibility","visible")

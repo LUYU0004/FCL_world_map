@@ -8,10 +8,10 @@
 
     position:absolute;
 
-    -webkit-transition: opacity 2s ease-in-out;
-    -moz-transition: opacity 2s ease-in-out;
-    -ms-transition: opacity 2s ease-in-out;
-    -o-transition: opacity 2s ease-in-out;
+    -webkit-transition: opacity 3s ease-in-out;
+    -moz-transition: opacity 3s ease-in-out;
+    -ms-transition: opacity 3s ease-in-out;
+    -o-transition: opacity 3s ease-in-out;
 }
 div.welcome_msg{
     position: absolute;
@@ -81,8 +81,16 @@ hr {
     text-align: left;
 }
 
+.menu-item h4 img{
+    width: 20px;
+    height:15px; /*width=15 height=15 style="float:left;padding-left: 14px;padding-top:7px;"*/
+    padding-left: 18px;
+    padding-top: 2px;
+    float:left;
+}
+
 .menu-item h4 a {
-    margin-left:20px ;
+    margin-left:50px ;
     color: white;
     display: block;
     text-decoration: none;
@@ -90,9 +98,10 @@ hr {
 
 }
 
-.menu-item:hover h4{
-    background-color: #d0d0d0;
+.menu-item h4:hover{
+    background-color: #717171;
 }
+
 
 /*ul Styles*/
 .menu-item ul {
@@ -124,12 +133,8 @@ hr {
 /*li Styles
 .menu-item li {
     border-bottom: 1px solid #010101;
-}*/
-
-
-.selectedBtn {
-    background-color: #cccccc;
 }
+*/
 
 #map_container {
     position: absolute;
@@ -288,6 +293,10 @@ legend {
     float: right;
     font-size: 28px;
     font-weight: bold;
+    position: relative;
+    top:-12px;
+
+
 }
 
 .close:hover,

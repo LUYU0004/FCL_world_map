@@ -43,7 +43,6 @@
             var holder = this.parentNode.id;
             var the_ul = d3.select("#"+holder).selectAll("ul");
 
-
             switch(this.id){
                 case 'pop_densityBtn':
 
@@ -56,12 +55,14 @@
                             SC.layer_count++;
                             SC.layer_stack[0]=SC.layer_count;
                             pop_layer = true;
+                            document.getElementById("pop_densityBtn_img").src = "img/eye_white.png";
                             the_ul.style("height","93px");
                             load_DData("pop_layer");
                         }else{
                             SC.layer_count--;
                             SC.layer_stack[0]=0;
                             pop_layer = false;
+                            document.getElementById("pop_densityBtn_img").src = "img/eye_black.png";
                             the_ul.style("height","0");
                             remove_layer('.pop_layer');
                             if(!(pop_layer|co2_layer|gdp_layer)){
@@ -78,12 +79,14 @@
                         SC.layer_count++;
                         SC.layer_stack[1]=SC.layer_count;
                         co2_layer = true;
+                        document.getElementById("co2_emissionBtn_img").src = "img/eye_white.png";
                         the_ul.style("height","93px");
                         load_DData("co2_layer");
                     }else{
                         SC.layer_count--;
                         SC.layer_stack[1]=0;
                         co2_layer = false;
+                        document.getElementById("co2_emissionBtn_img").src = "img/eye_black.png";
                         the_ul.style("height","0");
                         remove_layer('.co2_layer');
                         if(!(pop_layer|co2_layer|gdp_layer)){
@@ -100,12 +103,14 @@
                         SC.layer_count++;
                         SC.layer_stack[2]=SC.layer_count;
                         gdp_layer = true;
+                        document.getElementById("gdp_Btn_img").src = "img/eye_white.png";
                         the_ul.style("height","93px");
                         load_DData("gdp_layer");
                     }else{
                         SC.layer_count--;
                         SC.layer_stack[2]=0;
                         gdp_layer = false;
+                        document.getElementById("gdp_Btn_img").src = "img/eye_black.png";
                         the_ul.style("height","0");
                         remove_layer('.gdp_layer');
                         if(!(pop_layer|co2_layer|gdp_layer)){
@@ -198,6 +203,7 @@
     var mydragg = function(){
         return {
             move : function(divid,xpos,ypos){
+
                 document.getElementById(divid).style.right = xpos + 'px';
                 document.getElementById(divid).style.top = ypos + 'px';
             },
@@ -227,6 +233,50 @@
                     if (aX + eWi > cWi) aX = cWi - eWi;
                     if (aY + eHe > cHe) aY = cHe -eHe;
                     mydragg.move(divid,aX,aY);
+                }
+
+            },
+            stopMoving : function(container){
+                var a = document.createElement('script');
+                document.getElementById(container).style.cursor='default';
+                document.onmousemove = function(){}
+            },
+        }
+    }();
+
+    var mydragg_L = function(){
+        return {
+            move : function(divid,xpos,ypos){
+
+                document.getElementById(divid).style.left = xpos + 'px';
+                document.getElementById(divid).style.top = ypos + 'px';
+            },
+            startMoving : function(divid,container,evt){
+                evt = evt || window.event;
+                var posX = evt.clientX,
+                        posY = evt.clientY,
+                        divTop = document.getElementById(divid).offsetTop,
+                        divLeft = document.getElementById(divid).offsetLeft,
+                        eWi = parseInt(document.getElementById(divid).offsetWidth),
+                        eHe = parseInt(document.getElementById(divid).offsetHeight),
+                        cWi = parseInt(document.getElementById(container).offsetWidth),
+                        cHe = parseInt(document.getElementById(container).offsetHeight);
+                // document.getElementById(container).style.cursor='move';
+                //divTop = divTop.replace('px','');
+                //divLeft = divLeft.replace('px','');
+                var diffX = posX-divLeft ,
+                        diffY = posY - divTop;
+                document.onmousemove = function(evt){
+                    evt = evt || window.event;
+                    var posX = evt.clientX,
+                            posY = evt.clientY,
+                            aX = posX -diffX,  //LEFT
+                            aY = posY - diffY;
+                    if (aX < 0) aX = 0;
+                    if (aY < 0) aY = 0;
+                    if (aX + eWi > cWi) aX = cWi - eWi;
+                    if (aY + eHe > cHe) aY = cHe -eHe;
+                    mydragg_L.move(divid,aX,aY);
                 }
 
             },
@@ -277,21 +327,21 @@
         </div>
         <hr>
         <div class="menu-item navg_button" id="pop_densityHolder">
-            <h4 id ="pop_densityBtn"><a>  Population Density</a></h4>
+            <h4 id ="pop_densityBtn"><img id="pop_densityBtn_img" src="img/eye_white.png" ><a>  Population Density</a></h4>
             <ul>
                 <li></li>
             </ul>
         </div>
         <hr><hr>
         <div class="menu-item navg_button" id="co2_emissionHolder">
-            <h4 id = "co2_emissionBtn"><a>  CO2 Emission Per Capita</a></h4>
+            <h4 id = "co2_emissionBtn"><img id="co2_emissionBtn_img" src="img/eye_black.png" ><a>  CO2 Emission Per Capita</a></h4>
             <ul>
                 <li></li>
             </ul>
         </div>
             <hr><hr>
             <div class="menu-item navg_button" id="gdpHolder">
-                <h4 id = "gdp_Btn"><a>  GDP Per Capita</a></h4>
+                <h4 id = "gdp_Btn"><img id = "gdp_Btn_img"src="img/eye_black.png" ><a>  GDP Per Capita</a></h4>
                 <ul>
                     <li></li>
                 </ul>
@@ -328,11 +378,26 @@
                 <h2>FCL Rationale</h2>
             </div>
             <div class="modal-body">
-                <p>Some text in the Modal Body</p>
-                <p>Some other text...</p>
+                <p><br>
+                    <b style="font: 18px arial, sans-serif">The guiding vision of the Future Cities Laboratory is to shape sustainable future cities:<br>
+                    THROUGH SCIENCE | BY DESIGN | IN PLACE</b><br>
+                    <br>
+                    <b>Through Science</b><br>
+                    To achieve sustainability, science is essential. Science provides the basis for understanding how cities develop and interact with the environment at different scales. Cities are composed of physical stocks, resource  ows, social institutions and cultural catalysts whose interactions generate a quanti able ‘metabolism’. The scienti c focus of our research is to quantify such metabolisms, and understand how they might be best structured for the bene t of sustainable cities.
+                    <br><br>
+                    <b>By Design</b>
+                   <br>A sustainable city must also be liveable. To achieve liveability, design is essential. Design is
+                    a collaborative process that combines analytical techniques, imaginative strategies and transdisciplinary knowledge to generate new ideas and bring them to fruition. Design skills
+                    bring, often con icting, technical, economic, social and cultural demands (such as environmental sustainability, pro t, comfort, convenience, identity, security, satisfaction and desire) into innovative and harmonious relationships.
+                    <br><br>
+                    <b>In Place</b>
+                    <br>Science and design are effective only if they serve places and the lives that are lived in them. Places result from common processes (growth and decline; competition and co-operation; ebb and  ow of capital, people, goods and ideas; climate change) and differentiating factors (geography, culture, language, history). Our research addresses diverse lived places, from compact cities with high-density populations to extended cities with a mosaic of urban and rural land-uses.
+               <br><br>
+                </p>
+
             </div>
             <div class="modal-footer">
-                <h3>Footer</h3>
+                <h3>Sourse:.........</h3>
             </div>
         </div>
     </div>

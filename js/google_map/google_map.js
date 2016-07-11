@@ -256,7 +256,7 @@ function load_google_map() {
 
     var text = document.createElement('div');
     text.className = 'text_box';
-    text.innerHTML = 'Google Map';
+    text.innerHTML = 'SG Projects';
 
     var input = document.createElement('input');
     input.className = 'switch-input';
