@@ -36,8 +36,9 @@ d3.json("data/topo/world-topo.json", function (error, world) {
     world_topo = topojson.feature(world, world.objects.countries).features;
 
     var welcome = d3.select("#welcome_mask")
-        .style("opacity", 0);
-    setTimeout(function(){ welcome.remove();}, 3000);
+        .style("opacity", 0.3);
+    setTimeout(function(){ welcome.remove();}, 3200);
+
 
     read_popData();
 

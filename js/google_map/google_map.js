@@ -3,9 +3,12 @@
  */
 
 var gmap;
+var googlem_holder;
 var center;
 function initMap() {
-    
+    load_google_map();
+    //googlem_holder.style("visibility","hidden");
+
     // Create an array of styles.
     var styles = [
 
@@ -42,33 +45,7 @@ function initMap() {
                 {color:"#B3B6B7"},
                 { visibility: "off" }//"simplified"
             ]
-        }/*,{
-            featureType: "road.highway",
-            elementType: "geometry",
-            stylers: [
-                { lightness: 60 }
-            ]
-        }*/
-        /*,{
-         featureType: "landscape.man_made",
-         elementType: "geometry",
-         stylers: [
-             { lightness: 0 },
-             {color:"#ccffff"},
-             {weight:5}
-         ]
-         }
-        ,{
-            featureType: "poi.government",
-            elementType: "geometry",
-            stylers: [
-                { lightness: 0 },
-                {color:"#ccffff"},
-                {weight:5}
-            ]
         }
-        // poi.government poi.medical poi.school
-        */
     ];
 
     // Create a new StyledMapType object, passing it the array of styles,
@@ -226,30 +203,46 @@ function draw_polygon(triangleCoords,markerPos,fillcolor){
 
     marker.addListener('mouseover', function() {
         this.setIcon(highlightedIcon);
-    });
-    marker.addListener('mouseout', function() {
-        this.setIcon(defaultIcon);
+        bermudaTriangle.set("strokeColor",'red');
+        bermudaTriangle.set("fillColor",'red');
     });
 
-    bermudaTriangle.setOptions({clickable:false});
+
+    marker.addListener('mouseout', function() {
+        this.setIcon(defaultIcon);
+        bermudaTriangle.set("strokeColor",fillcolor);
+        bermudaTriangle.set("fillColor",fillcolor);
+    });
+
+    bermudaTriangle.addListener('click', function() {
+        infowindow.open(gmap, marker);
+    });
+
+    bermudaTriangle.addListener('mouseover', function() {
+        marker.setIcon(highlightedIcon);
+        this.set("strokeColor",'red');
+        this.set("fillColor",'red');
+    });
+
+    bermudaTriangle.addListener('mouseout', function() {
+        marker.setIcon(defaultIcon);
+        this.set("strokeColor",fillcolor);
+        this.set("fillColor",fillcolor);
+    });
+
+    //bermudaTriangle.bindTo('strokeColor',marker,'strokeColor');
+    //bermudaTriangle.setOptions({clickable:false});
 }
 
 function load_google_map() {
-
-    var googlem_holder = d3.select("#content_holder").append("div").attr("id","googlem_holder")
-        .attr("class","project_layer")
+    //if(googlem_holder !=undefined)googlem_holder.remove();
+    googlem_holder = d3.select("#content_holder").append("div").attr("id","googlem_holder")
+        //.attr("class","project_layer")
         //.style("width",map_width/2+'px')
         //.style("height",map_height/2+'px')
-        .style("position","absolute");
-
-    //add in the toggle switch button
-
-    /*<label class="switch switch-left-right">
-     <input class="switch-input" type="checkbox" />
-     <span class="switch-label" data-on="On" data-off="Off"></span>
-     <span class="switch-handle"></span>
-     </label>*/
-
+        .style("position","absolute")
+        .style("visibility","hidden");
+    
     var toggle_switchHolder = document.createElement('div');
     //toggle_switchHolder.innerHTML = "Google Map";
     toggle_switchHolder.id = "toggle_GM";
@@ -259,67 +252,41 @@ function load_google_map() {
     text.innerHTML = 'SG Projects';
 
     var input = document.createElement('input');
-    input.className = 'switch-input';
     input.type = 'checkbox';
+    input.className = 'switch-input';
     input.onchange = function() {handle_switch()};
 
+    var toggle_slider= document.createElement('div');
+    toggle_slider.className = 'toggle_slider round';
+    
 
-    var label =  document.createElement('span');
-    label.className = 'switch-label';
-    label.setAttribute('data-on','On');
-    label.setAttribute('data-off','Off');
+    var label =  document.createElement('label');
+    label.className = 'toggle_switch';
 
-    var handle = document.createElement('span');
-    handle.className = 'switch-handle';
-
-    var toggle_switch = document.createElement('label');
-    toggle_switch.className = 'switch switch-left-right';
-
-    toggle_switch.appendChild(input);
-    toggle_switch.appendChild(label);
-    toggle_switch.appendChild(handle);
-    toggle_switchHolder.appendChild(toggle_switch);
+    label.appendChild(input);
+    label.appendChild(toggle_slider);
+    toggle_switchHolder.appendChild(label);
     document.getElementById("googlem_holder").appendChild(text);
     document.getElementById("googlem_holder").appendChild(toggle_switchHolder);
     //end of toggle switch
 
-
-    /* //min button
-     var closeBtn = document.createElement('div');
-     closeBtn.innerHTML = "x";
-     closeBtn.style = "width:40px;height:30px;float:left;background-color:grey;margin-left:10px;text-align:center;padding-top:7px;";
-     closeBtn.id = "closebtn_GM";
-
-     document.getElementById("googlem_holder").appendChild(closeBtn);
-     document.getElementById('closebtn_GM').addEventListener("click", close_GoogleMap);
-
-     //max button
-     var openBtn = document.createElement('div');
-     openBtn.innerHTML = "O";
-     openBtn.style = "width:40px;height:30px;float:left;background-color:grey;text-align:center;padding-top:7px;";
-     openBtn.id = "openbtn_GM";
-
-     document.getElementById("googlem_holder").appendChild(openBtn);
-     document.getElementById('openbtn_GM').addEventListener("click", open_GoogleMap);
-     //closeBtn.text("&times");
- */
     googlem_holder.append("div")//<a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="border-bottom:0 solid red;">&times;</a>
         .attr("id","google_map");
-        //.style("width",0.98*map_width/2+'px')
-        //.style("height",map_height/2*0.96-60+'px');
+    
+}
 
+/*make google visible*/
+function display_googleM(){
+    googlem_holder.style("visibility","visible");
+}
 
-
-
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBU5cWlAqYt_SPwMSEi1NZjbjB2JDD1PIA&callback=initMap';   //adding  'callback=something' gets the maps module to load
-    document.body.appendChild(script);
+function display_NogoogleM() {
+    googlem_holder.style("visibility","hidden");
 }
 
 function close_GoogleMap() {
 
-        document.getElementById("googlem_holder").style.width = "220px";
+        document.getElementById("googlem_holder").style.width = "190px";
         document.getElementById("googlem_holder").style.height = "40px";
        // document.getElementById("google_map").style.width = "1250px";
 
@@ -366,14 +333,13 @@ function resize_GoogleMap() {
 
 function handle_switch(){
     var input = document.getElementsByClassName('switch-input');
-    console.log("input = "+input[0]);
+
         var res = input[0].checked;
-    console.log("res = "+res);
+
     if(res){
-        console.log("open");
         open_GoogleMap();
     }else{
-        console.log("close");
+
         close_GoogleMap();
     }
 }

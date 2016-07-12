@@ -20,6 +20,12 @@
 
 <script>
 
+   /*
+   var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = '';   //adding  'callback=something' gets the maps module to load
+    document.body.appendChild(script);*/
+
     var pop_layer = false;
     var co2_layer = false;
     var gdp_layer = false;
@@ -126,12 +132,13 @@
 
                     if(res){
                         project_layer = true;
-                       load_google_map();
+                       display_googleM();
                         load_DData("project_layer");
                         point_layer_count ++;
                     }else{
                         project_layer = false;
                         remove_layer('.project_layer');
+                        display_NogoogleM();
                         point_layer_count--;
                     }
                     break;
@@ -310,6 +317,8 @@
         }
     }
 
+
+
 </script>
 
 <div id="welcome_mask">
@@ -322,8 +331,8 @@
 
     <nav id = "menu_bar" class="no_userselect" >
         <div class ="holder">
-        <div class="menu-item" style="padding: 10px; border-top: 0" onmousedown='mydragg.startMoving("menu_bar","content_holder",event);' onmouseup='mydragg.stopMoving("content_holder");'>
-            <img id="fcl_logo" src="img/Logo_FCLwhite.png" alt="fcl_logo" width="180px" height="60px">
+        <div class="menu-item" style="padding: 0px; border-top: 0" onmousedown='mydragg.startMoving("menu_bar","content_holder",event);' onmouseup='mydragg.stopMoving("content_holder");'>
+            <img id="fcl_logo" src="img/Logo_FCLwhite.png" alt="fcl_logo" width="210px" height="60px">
         </div>
         <hr>
         <div class="menu-item navg_button" id="pop_densityHolder">
@@ -428,6 +437,7 @@ document.getElementById('academic_staffBtn').addEventListener("click", newInput)
 <script src="js/slider/color_slider.js"></script>
 <script src="js/map/zoomable_circles.js"></script>
 <script src="js/google_map/google_map.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBU5cWlAqYt_SPwMSEi1NZjbjB2JDD1PIA&callback=initMap"></script>
 
 </body>
 </html>

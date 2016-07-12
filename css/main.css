@@ -8,10 +8,10 @@
 
     position:absolute;
 
-    -webkit-transition: opacity 3s ease-in-out;
-    -moz-transition: opacity 3s ease-in-out;
-    -ms-transition: opacity 3s ease-in-out;
-    -o-transition: opacity 3s ease-in-out;
+    -webkit-transition: opacity 4s ease-in-out;
+    -moz-transition: opacity 4s ease-in-out;
+    -ms-transition: opacity 4s ease-in-out;
+    -o-transition: opacity 4s ease-in-out;
 }
 div.welcome_msg{
     position: absolute;
@@ -208,10 +208,7 @@ legend {
     stroke-width: 1px;
 }
 
-#fcl_logo{
-    padding-top: 15px;
-    pointer-events: none;
-}
+
 
 .no_userselect{
     -webkit-touch-callout: none; /* iOS Safari */
@@ -350,4 +347,10 @@ legend {
 @keyframes animatebottom {
     from {  bottom: -300px; opacity: 0}
     to {bottom: 20px; opacity: 1}
+}
+
+#fcl_logo{
+    padding-top: 15px;
+    pointer-events: none;
+    margin-right:0px;
 }

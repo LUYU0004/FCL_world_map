@@ -25,6 +25,12 @@ function generate_project_DistMatrix(){
         var lat_unit;
 
         projects.forEach(function (pointA) {
+            var long="";
+            var descp = pointA.Description;
+            var imgc = pointA.Image_Credit;
+            if(descp.length>0) long += "<br><br>" +descp;
+            if(imgc) long +="<br><br>image credit:  <b style='font-style:italic;font-size:12px; text-decoration:underline;'>"+imgc+"</b>";
+
             positionA = [];
             positionA.push(pointA.Longitude, pointA.Latitude);
             matrix.push([]);
@@ -32,8 +38,7 @@ function generate_project_DistMatrix(){
             projectObj["name"] = pointA.Index+" "+pointA.Name;
             lat_unit  = Number(pointA.Latitude) >=0 ? Math.abs(pointA.Latitude) +'°N':Math.abs(pointA.Latitude) +'°S';
             lon_unit = Number(pointA.Longitude) >=0 ? Math.abs(pointA.Longitude) +'°E':Math.abs(pointA.Longitude) +'°W';
-            projectObj["text"] = pointA.Title+"<br>"+lat_unit+" , "+lon_unit+"<br>"+pointA.City+" , "+pointA.Country+"<br>"
-                +pointA.Description+"<br>"+pointA.Image_Credit;
+            projectObj["text"] ="<br>"+ pointA.Title+"<br>"+lat_unit+" , "+lon_unit+"<br>"+pointA.City+" , "+pointA.Country+long;
             projectObj["latitude"] = pointA.Latitude;
             projectObj["longitude"] = pointA.Longitude;
             projectObj["city"] = pointA.City;
@@ -636,13 +641,14 @@ function draw_circles(root,className){
 
                 one_tooltip.style("visibility","hidden");
                 var name = d["name"];
+                var projectNo = d["itemIndex"];
 
                 var filtered = fcl_tooltip_list.filter(function (f) {
-                    return f == name;
+                    return f == projectNo;
                 });
 
                 if (filtered.length <= 0) {
-                    fcl_tooltip_list.push(name);
+                    fcl_tooltip_list.push(projectNo);
 
                     var left = zoom.translate()[0];
                     var top = zoom.translate()[1];
@@ -656,13 +662,6 @@ function draw_circles(root,className){
                     var item_img = new Image();
                     item_img.src = "img/project_img/" + d["itemIndex"] + "_fcl_vis.jpg";
 
-                   /* var positionObj = {};
-                    positionObj["type"] ='cluster';
-                    positionObj["root_x"] = root_x;
-                    positionObj["root_y"] = root_y;
-                    positionObj["x"]   = d.x;
-                    positionObj["y"] = d.y;
-                    positionObj["k"] = k;    */
 
 
 
@@ -680,7 +679,7 @@ function draw_circles(root,className){
 
                         }).on("click", function () {
                             this.remove();
-                            var index = fcl_tooltip_list.indexOf(name);
+                            var index = fcl_tooltip_list.indexOf(projectNo);
 
 
                             if (index != -1) {
