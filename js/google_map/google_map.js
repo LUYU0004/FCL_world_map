@@ -296,7 +296,7 @@ function display_NogoogleM() {
 function close_GoogleMap() {
 
     var center = gmap.getCenter();
-    var zoom = gmap.getZoom();
+    var zoom = gmap.getZoom()-1;
 
     var new_map_center = projection([center.lng(),center.lat()]);
     var shift_x =   innerWidth/2 - new_map_center[0] * zoom;
@@ -304,8 +304,8 @@ function close_GoogleMap() {
 
     var t = [shift_x,shift_y];
 
-    console.log("close "+t[0],t[1]);
-    move(t,zoom*100);
+    console.log(t[0],t[1],zoom);
+    move(t,zoom);
 
 
 
@@ -335,23 +335,22 @@ function open_GoogleMap() {
 
 
     //adjust the map to be return
-    var map_scale = projection.scale();
-    var zoomlvl = parseInt(map_scale/100);
+    var zoomlvl = zoom.scale();
+    var  translate= zoom.translate();
+    var center_x =  (innerWidth/2-translate[0])/zoomlvl;
+    var center_y = (innerHeight/2-translate[1])/zoomlvl;
 
-    var map_center = projection.invert([map_width/2, map_height/2]);//
+    console.log(center_x,center_y);
+    var map_center = projection.invert([center_x, center_y]);//
     var c = new google.maps.LatLng(map_center[1],map_center[0]);
 
 
     google.maps.event.trigger(gmap, 'resize');
 
-    console.log("open  "+c.lng(),c.lat(),zoomlvl);
-    gmap.setZoom(zoomlvl);
-
-    if(c==undefined){
-        c=center;
-    }
-
     gmap.panTo(c);
+    gmap.setZoom(parseInt(zoomlvl)+1);
+
+
 
 }
 

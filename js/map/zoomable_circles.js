@@ -340,11 +340,9 @@ function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
         .on("click",function () {
 
             //one_tooltip.style("visibility","hidden");
-            console.log(scale);
             var shift_x =   innerWidth/2 - projection([lon,lat])[0] *scale ;
             var shift_y = innerHeight/2 - projection([lon,lat])[1] *scale;
             var t = [shift_x,shift_y];
-            console.log(t[0],t[1]);
             move(t,scale);
 
             var name = className+imgNo;

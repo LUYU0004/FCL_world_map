@@ -92,10 +92,10 @@ var projection, path, svg, g;
 //var graticule;
 var tooltip, one_tooltip, country_info_tooltip, fcl_tooltip,country_chart_tooltip;
 
-var zoom;
+var zoom = d3.behavior.zoom().scaleExtent([1, 4])
+            .on("zoom",move);
 
-var maxlat = 83;
-var scaleExtent;
+
 function setup() {
 
     offsetL = document.getElementById("map_container").offsetLeft + 10;
@@ -132,32 +132,15 @@ function setup() {
     country_info_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden").attr("z-index",4);
 
     //<span class="close" onclick="close_modal()">×</span>
+
     //graticule = d3.geo.graticule();
     
     projection = d3.geo.mercator()
+        .translate([(map_width / 2), (map_height / 2)])
         //.center()
-        .rotate( [0,0] )
-       //.center( [0, 42.313] )
-        .scale(1)//map_width /2/Math.PI
-        .translate([(map_width / 2), (map_height / 2)]);
-
-    // set up the scale extent and initial scale for the projection
-    var b = mercatorBounds(projection, maxlat),
-        s = map_width/(b[1][0]-b[0][0]);
-
-    scaleExtent = [s, 10*s];
-
-    projection
-        .scale(scaleExtent[0]);
-
-    zoom= d3.behavior.zoom()
-        .scaleExtent(scaleExtent)
-        .scale(projection.scale())
-        .translate([0,0])               // not linked directly to projection
-        .on("zoom", move);
-    /*= d3.behavior.zoom().scaleExtent([1, 4])
-     .translate([0,0])
-     .on("zoom",move);*/
+        //.rotate( [71.057,0] )
+        .center( [0, 42.313] )
+        .scale(map_width /2/Math.PI);
 
     path = d3.geo.path().projection(projection);
     
@@ -172,22 +155,7 @@ function setup() {
 
     g = svg.append("g").attr("id","country_holder");
 
-
-
-
-
-
-
-
-}
-
-// find the top left and bottom right of current projection
-function mercatorBounds(projection, maxlat) {
-    var yaw = projection.rotate()[0],
-        xymax = projection([-yaw+180-1e-6,-maxlat]),
-        xymin = projection([-yaw-180+1e-6, maxlat]);
-
-    return [xymin,xymax];
+    
 }
 
 function draw_worldmap() {
@@ -224,14 +192,14 @@ function draw_worldmap() {
         .attr("dy", ".35em")
         .text(function(d) { return d.properties.name; });*/
 
-    /*d3.select("#map_container").append("svg")
+   /* d3.select("#map_container").append("svg")
         .attr("id","svg2")
         .attr("width",map_width )
         .attr("height",map_height)
         .append("use")
         //.attr("transform","translate("+map_width+",0)skewY(180)")
         .attr("xlink:href","#svg1");
-
+*/
 /*<svg width="100" height="100">
         <use transform="scale(0.1)" xlink:href="#SVG1"/>
         </svg>*/
@@ -361,52 +329,21 @@ function draw_pop_layer(){
 
 }
 
+/*
+function remove(th){
+    console.log("end");
+    th.remove();
+}*/
 
-// track last translation and scale event we processed
-var tlast = [0,0],
-    slast = null;
 
-//to handle transform of svg elements on zoom
+//var callcount = 0;
 function move(t,s) {
     if(t ==undefined || s== undefined){
         s = d3.event.scale ;
         t = d3.event.translate;
+
     }
-    
-    // if scaling changes, ignore translation (otherwise touch zooms are weird)
-    if (s != slast) {
-        projection.scale(s);
-    } else {
-        var dx = t[0]-tlast[0],
-            dy = t[1]-tlast[1],
-            yaw = projection.rotate()[0],
-            tp = projection.translate();
 
-        // use x translation to rotate based on current scale
-        projection.rotate([yaw+360.*dx/map_width*scaleExtent[0]/s, 0, 0]);
-        // use y translation to translate projection, clamped by min/max
-        var b = mercatorBounds(projection, maxlat);
-        if (b[0][1] + dy > 0) dy = -b[0][1];
-        else if (b[1][1] + dy < map_height) dy = map_height-b[1][1];
-        projection.translate([tp[0],tp[1]+dy]);
-    }
-    // save last values.  resetting zoom.translate() and scale() would
-    // seem equivalent but doesn't seem to work reliably?
-    slast = s;
-    tlast = t;
-
-
-
-svg.selectAll('path')       // re-project path data
-    .attr('d', path);
-
-    /* SET NEW ZOOM POINT */
-    //svg.attr("transform", "translate(" + t + ")scale(" + s + ")");
-    //zoom.translate(t);
-    //zoom.scale(s);
-
-
-    //redraw the points
     var tier1_scale = 2;
     var tier2_scale = 2.5;
     var tier3_scale = 3;
@@ -492,21 +429,23 @@ svg.selectAll('path')       // re-project path data
     fcl_tooltip.selectAll(".tooltip").attr("style","visibility: hidden");
 
 
+    svg.attr("transform", "translate(" + t + ")scale(" + s + ")");
 
-
-
+    /* SET NEW ZOOM POINT */
+    zoom.translate(t);
+    zoom.scale(s);
 
     d3.selectAll(".point")
         .style("stroke-width", 0.5/s+'px')
         .attr("r", function (d) {
-            return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
-        });
+       return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
+    });
 
     d3.selectAll(".cluster")
         .style("stroke-width", 0.5/s+'px')
         .attr("r", function (d) {
-            return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
-        });
+        return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
+    });
 
 
     //cg_g.remove();
@@ -518,10 +457,12 @@ svg.selectAll('path')       // re-project path data
     d3.selectAll(".country").style("stroke-map_width", 1.5 / s);
     d3.selectAll(".text").style("font-size", 20 / s);
     //d3.selectAll(".equator").style("stroke-width", 1/s+'px');
-    // d3.selectAll("graticule").style("stroke-width", 0.5/s+'px');
+   // d3.selectAll("graticule").style("stroke-width", 0.5/s+'px');
 
+    var center_x =  (innerWidth/2-t[0])/s;
+    var center_y = (innerHeight/2-t[1])/s;
 
-
+    console.log(center_x,center_y);
 }
 
 
@@ -543,6 +484,13 @@ function click() {
 
 
 
+function formatNum(num) {
+    var format = d3.format(',.02f');
+
+    var label = format(num / 1000000) + "M";
+
+    return label;
+}
 
 function removeAllChild(){
 
