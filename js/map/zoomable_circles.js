@@ -56,8 +56,52 @@ function generate_project_DistMatrix(){
         });
 
         SC.project_matrix = matrix;
-        find_last_tier(100,zoom.scale(),'project_layer'); // draw tier1
 
+        var tier1_scale = 2;
+        var tier2_scale = 2.5;
+        var tier3_scale = 3;
+        var tier4_scale =3.5;
+        var google_map_scale = 4;
+        var tier_range = 100;
+        var scale =2;
+
+        var s = zoom.scale();
+
+        if(s>= tier4_scale) {
+            tier_range = 3;
+            scale = tier4_scale;
+        }else if(s>=tier3_scale){
+
+            tier_range=5;
+            scale = tier3_scale;
+
+        }else if(s>=tier2_scale){
+            tier_range = 25;
+            scale = tier2_scale;
+
+        }else if(s>=tier1_scale){
+
+            tier_range = 50 ;
+            scale = tier1_scale;
+
+        }else{
+
+            tier_range = 100 ;
+            scale = 1;
+        }
+        find_last_tier(tier_range,scale,'project_layer'); // draw tier1
+
+        d3.selectAll(".point")
+            .style("stroke-width", 0.5/s+'px')
+            .attr("r", function (d) {
+                return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
+            });
+
+        d3.selectAll(".cluster")
+            .style("stroke-width", 0.5/s+'px')
+            .attr("r", function (d) {
+                return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
+            });
 
 
     });
@@ -104,7 +148,50 @@ function generate_network_DistMatrix(){
         });
 
         SC.network_matrix = matrix;
-        find_last_tier(100,zoom.scale(),'network_layer'); // draw tier1
+        var tier1_scale = 2;
+        var tier2_scale = 2.5;
+        var tier3_scale = 3;
+        var tier4_scale =3.5;
+        var tier_range = 100;
+        var scale =2;
+
+        var s = zoom.scale();
+
+        if(s>= tier4_scale) {
+            tier_range = 3;
+            scale = tier4_scale;
+        }else if(s>=tier3_scale){
+
+            tier_range=5;
+            scale = tier3_scale;
+
+        }else if(s>=tier2_scale){
+            tier_range = 25;
+            scale = tier2_scale;
+
+        }else if(s>=tier1_scale){
+
+            tier_range = 50 ;
+            scale = tier1_scale;
+
+        }else{
+
+            tier_range = 100 ;
+            scale = 1;
+        }
+        find_last_tier(tier_range,scale,'network_layer'); // draw tier1
+
+        d3.selectAll(".point")
+            .style("stroke-width", 0.5/s+'px')
+            .attr("r", function (d) {
+                return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
+            });
+
+        d3.selectAll(".cluster")
+            .style("stroke-width", 0.5/s+'px')
+            .attr("r", function (d) {
+                return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
+            });
 
     });
 
@@ -151,8 +238,50 @@ function generate_staff_DistMatrix(){
         });
 
         SC.staff_matrix = matrix;
-        find_last_tier(100,zoom.scale(),'staff_layer'); // draw tier1
+        var tier1_scale = 2;
+        var tier2_scale = 2.5;
+        var tier3_scale = 3;
+        var tier4_scale =3.5;
+        var tier_range = 100;
+        var scale =2;
 
+        var s = zoom.scale();
+
+        if(s>= tier4_scale) {
+            tier_range = 3;
+            scale = tier4_scale;
+        }else if(s>=tier3_scale){
+
+            tier_range=5;
+            scale = tier3_scale;
+
+        }else if(s>=tier2_scale){
+            tier_range = 25;
+            scale = tier2_scale;
+
+        }else if(s>=tier1_scale){
+
+            tier_range = 50 ;
+            scale = tier1_scale;
+
+        }else{
+
+            tier_range = 100 ;
+            scale = 1;
+        }
+        find_last_tier(tier_range,scale,'staff_layer'); // draw tier1
+
+        d3.selectAll(".point")
+            .style("stroke-width", 0.5/s+'px')
+            .attr("r", function (d) {
+                return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
+            });
+
+        d3.selectAll(".cluster")
+            .style("stroke-width", 0.5/s+'px')
+            .attr("r", function (d) {
+                return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
+            });
     });
 
 
@@ -211,9 +340,11 @@ function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
         .on("click",function () {
 
             //one_tooltip.style("visibility","hidden");
+            console.log(scale);
             var shift_x =   innerWidth/2 - projection([lon,lat])[0] *scale ;
             var shift_y = innerHeight/2 - projection([lon,lat])[1] *scale;
             var t = [shift_x,shift_y];
+            console.log(t[0],t[1]);
             move(t,scale);
 
             var name = className+imgNo;
@@ -531,6 +662,7 @@ function find_last_tier(tier_range,scale,className){
         item = items[itemIndex];
         addpoint(color,item["latitude"],item["longitude"],item["name"],item["text"],1,itemIndex+1,scale,className);
     }
+
 
 }
 

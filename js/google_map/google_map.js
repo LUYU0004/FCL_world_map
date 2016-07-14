@@ -58,7 +58,7 @@ function initMap() {
     // Create a map object, and include the MapTypeId to add
     // to the map type control.
     var mapOptions = {
-        zoom: 11,
+        zoom: 12,
         center: center,//55.6468, 37.581
        mapTypeControl:false
         /* mapTypeControlOptions: {
@@ -74,15 +74,17 @@ function initMap() {
     //Associate the styled map with the MapTypeId and set it to display.
     gmap.mapTypes.set('map_style', styledMap);
     gmap.setMapTypeId('map_style');
-    gmap.setOptions({minZoom:11});
+    //
 
     // restrict the appropriate region for users
+    /*
+     gmap.setOptions({minZoom:11});
     var allowedBounds = new google.maps.LatLngBounds(
         new google.maps.LatLng(1.1059477218902916, 103.38930926660157),
         new google.maps.LatLng(1.600193102239492, 104.25036273339845)
     );
 
-    var lastValidCenter = gmap.getCenter();
+   var lastValidCenter = gmap.getCenter();
 
     google.maps.event.addListener(gmap, 'center_changed', function() {
         if (allowedBounds.contains(gmap.getCenter())) {
@@ -93,9 +95,10 @@ function initMap() {
         }
 
         // not valid anymore => return to last valid position
-        gmap.panTo(lastValidCenter);
-    });
+        gmap.panTo(lastValidCenter):
 
+    });
+*/
     /*var initialBounds;
     google.maps.event.addListener(gmap, 'bounds_changed', function() {
         try {
@@ -120,8 +123,9 @@ function initMap() {
         {lat: 1.352083, lng: 103.819836}*/
     ];
 
+    var info =['John','Welcome to Singapore!'];
     var markerPos = triangleCoords[0];
-        draw_polygon(triangleCoords,markerPos,'#1E90FF');
+        draw_polygon(triangleCoords,markerPos,'#1E90FF',info);
 
 
     var triangleCoords2 = [
@@ -130,8 +134,9 @@ function initMap() {
         {lat: 1.339083, lng: 103.92},
         {lat: 1.3534, lng: 103.90}
     ];
-    markerPos = triangleCoords2[0];
-    draw_polygon(triangleCoords2,markerPos,'#FF0000');
+    markerPos = triangleCoords2[2];
+    info =['David','This is an awesome place!'];
+    draw_polygon(triangleCoords2,markerPos,'#FF0000',info);
 
 
     var triangleCoords3 = [
@@ -142,7 +147,8 @@ function initMap() {
     ];
 
     var markerPos3 = triangleCoords3[0];
-    draw_polygon(triangleCoords3,markerPos3,'#1E90FF');
+    info =['Sarah','Hope you enjoy your life here!'];
+    draw_polygon(triangleCoords3,markerPos3,'#1E90FF',info);
 
 
 }
@@ -161,7 +167,7 @@ function makeMarkerIcon(markerColor) {
     return markerImage;
 }
 
-function draw_polygon(triangleCoords,markerPos,fillcolor){
+function draw_polygon(triangleCoords,markerPos,fillcolor,info){
 
     // Construct the polygon.
     var bermudaTriangle = new google.maps.Polygon({
@@ -178,8 +184,11 @@ function draw_polygon(triangleCoords,markerPos,fillcolor){
     var project_img = new Image();
     project_img.src = "img/project_img/"+2+"_fcl_vis.jpg";
 
-    var contentString = " <div><div class='pic_holder Centerer'><img class='tooltip_pic' src='"+project_img.src+"'></div>" +
-        "<div class='tooltip_text'><b>" + "The Singapore Project" + "</b><br> Introduction to the extraodinary life of Singaporean People</div></div>";
+    var contentString = " <div><div class='pic_holder Centerer'>" +
+        "<img class='tooltip_pic' src='"+project_img.src+"'></div>" +
+        "<div class='tooltip_text'><b style='font-size:17px;'>" + "The Singapore Project" + "</b>" +
+        "<br><br> <b>Contact:</b> "+info[0]+
+        "<br><br> <b>Description:</b> "+info[1]+"</div></div>";
 
     var infowindow = new google.maps.InfoWindow({
         content: contentString,
@@ -286,6 +295,20 @@ function display_NogoogleM() {
 
 function close_GoogleMap() {
 
+    var center = gmap.getCenter();
+    var zoom = gmap.getZoom();
+
+    var new_map_center = projection([center.lng(),center.lat()]);
+    var shift_x =   innerWidth/2 - new_map_center[0] * zoom;
+    var shift_y = innerHeight/2 - new_map_center[1] *zoom;
+
+    var t = [shift_x,shift_y];
+
+    console.log("close "+t[0],t[1]);
+    move(t,zoom*100);
+
+
+
         document.getElementById("googlem_holder").style.width = "190px";
         document.getElementById("googlem_holder").style.height = "40px";
        // document.getElementById("google_map").style.width = "1250px";
@@ -295,26 +318,10 @@ function close_GoogleMap() {
 
 function open_GoogleMap() {
 
-    //d3.select("#googlem_holder").remove();
-    //load_google_map();
-
     d3.select("#google_map").style("visibility","visible");
     document.getElementById("googlem_holder").style.width = innerWidth+"px";
     document.getElementById("googlem_holder").style.height = innerHeight+"px";
 
-    //document.getElementById("google_map").style.width = document.getElementById("googlem_holder").style.width*0.8+"px";
-    //document.getElementById("google_map").style.height = document.getElementById("googlem_holder").style.height*0.9+"px";
-
-    resize_GoogleMap();
-    //google.maps.event.trigger(gmap, 'resize');
-    //gmap.panTo(center);
-
-}
-
-function resize_GoogleMap() {
-
-    //d3.select("#googlem_holder").remove();
-    //load_google_map();
 
     d3.select("#google_map").style("visibility","visible");
     //document.getElementById("googlem_holder").style.width = innerWidth+"px";
@@ -326,8 +333,25 @@ function resize_GoogleMap() {
     document.getElementById("google_map").style.width = holder_width+"px";
     document.getElementById("google_map").style.height = holder_height+"px";
 
+
+    //adjust the map to be return
+    var map_scale = projection.scale();
+    var zoomlvl = parseInt(map_scale/100);
+
+    var map_center = projection.invert([map_width/2, map_height/2]);//
+    var c = new google.maps.LatLng(map_center[1],map_center[0]);
+
+
     google.maps.event.trigger(gmap, 'resize');
-    gmap.panTo(center);
+
+    console.log("open  "+c.lng(),c.lat(),zoomlvl);
+    gmap.setZoom(zoomlvl);
+
+    if(c==undefined){
+        c=center;
+    }
+
+    gmap.panTo(c);
 
 }
 
@@ -337,9 +361,18 @@ function handle_switch(){
         var res = input[0].checked;
 
     if(res){
+
         open_GoogleMap();
     }else{
 
         close_GoogleMap();
     }
+}
+
+
+function formatNum(num) {
+    var format = d3.format(',.02f');
+
+
+    return format(num);
 }

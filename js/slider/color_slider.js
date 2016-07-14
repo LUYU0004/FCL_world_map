@@ -67,13 +67,12 @@ function draw_colorSlider_1(className){
     var body = d3.select("#pop_densityHolder").selectAll("li").append("div")
                                     .attr("class","legend "+className);
 
-    var text_height = 25;
     
     var svg = body.append("svg")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom+text_height);
+        .attr("height", height + margin.top + margin.bottom+20);
 
-    svg.append("g").append("text").text("people per sq.km").attr("fill",label_color).attr("y",13);
+
 
 
     /*svg.append("defs")
@@ -86,7 +85,7 @@ function draw_colorSlider_1(className){
 
     var context = svg.append("g")
         .attr("class", "context")
-        .attr("transform", "translate(" + margin.left + "," + (margin.top+text_height) + ")");
+        .attr("transform", "translate(" + margin.left + "," + (margin.top+10) + ")");
 
 
     color_x1.domain([0,ticks1]);
@@ -128,9 +127,9 @@ function draw_colorSlider_1(className){
 
     var labels = body.append("svg")
         .attr("width",widthOfcontainer+20)
-        .attr("height",50)
+        .attr("height",7)
         .append("g")
-        .attr("transform","translate(10,0)");;
+        .attr("transform","translate(12,0)");
 
     labels.selectAll("text").data(data)
         .enter()
@@ -140,7 +139,8 @@ function draw_colorSlider_1(className){
         }).attr("fill",label_color)
         .attr("x",function(d){
             return color_x1(d.x)
-        }).attr("y",height).attr("font-size","9px");
+        }).attr("y",7)
+        .attr("font-size","9px");
 
     selection_bar1 = context.append("rect")//.attr("class","color_brush")
         .style("height",height+'px')
@@ -156,22 +156,38 @@ function draw_colorSlider_1(className){
     var drag = d3.behavior.drag()
         .on("drag", drag_handler1);
 
-    color_handleL1 = context.append("circle")
+    color_handleL1 = context.append("rect")
         //.attr("points","00,00 05,10 10,00")
         .attr("class", "L handle")
         .style("fill",label_color)
-        //.attr("transform", "translate("+4.5+"," +0 + ")")
-        .attr("r", 9)
+        .style("opacity",0.75)
+        .style("width","9px")
+        .style("height","25px")
+        .attr("transform", "translate(-4.5,-5)")//.attr("transform", "translate("+4.5+"," +0 + ")")
         .call(drag);
 
-    color_handleR1 = context.append("circle")
+    color_handleR1 = context.append("rect")
         .attr("class", "R handle")
         .style("fill",label_color)
-        //.attr("cx",width)
-        .attr("r", 9)
+        .style("opacity",0.75)
+        .style("width","9px")
+        .style("height","25px")
+        .attr("transform", "translate(-4.5,-5)")//.attr("transform", "translate("+4.5+"," +0 + ")")
         .call(drag);
 
     color_brush1.extent([0,ticks1]);
+
+    body.append("svg")
+        .attr("width",widthOfcontainer+20)
+        .attr("height",50)
+        .append("g")
+        .append("text")
+        .text("people per sq.km")
+        .style("font-size","10px")
+        .attr("fill",label_color)
+        .attr("x",12)
+        .attr("y",7);
+
     color_brushed1();
 
 
@@ -194,8 +210,8 @@ function color_brushed1(ext) {
     var right = color_x1(R);
     var width = right - left;
 
-    color_handleL1.attr("cx",left );
-    color_handleR1.attr("cx",right) ;
+    color_handleL1.attr("x",left );
+    color_handleR1.attr("x",right) ;
 
     selection_bar1.attr("x",left)
         .style("width",width+'px');
@@ -279,18 +295,16 @@ function draw_colorSlider_2(className){
     var body = d3.select("#co2_emissionHolder").selectAll("li").append("div")
         .attr("class","legend "+className);
 
-    var text_height = 25;
 
     var svg = body.append("svg")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom+text_height);
+        .attr("height", height + margin.top + margin.bottom+20);
 
-    svg.append("g").append("text").text("tons per person").attr("fill",label_color).attr("y",13);
 
 
     var context = svg.append("g")
         .attr("class", "context")
-        .attr("transform", "translate(" + margin.left + "," + (margin.top+text_height) + ")");
+        .attr("transform", "translate(" + margin.left + "," + (margin.top+10) + ")");
 
 
     color_x2.domain([0,ticks2]);
@@ -333,7 +347,7 @@ function draw_colorSlider_2(className){
 
     var labels = body.append("svg")
         .attr("width",widthOfcontainer+20)
-        .attr("height",50)
+        .attr("height",20)
         .append("g")
         .attr("transform","translate(10,0)");
 
@@ -345,7 +359,7 @@ function draw_colorSlider_2(className){
         }).attr("fill",label_color)
         .attr("x",function(d){
             return color_x2(d.x)+4.5;
-        }).attr("y",height).attr("font-size","9px");
+        }).attr("y",7).attr("font-size","9px");
 
 
     selection_bar2 = context.append("rect")//.attr("class","color_brush")
@@ -362,20 +376,38 @@ function draw_colorSlider_2(className){
     var drag = d3.behavior.drag()
         .on("drag", drag_handler2);
 
-    color_handleL2= context.append("circle")
+    color_handleL2 = context.append("rect")
+    //.attr("points","00,00 05,10 10,00")
         .attr("class", "L handle")
         .style("fill",label_color)
-        .attr("r", 9)
+        .style("opacity",0.75)
+        .style("width","9px")
+        .style("height","25px")
+        .attr("transform", "translate(-4.5,-5)")//.attr("transform", "translate("+4.5+"," +0 + ")")
         .call(drag);
 
-    color_handleR2 = context.append("circle")
+    color_handleR2 = context.append("rect")
         .attr("class", "R handle")
         .style("fill",label_color)
-        //.attr("cx",width)
-        .attr("r", 9)
+        .style("opacity",0.75)
+        .style("width","9px")
+        .style("height","25px")
+        .attr("transform", "translate(-4.5,-5)")//.attr("transform", "translate("+4.5+"," +0 + ")")
         .call(drag);
 
     color_brush2.extent([0,ticks2]);
+
+    body.append("svg")
+        .attr("width",widthOfcontainer+20)
+        .attr("height",50)
+        .append("g")
+        .append("text")
+        .text("tons per capita")
+        .style("font-size","10px")
+        .attr("fill",label_color)
+        .attr("x",12)
+        .attr("y",7);
+
     color_brushed2();
 
 
@@ -398,8 +430,8 @@ function color_brushed2(ext) {
     var right = color_x2(R);
     var width = right - left;
 
-    color_handleL2.attr("cx",left );
-    color_handleR2.attr("cx",right) ;
+    color_handleL2.attr("x",left );
+    color_handleR2.attr("x",right) ;
 
     selection_bar2.attr("x",left)
         .style("width",width+'px');
@@ -488,14 +520,10 @@ function draw_colorSlider_3(className){
     var body = d3.select("#gdpHolder").selectAll("li").append("div")
         .attr("class","legend "+className);
 
-    var text_height = 25;
 
     var svg = body.append("svg")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom+text_height);
-
-    svg.append("g").append("text").text("USD per capita").attr("fill",label_color).attr("y",13);
-
+        .attr("height", height + margin.top + margin.bottom+20);
 
     /*svg.append("defs")
      .append("clipPath")
@@ -507,7 +535,7 @@ function draw_colorSlider_3(className){
 
     var context = svg.append("g")
         .attr("class", "context")
-        .attr("transform", "translate(" + margin.left + "," + (margin.top+text_height) + ")");
+        .attr("transform", "translate(" + margin.left + "," + (margin.top+10) + ")");
 
 
     color_x3.domain([0,ticks3]);
@@ -549,7 +577,7 @@ function draw_colorSlider_3(className){
 
     var labels = body.append("svg")
         .attr("width",widthOfcontainer+20)
-        .attr("height",50)
+        .attr("height",20)
         .append("g")
         .attr("transform","translate(10,0)");
 
@@ -577,22 +605,38 @@ function draw_colorSlider_3(className){
     var drag = d3.behavior.drag()
         .on("drag", drag_handler3);
 
-    color_handleL3 = context.append("circle")
+    color_handleL3 = context.append("rect")
     //.attr("points","00,00 05,10 10,00")
         .attr("class", "L handle")
         .style("fill",label_color)
-        //.attr("transform", "translate("+4.5+"," +0 + ")")
-        .attr("r", 9)
+        .style("opacity",0.75)
+        .style("width","9px")
+        .style("height","25px")
+        .attr("transform", "translate(-4.5,-5)")//.attr("transform", "translate("+4.5+"," +0 + ")")
         .call(drag);
 
-    color_handleR3= context.append("circle")
+    color_handleR3 = context.append("rect")
         .attr("class", "R handle")
         .style("fill",label_color)
-        //.attr("cx",width)
-        .attr("r", 9)
+        .style("opacity",0.75)
+        .style("width","9px")
+        .style("height","25px")
+        .attr("transform", "translate(-4.5,-5)")//.attr("transform", "translate("+4.5+"," +0 + ")")
         .call(drag);
 
     color_brush3.extent([0,ticks3]);
+
+    body.append("svg")
+        .attr("width",widthOfcontainer+20)
+        .attr("height",50)
+        .append("g")
+        .append("text")
+        .text("US$ per capita")
+        .style("font-size","10px")
+        .attr("fill",label_color)
+        .attr("x",12)
+        .attr("y",7);
+
     color_brushed3();
 
 
@@ -615,8 +659,8 @@ function color_brushed3(ext) {
     var right = color_x3(R);
     var width = right - left;
 
-    color_handleL3.attr("cx",left );
-    color_handleR3.attr("cx",right) ;
+    color_handleL3.attr("x",left );
+    color_handleR3.attr("x",right) ;
 
     selection_bar3.attr("x",left)
         .style("width",width+'px');

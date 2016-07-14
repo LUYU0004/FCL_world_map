@@ -1,5 +1,5 @@
 #label_slider{
-    height:140px;
+    height:126px;
 }
 
 
@@ -11,8 +11,8 @@
 }
 
 .axis {
-    color: #ffffff;
-    font: 10px sans-serif;
+    color: #ff2e1b;
+    font: 0px sans-serif;
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
@@ -21,17 +21,18 @@
 
 .axis .domain {
     fill: none;
+
     stroke: #ffffff;
     stroke-opacity: .3;
-    stroke-width: 10px;
-    stroke-linecap: round;
+    stroke-width: 2px;
+    stroke-linecap:square;
     color: #ffffff;
 }
 
 .axis .halo {
     fill: none;
     stroke: #ddd;
-    stroke-width: 8px;
+    stroke-width: 2px;
     stroke-linecap: round;
 }
 
@@ -54,7 +55,7 @@
 }
 
 .year.label.active {
-    fill: #feff8a;
+    fill: #ffffff;
 }
 
 .overlay {

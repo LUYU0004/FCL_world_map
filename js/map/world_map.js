@@ -88,17 +88,14 @@ function read_co2Data(){
 
 var offsetL=10,offsetT=10 ;
 
-//d3.select(window).on("resize", throttle);
-
-
-
-var projection, path, svg, g, graticule;
+var projection, path, svg, g;
+//var graticule;
 var tooltip, one_tooltip, country_info_tooltip, fcl_tooltip,country_chart_tooltip;
 
-var zoom = d3.behavior.zoom().scaleExtent([1, 4])
-            .on("zoom",move);
+var zoom;
 
-
+var maxlat = 83;
+var scaleExtent;
 function setup() {
 
     offsetL = document.getElementById("map_container").offsetLeft + 10;
@@ -114,7 +111,7 @@ function setup() {
 
     country_chart_tooltip = tooltip.append("div").attr("class","tooltip")
         .attr("id","chart_tooltip")
-        .attr("style","visibility:hidden;display:inline;")
+        .attr("style","visibility:hidden;display:inline;background-color:white")
         .attr("z-index",2)
         .on("mousedown",function(){
             country_chart_tooltip.style("visibility","visible");
@@ -135,20 +132,38 @@ function setup() {
     country_info_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden").attr("z-index",4);
 
     //<span class="close" onclick="close_modal()">×</span>
-
-    graticule = d3.geo.graticule();
+    //graticule = d3.geo.graticule();
     
     projection = d3.geo.mercator()
-        .translate([(map_width / 2), (map_height / 2)])
         //.center()
-        //.rotate( [71.057,0] )
-        .center( [0, 42.313] )
-        .scale(map_width /2/Math.PI);
+        .rotate( [0,0] )
+       //.center( [0, 42.313] )
+        .scale(1)//map_width /2/Math.PI
+        .translate([(map_width / 2), (map_height / 2)]);
+
+    // set up the scale extent and initial scale for the projection
+    var b = mercatorBounds(projection, maxlat),
+        s = map_width/(b[1][0]-b[0][0]);
+
+    scaleExtent = [s, 10*s];
+
+    projection
+        .scale(scaleExtent[0]);
+
+    zoom= d3.behavior.zoom()
+        .scaleExtent(scaleExtent)
+        .scale(projection.scale())
+        .translate([0,0])               // not linked directly to projection
+        .on("zoom", move);
+    /*= d3.behavior.zoom().scaleExtent([1, 4])
+     .translate([0,0])
+     .on("zoom",move);*/
 
     path = d3.geo.path().projection(projection);
     
 
     svg = d3.select("#map_container").append("svg")
+        .attr("id","svg1")
         .attr("width",map_width )
         .attr("height",map_height)
         .call(zoom)
@@ -157,7 +172,22 @@ function setup() {
 
     g = svg.append("g").attr("id","country_holder");
 
-    
+
+
+
+
+
+
+
+}
+
+// find the top left and bottom right of current projection
+function mercatorBounds(projection, maxlat) {
+    var yaw = projection.rotate()[0],
+        xymax = projection([-yaw+180-1e-6,-maxlat]),
+        xymin = projection([-yaw-180+1e-6, maxlat]);
+
+    return [xymin,xymax];
 }
 
 function draw_worldmap() {
@@ -165,11 +195,11 @@ function draw_worldmap() {
     removeAllChild();
     setup();
 
-    svg.append("path").datum(graticule).attr("class", "graticule").attr("d", path);
+    //svg.append("path").datum(graticule).attr("class", "graticule").attr("d", path);
 
-    svg.append("path").datum({type: "LineString", coordinates: [[-180, 0], [-90, 0], [0, 0], [90, 0], [180, 0]]})
+    /*svg.append("path").datum({type: "LineString", coordinates: [[-180, 0], [-90, 0], [0, 0], [90, 0], [180, 0]]})
         .attr("class", "equator")
-        .attr("d", path);
+        .attr("d", path);*/
 
 
     var tooltip_info = {};
@@ -185,7 +215,26 @@ function draw_worldmap() {
         .attr("title", function (d, i) {
             return d.properties.name;
         }).attr("fill", worldmap_background);
-    
+
+   /* g.selectAll(".country-label")
+        .data(this.world_topo)
+        .enter().append("text")
+        .attr("class", "country-label")
+        .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+        .attr("dy", ".35em")
+        .text(function(d) { return d.properties.name; });*/
+
+    /*d3.select("#map_container").append("svg")
+        .attr("id","svg2")
+        .attr("width",map_width )
+        .attr("height",map_height)
+        .append("use")
+        //.attr("transform","translate("+map_width+",0)skewY(180)")
+        .attr("xlink:href","#svg1");
+
+/*<svg width="100" height="100">
+        <use transform="scale(0.1)" xlink:href="#SVG1"/>
+        </svg>*/
 
     setup_slider(1964,2014);
 
@@ -193,6 +242,7 @@ function draw_worldmap() {
     
 }
 
+/* to draw the different layers of country shapes*/
 function draw_pop_country() {
     
     var country = g.append("g").attr("id","pop_countries")
@@ -210,24 +260,6 @@ function draw_pop_country() {
             var res = 0.8-0.2*SC.layer_count;
             return res;
         });
-
-
-    /*country.on("mouseover", function(){
-        return one_tooltip.attr("style","visibility: visible;borderColor: #F5F5DC");})
-        .on("mousemove", function (d,i) {
-            var mouse = d3.mouse(svg.node()).map(function (d) {
-                return parseInt(d);
-            });
-
-            return one_tooltip.attr("style", "left:" + (mouse[0] + offsetL) + "px;top:" + (mouse[1] + offsetT) + "px")
-                .html(d.properties.name);
-
-
-
-        }).on("mouseout", function (d, i) {
-        return one_tooltip.attr("style", "visibility: hidden");
-    });*/
-
 
 }
 
@@ -266,6 +298,7 @@ function draw_gdp_country() {
 
 }
 
+/* to redraw world map upon close of all three color layer*/
 function redraw_worldmap(){
     var country = g.selectAll(".country").data(this.world_topo);
 
@@ -316,6 +349,7 @@ function redraw_worldmap(){
     });
 }
 
+/*to use for initializing the population density display at the first open of the map */
 function draw_pop_layer(){
     document.getElementById("pop_densityBtn").classList.toggle("selectedBtn");
     pop_layer = true;
@@ -326,20 +360,53 @@ function draw_pop_layer(){
     load_DData("pop_layer");
 
 }
-function remove(th){
-    console.log("end");
-    th.remove();
-}
 
 
-var callcount = 0;
+// track last translation and scale event we processed
+var tlast = [0,0],
+    slast = null;
+
+//to handle transform of svg elements on zoom
 function move(t,s) {
     if(t ==undefined || s== undefined){
         s = d3.event.scale ;
         t = d3.event.translate;
-
     }
+    
+    // if scaling changes, ignore translation (otherwise touch zooms are weird)
+    if (s != slast) {
+        projection.scale(s);
+    } else {
+        var dx = t[0]-tlast[0],
+            dy = t[1]-tlast[1],
+            yaw = projection.rotate()[0],
+            tp = projection.translate();
 
+        // use x translation to rotate based on current scale
+        projection.rotate([yaw+360.*dx/map_width*scaleExtent[0]/s, 0, 0]);
+        // use y translation to translate projection, clamped by min/max
+        var b = mercatorBounds(projection, maxlat);
+        if (b[0][1] + dy > 0) dy = -b[0][1];
+        else if (b[1][1] + dy < map_height) dy = map_height-b[1][1];
+        projection.translate([tp[0],tp[1]+dy]);
+    }
+    // save last values.  resetting zoom.translate() and scale() would
+    // seem equivalent but doesn't seem to work reliably?
+    slast = s;
+    tlast = t;
+
+
+
+svg.selectAll('path')       // re-project path data
+    .attr('d', path);
+
+    /* SET NEW ZOOM POINT */
+    //svg.attr("transform", "translate(" + t + ")scale(" + s + ")");
+    //zoom.translate(t);
+    //zoom.scale(s);
+
+
+    //redraw the points
     var tier1_scale = 2;
     var tier2_scale = 2.5;
     var tier3_scale = 3;
@@ -352,17 +419,17 @@ function move(t,s) {
     if(s>=google_map_scale){
 
         if(project_layer){
-            callcount++;
-            console.log(callcount);
+            //callcount++;
+            //console.log(callcount);
             //if(callcount==1)load_google_map();
 
         }
     }else if(s>= tier4_scale) {
 
-        if(project_layer&&callcount>0){
+        /*if(project_layer&&callcount>0){
             callcount=0;
             d3.select("#google_map").remove();
-        }
+        }*/
         tier_range = 3;
         scale = tier4_scale;
         svg.selectAll(".items").remove();
@@ -407,7 +474,7 @@ function move(t,s) {
     }
     
     
-    var h = map_height / 4;
+    /*var h = map_height / 4;
 
     t[0] = Math.min(
         (map_width / map_height) * (s - 1),
@@ -416,48 +483,30 @@ function move(t,s) {
     t[1] = Math.min(
         h * (s - 1) + h * s,
         Math.max(map_height * (1 - s) - h * s, t[1])
-    );
-
-    /*//calculate the new position of one_tooltip
-    var cur_trans = zoom.translate();
-    var cur_sc = zoom.scale();
-    var sc_ratio = s/cur_sc;
-    var cur_right = one_tooltip.node().getBoundingClientRect().right;
-    var cur_bottom = one_tooltip.node().getBoundingClientRect().bottom;
-    var diffR = (innerWidth-cur_right-cur_trans[0])*(1-sc_ratio);
-    var diffB = (innerWidth-cur_bottom-cur_trans[1])*(1-sc_ratio);
+    );*/
 
 
-    var new_right = cur_right + diffR;
-    var new_bottom = cur_bottom+diffB;
-*/
-    //one_tooltip.style("visibility","hidden");
-   // console.log(fcl_tooltip);
-    //fcl_tooltip.style("visibility","hidden");
-    //fcl_tooltip.selectAll(".tooltip").style("visibility","hidden");
     fcl_tooltip_list =[];
-      //  .attr()
-
 
     one_tooltip.attr("style","visibility: hidden");
     fcl_tooltip.selectAll(".tooltip").attr("style","visibility: hidden");
-    svg.attr("transform", "translate(" + t + ")scale(" + s + ")");
 
-    /* SET NEW ZOOM POINT */
-    zoom.translate(t);
-    zoom.scale(s);
+
+
+
+
 
     d3.selectAll(".point")
         .style("stroke-width", 0.5/s+'px')
         .attr("r", function (d) {
-       return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
-    });
+            return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
+        });
 
     d3.selectAll(".cluster")
         .style("stroke-width", 0.5/s+'px')
         .attr("r", function (d) {
-        return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
-    });
+            return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
+        });
 
 
     //cg_g.remove();
@@ -468,8 +517,10 @@ function move(t,s) {
     //adjust the country hover stroke map_width based on zoom level
     d3.selectAll(".country").style("stroke-map_width", 1.5 / s);
     d3.selectAll(".text").style("font-size", 20 / s);
-    d3.selectAll(".equator").style("stroke-width", 1/s+'px');
-    d3.selectAll("graticule").style("stroke-width", 0.5/s+'px');
+    //d3.selectAll(".equator").style("stroke-width", 1/s+'px');
+    // d3.selectAll("graticule").style("stroke-width", 0.5/s+'px');
+
+
 
 }
 
@@ -492,13 +543,6 @@ function click() {
 
 
 
-function formatNum(num) {
-    var format = d3.format(',.02f');
-
-    var label = format(num / 1000000) + "M";
-
-    return label;
-}
 
 function removeAllChild(){
 

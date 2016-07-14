@@ -132,11 +132,13 @@
 
                     if(res){
                         project_layer = true;
+                        document.getElementById("fcl_projectsBtn_img").src="img/yellow.png";
                        display_googleM();
                         load_DData("project_layer");
                         point_layer_count ++;
                     }else{
                         project_layer = false;
+                        document.getElementById("fcl_projectsBtn_img").src="img/grey_out.png";
                         remove_layer('.project_layer');
                         display_NogoogleM();
                         point_layer_count--;
@@ -150,10 +152,12 @@
 
                     if(res){
                         network_layer = true;
+                        document.getElementById("global_networkBtn_img").src="img/blue.png";
                         load_DData("network_layer");
                         point_layer_count++;
                     }else{
                         network_layer = false;
+                        document.getElementById("global_networkBtn_img").src="img/grey_out.png";
                         remove_layer('.network_layer');
                         point_layer_count--;
                     }
@@ -166,10 +170,12 @@
 
                     if(res){
                         staff_layer = true;
+                        document.getElementById("academic_staffBtn_img").src="img/pink.png";
                         load_DData("staff_layer");
                         point_layer_count++;
                     }else{
                         staff_layer = false;
+                        document.getElementById("academic_staffBtn_img").src="img/grey_out.png";
                         remove_layer('.staff_layer');
                         point_layer_count--;
                     }
@@ -200,7 +206,7 @@
         else{//open the side bar
             sideBar_open = true;
             d3.select("#fcl_projects").style("background-color","#1f2933").style("color","#ffffff");
-            sidebar.attr("style","height:120px");
+            sidebar.attr("style","height:90px");
 
         }
     }
@@ -321,8 +327,8 @@
 
 </script>
 
-<div id="welcome_mask">
-    <div class="welcome_msg">
+<div id="welcome_mask" style="background-color: yellow;opacity: 0.85">
+    <div class="welcome_msg"  style="background-color: yellow">
         <p style="background-color: yellow;width:400px;"><img src='img/project_img/0_fcl_vis.jpg'></p>
     </div>
 </div>
@@ -332,45 +338,44 @@
     <nav id = "menu_bar" class="no_userselect" >
         <div class ="holder">
         <div class="menu-item" style="padding: 0px; border-top: 0" onmousedown='mydragg.startMoving("menu_bar","content_holder",event);' onmouseup='mydragg.stopMoving("content_holder");'>
-            <img id="fcl_logo" src="img/Logo_FCLwhite.png" alt="fcl_logo" width="210px" height="60px">
+            <img id="fcl_logo" src="img/Logo_FCLwhite.png" alt="fcl_logo" width="210px" height="51.44px">
         </div>
         <hr>
         <div class="menu-item navg_button" id="pop_densityHolder">
-            <h4 id ="pop_densityBtn"><img id="pop_densityBtn_img" src="img/eye_white.png" ><a>  Population Density</a></h4>
+            <h4 id ="pop_densityBtn"><img id="pop_densityBtn_img" src="img/eye_white.png" ><a>POPULATION DENSITY</a></h4>
             <ul>
                 <li></li>
             </ul>
         </div>
-        <hr><hr>
+        <hr>
         <div class="menu-item navg_button" id="co2_emissionHolder">
-            <h4 id = "co2_emissionBtn"><img id="co2_emissionBtn_img" src="img/eye_black.png" ><a>  CO2 Emission Per Capita</a></h4>
+            <h4 id = "co2_emissionBtn"><img id="co2_emissionBtn_img" src="img/eye_black.png" ><a>CO2 EMISSION PER CAPITA</a></h4>
             <ul>
                 <li></li>
             </ul>
         </div>
-            <hr><hr>
+            <hr>
             <div class="menu-item navg_button" id="gdpHolder">
-                <h4 id = "gdp_Btn"><img id = "gdp_Btn_img"src="img/eye_black.png" ><a>  GDP Per Capita</a></h4>
+                <h4 id = "gdp_Btn"><img id = "gdp_Btn_img"src="img/eye_black.png" ><a>GDP PER CAPITA</a></h4>
                 <ul>
                     <li></li>
                 </ul>
             </div>
-        <hr><hr>
+        <hr>
         <div class="menu-item" id="label_slider">
+
         </div>
-        <hr><hr>
             </div>
         <div class="line_break"></div>
         <div id="fclHolder">
             <div style="background-color: #FEFF8A;    -webkit-box-shadow: 2px 2px 5px rgba(0,0,0,0.2);-moz-box-shadow: 2px 2px 5px rgba(0,0,0,0.2);">
-                <button id="fcl_modal" onclick="modal_open()">FCL Rationale</button> | <button id="fcl_projects" onclick="openNav()">FCL Projects</button>
+                <button id="fcl_modal" onclick="modal_open()">FCL Rationale</button> |  <button id="fcl_projects" onclick="openNav()">FCL Projects</button>
             </div>
             <!-- side bar-->
                     <div id="fclSidenav" class="no_userselect">
-                      <img src="img/yellow.png" ><a href="#" id="fcl_projectsBtn">FCL Projects</a>
-                        <img src="img/blue.png"><a href="#" id="global_networkBtn">Global Network</a>
-                        <img src="img/pink.png" ><a href="#" id="academic_staffBtn">Academic Staff</a>
-                            <a href="http://www.fcl.ethz.ch/" target="_blank" style="text-decoration:underline;color:dodgerblue;">FCL Website</a>
+                      <a href="#" id="fcl_projectsBtn"><img src="img/grey_out.png" id="fcl_projectsBtn_img">FCL Projects</a>
+                        <a href="#" id="global_networkBtn"> <img src="img/grey_out.png" id ="global_networkBtn_img">Global Network</a>
+                        <a href="#" id="academic_staffBtn"><img src="img/grey_out.png" id="academic_staffBtn_img">Academic Staff</a>
                     </div>
         </div>
 
@@ -381,32 +386,30 @@
     <div id="myModal" class="modal">
 
         <!-- Modal content -->
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="close" onclick="close_modal()">×</span>
-                <h2>FCL Rationale</h2>
-            </div>
+        <div class="modal-content" style="font-family:arial, sans-serif">
             <div class="modal-body">
-                <p><br>
-                    <b style="font: 18px arial, sans-serif">The guiding vision of the Future Cities Laboratory is to shape sustainable future cities:<br>
-                    THROUGH SCIENCE | BY DESIGN | IN PLACE</b><br>
-                    <br>
-                    <b>Through Science</b><br>
+                <b style="font-size:30px;">FCL Rationale</b>  <span class="close" onclick="close_modal()">×</span>
+                <br><br>
+                    <p style="font-size: 18px;">The guiding vision of the Future Cities Laboratory is to shape sustainable future cities:<br>
+                    THROUGH SCIENCE | BY DESIGN | IN PLACE</p><br>
+
+                <p style="font-size: 14px">
+                    <b style="font-size: 12px;">THROUGH SCIENCE</b><br>
                     To achieve sustainability, science is essential. Science provides the basis for understanding how cities develop and interact with the environment at different scales. Cities are composed of physical stocks, resource  ows, social institutions and cultural catalysts whose interactions generate a quanti able ‘metabolism’. The scienti c focus of our research is to quantify such metabolisms, and understand how they might be best structured for the bene t of sustainable cities.
                     <br><br>
-                    <b>By Design</b>
+                    <b style="font-size: 12px;" >BY DESIGN</b>
                    <br>A sustainable city must also be liveable. To achieve liveability, design is essential. Design is
                     a collaborative process that combines analytical techniques, imaginative strategies and transdisciplinary knowledge to generate new ideas and bring them to fruition. Design skills
                     bring, often con icting, technical, economic, social and cultural demands (such as environmental sustainability, pro t, comfort, convenience, identity, security, satisfaction and desire) into innovative and harmonious relationships.
                     <br><br>
-                    <b>In Place</b>
+                    <b style="font-size: 12px;">IN PLACE</b>
                     <br>Science and design are effective only if they serve places and the lives that are lived in them. Places result from common processes (growth and decline; competition and co-operation; ebb and  ow of capital, people, goods and ideas; climate change) and differentiating factors (geography, culture, language, history). Our research addresses diverse lived places, from compact cities with high-density populations to extended cities with a mosaic of urban and rural land-uses.
                <br><br>
                 </p>
 
             </div>
             <div class="modal-footer">
-                <h3>Sourse:.........</h3>
+                <h5><a href="http://www.fcl.ethz.ch/" target="_blank" style="text-decoration:underline;color:dodgerblue;">www.fcl.ethz.ch</a></h5>
             </div>
         </div>
     </div>
@@ -418,8 +421,9 @@
         <!--<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7830112895026!2d103.78620331459703!3d1.3052853620809883!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da1a431841d5f1%3A0x160f705c61acdff3!2ssixty40!5e0!3m2!1sen!2ssg!4v1466989919758" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>-->
     </div>
 
-</div>
+    <span class="page_footer">Data Source: The World Bank  &emsp;  </span>
 
+</div>
 
 <script>
 document.getElementById("content_holder").style.height=  window.innerHeight+'px';

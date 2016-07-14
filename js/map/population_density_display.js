@@ -964,7 +964,7 @@ function draw_charts(xy_pop_data, xy_co2_data, xy_gdp_data,country_name){
             //.attr("class", "x title")
             .attr("text-anchor", "end")
             .style("font-size", (mobileScreen ? 8 : 12) + "px")
-            .attr("transform", "translate(" + 140 + "," + 0 + ")")
+            .attr("transform", "translate(" + 100 + "," + 0 + ")")
             .text("People" +
                 " per sq.km");
 
@@ -1014,10 +1014,12 @@ function draw_charts(xy_pop_data, xy_co2_data, xy_gdp_data,country_name){
                 var th = d3.select(this);
                 th.style("border","2px solid red");
 
+                var format = d3.format(',.04f');
+
                 country_info_tooltip
-                    .html("Population Density: "+ v.value + "<br>Year: "+v.year)
-                    .style("left", (d3.event.pageX + 5) + "px")
-                    .style("top", (d3.event.pageY - 28) + "px");
+                    .html("Population Density: "+ format(v.value) + "<br>Year: "+v.year)
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY) + "px");
 
                 country_info_tooltip.style("visibility","visible")
             })
@@ -1129,11 +1131,12 @@ function draw_charts(xy_pop_data, xy_co2_data, xy_gdp_data,country_name){
                 return colors2[1];
             }})
             .on("mouseover", function(v) {
+                var format = d3.format(',.02f');
 
                 country_info_tooltip.style("visibility","visible")
-                    .html("CO2 Emission per capita: "+ v.value + "<br>Year: "+v.year)
-                    .style("left", (d3.event.pageX + 5) + "px")
-                    .style("top", (d3.event.pageY - 28) + "px");
+                    .html("CO2 Emission per capita: "+ format(v.value) + "<br>Year: "+v.year)
+                    .style("left", (d3.event.pageX ) + "px")
+                    .style("top", (d3.event.pageY) + "px");
             })
             .on("mouseout", function(d) {
                 country_info_tooltip.style("visibility","hidden");
@@ -1240,11 +1243,11 @@ function draw_charts(xy_pop_data, xy_co2_data, xy_gdp_data,country_name){
                         return colors3[1];
                     }})
                     .on("mouseover", function(v) {
-
+                        var format = d3.format(',.02f');
                         country_info_tooltip.style("visibility","visible")
-                            .html("GDP per Capita (US$): "+ v.value + "<br>Year: "+v.year)
-                            .style("left", (d3.event.pageX + 5) + "px")
-                            .style("top", (d3.event.pageY - 28) + "px");
+                            .html("GDP per Capita (US$): "+ format(v.value) + "<br>Year: "+v.year)
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY) + "px");
                     })
                     .on("mouseout", function(d) {
                         country_info_tooltip.style("visibility","hidden");

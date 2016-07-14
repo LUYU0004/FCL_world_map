@@ -111,11 +111,12 @@ function setup_slider(start_y, end_y){
     slider.select(".background")
         .attr("height", slider_height);
 
-    handle = slider.append("circle")
+    handle = slider.append("rect")
         .attr("class", "handle")
+        .style("width","7px")
+        .style("height","15px")
         .style("fill",label_color)
-        .attr("transform", "translate("+slider_margin.left+"," + slider_height / 3 + ")")
-        .attr("r", 9);
+        .attr("transform", "translate("+3.5+"," + 3 + ")");
 
 
 }
@@ -188,7 +189,7 @@ function brushed() {
             }
         }
     
-    handle.attr("cx", x(value));
+    handle.attr("x", x(value));
 
     update(value);
 }
