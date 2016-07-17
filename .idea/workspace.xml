@@ -3,9 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="5cd72448-d8fc-45b4-afc0-c979ee3734fe" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/google_map.css" afterPath="$PROJECT_DIR$/css/google_map.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/main.css" afterPath="$PROJECT_DIR$/css/main.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/google_map/google_map.js" afterPath="$PROJECT_DIR$/js/google_map/google_map.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/map/world_map.js" afterPath="$PROJECT_DIR$/js/map/world_map.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/map/zoomable_circles.js" afterPath="$PROJECT_DIR$/js/map/zoomable_circles.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.html" afterPath="$PROJECT_DIR$/main.html" />
     </list>
     <ignored path="FCL Explantory Visualization.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,8 +32,8 @@
       <file leaf-file-name="main.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="183">
-              <caret line="38" column="30" selection-start-line="38" selection-start-column="30" selection-end-line="38" selection-end-column="30" />
+            <state relative-caret-position="135">
+              <caret line="156" column="32" selection-start-line="156" selection-start-column="32" selection-end-line="156" selection-end-column="32" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -54,8 +57,8 @@
       <file leaf-file-name="world_map.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/map/world_map.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="256">
-              <caret line="463" column="0" selection-start-line="463" selection-start-column="0" selection-end-line="463" selection-end-column="0" />
+            <state relative-caret-position="181">
+              <caret line="327" column="14" selection-start-line="327" selection-start-column="4" selection-end-line="327" selection-end-column="14" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -63,24 +66,41 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="google_map.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="google_map.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/google_map/google_map.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="181">
-              <caret line="300" column="61" selection-start-line="300" selection-start-column="61" selection-end-line="300" selection-end-column="61" />
+            <state relative-caret-position="136">
+              <caret line="110" column="41" selection-start-line="110" selection-start-column="32" selection-end-line="110" selection-end-column="41" />
               <folding>
                 <element signature="n#!!block;n#makeMarkerIcon#0" expanded="false" />
-                <marker date="1468497214000" expanded="true" signature="5704:5719" ph="..." />
+                <marker date="1468738298000" expanded="true" signature="8573:8588" ph="..." />
+                <marker date="1468738298000" expanded="true" signature="8812:8827" ph="..." />
+                <marker date="1468738298000" expanded="true" signature="16791:16806" ph="..." />
+                <marker date="1468738298000" expanded="true" signature="21549:21564" ph="..." />
+                <marker date="1468738298000" expanded="true" signature="24690:24705" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="world-topo.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data/topo/world-topo.json">
+      <file leaf-file-name="zoomable_circles.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/js/map/zoomable_circles.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="22" column="12" selection-start-line="22" selection-start-column="12" selection-end-line="22" selection-end-column="12" />
+            <state relative-caret-position="-30">
+              <caret line="945" column="20" selection-start-line="945" selection-start-column="20" selection-end-line="945" selection-end-column="20" />
+              <folding>
+                <marker date="1468738615000" expanded="true" signature="928:988" ph="..." />
+                <marker date="1468738615000" expanded="true" signature="27095:27117" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="google_map.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/css/google_map.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="10" column="21" selection-start-line="10" selection-start-column="21" selection-end-line="10" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -89,21 +109,25 @@
       <file leaf-file-name="main.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/css/main.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="66">
-              <caret line="360" column="1" selection-start-line="360" selection-start-column="1" selection-end-line="360" selection-end-column="1" />
+            <state relative-caret-position="270">
+              <caret line="50" column="14" selection-start-line="50" selection-start-column="14" selection-end-line="50" selection-end-column="14" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="zoomable_circles.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/js/map/zoomable_circles.js">
+      <file leaf-file-name="population_density_display.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/js/map/population_density_display.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="106">
-              <caret line="343" column="59" selection-start-line="343" selection-start-column="59" selection-end-line="343" selection-end-column="59" />
+            <state relative-caret-position="121">
+              <caret line="44" column="50" selection-start-line="44" selection-start-column="50" selection-end-line="44" selection-end-column="50" />
               <folding>
-                <marker date="1468382328000" expanded="true" signature="928:988" ph="..." />
-                <marker date="1468382328000" expanded="true" signature="26612:26634" ph="..." />
+                <element signature="n#!!block;n#adjust_opacity#0" expanded="false" />
+                <element signature="e#14250#14664#0" expanded="false" />
+                <marker date="1468379872000" expanded="true" signature="5023:5037" ph="..." />
+                <marker date="1468379872000" expanded="true" signature="5023:5054" ph="..." />
+                <marker date="1468379872000" expanded="true" signature="12408:12422" ph="..." />
+                <marker date="1468379872000" expanded="true" signature="20177:20191" ph="..." />
               </folding>
             </state>
           </provider>
@@ -168,16 +192,16 @@
         <option value="$PROJECT_DIR$/data/flare.json" />
         <option value="$PROJECT_DIR$/css/tooltip.css" />
         <option value="$PROJECT_DIR$/js/map/population_density_display.js" />
-        <option value="$PROJECT_DIR$/css/google_map.css" />
         <option value="$PROJECT_DIR$/css/sliding_menuBar.css" />
         <option value="$PROJECT_DIR$/js/slider/color_slider.js" />
         <option value="$PROJECT_DIR$/js/slider/timer_slider.js" />
         <option value="$PROJECT_DIR$/css/slider.css" />
+        <option value="$PROJECT_DIR$/css/google_map.css" />
         <option value="$PROJECT_DIR$/css/main.css" />
-        <option value="$PROJECT_DIR$/main.html" />
-        <option value="$PROJECT_DIR$/js/map/zoomable_circles.js" />
         <option value="$PROJECT_DIR$/js/map/world_map.js" />
+        <option value="$PROJECT_DIR$/main.html" />
         <option value="$PROJECT_DIR$/js/google_map/google_map.js" />
+        <option value="$PROJECT_DIR$/js/map/zoomable_circles.js" />
       </list>
     </option>
   </component>
@@ -414,87 +438,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="raw" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FCL Explantory Visualization" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FCL_Explantory_Visualization" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="raw" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CO2 emissions (metric tons per capita)" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FCL Explantory Visualization" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FCL_Explantory_Visualization" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="raw" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CO2 emissions (kt)" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FCL Explantory Visualization" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FCL_Explantory_Visualization" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="fitted" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FCL Explantory Visualization" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FCL_Explantory_Visualization" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fcl" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -731,7 +675,8 @@
       <workItem from="1466421063097" duration="29104000" />
       <workItem from="1467253227757" duration="20191000" />
       <workItem from="1467279155375" duration="137310000" />
-      <workItem from="1468379067177" duration="38265000" />
+      <workItem from="1468379067177" duration="49735000" />
+      <workItem from="1468564207995" duration="14087000" />
     </task>
     <task id="LOCAL-00001" summary="Minor adjustments&#10;&#10;(1) logo display adjustment&#10;(2) Clear redundant rect in world_map.js&#10;    - class = legend_bg, legend_bar">
       <created>1463544024303</created>
@@ -1034,11 +979,18 @@
       <option name="project" value="LOCAL" />
       <updated>1468488642171</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="Recovered without connected map:&#10;(1) google map &amp; base map share consistent position &#10;(2) draggable base map outside to the edge">
+      <created>1468497343447</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1468497343447</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="797670000" />
+    <option name="totallyTimeSpent" value="823227000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1090,7 +1042,6 @@
       <path value="$PROJECT_DIR$" />
       <path value="$PROJECT_DIR$/FCL_Explantory_Visualization" />
     </ignored-roots>
-    <MESSAGE value="(1) Add in slide buttons&#10;(2) Adjust tooltip display position&#10;" />
     <MESSAGE value="Adjust tooltip display position&#10;" />
     <MESSAGE value="Backup with tooltip img inserted" />
     <MESSAGE value="Adjusted the tooltip display&#10;(1)with image&#10;(2)paddings" />
@@ -1115,7 +1066,8 @@
     <MESSAGE value="Modifications:&#10;(1) Add in draw charts as the country is clicked" />
     <MESSAGE value="Temp final" />
     <MESSAGE value="damaged version:&#10;(1) world map connect end-to-end&#10;(2)google map" />
-    <option name="LAST_COMMIT_MESSAGE" value="damaged version:&#10;(1) world map connect end-to-end&#10;(2)google map" />
+    <MESSAGE value="Recovered without connected map:&#10;(1) google map &amp; base map share consistent position &#10;(2) draggable base map outside to the edge" />
+    <option name="LAST_COMMIT_MESSAGE" value="Recovered without connected map:&#10;(1) google map &amp; base map share consistent position &#10;(2) draggable base map outside to the edge" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1126,37 +1078,37 @@
         </line-breakpoint>
         <line-breakpoint type="javascript">
           <url>file://$PROJECT_DIR$/js/map/zoomable_circles.js</url>
-          <line>709</line>
+          <line>721</line>
           <option name="timeStamp" value="677" />
         </line-breakpoint>
         <line-breakpoint type="javascript">
           <url>file://$PROJECT_DIR$/js/map/zoomable_circles.js</url>
-          <line>713</line>
+          <line>725</line>
           <option name="timeStamp" value="678" />
         </line-breakpoint>
         <line-breakpoint type="javascript">
           <url>file://$PROJECT_DIR$/js/map/zoomable_circles.js</url>
-          <line>751</line>
+          <line>765</line>
           <option name="timeStamp" value="686" />
         </line-breakpoint>
         <line-breakpoint type="javascript">
           <url>file://$PROJECT_DIR$/js/map/zoomable_circles.js</url>
-          <line>382</line>
+          <line>381</line>
           <option name="timeStamp" value="689" />
         </line-breakpoint>
         <line-breakpoint type="javascript">
           <url>file://$PROJECT_DIR$/js/map/zoomable_circles.js</url>
-          <line>817</line>
+          <line>831</line>
           <option name="timeStamp" value="690" />
         </line-breakpoint>
         <line-breakpoint type="javascript">
           <url>file://$PROJECT_DIR$/js/map/zoomable_circles.js</url>
-          <line>831</line>
+          <line>845</line>
           <option name="timeStamp" value="691" />
         </line-breakpoint>
         <line-breakpoint type="javascript">
           <url>file://$PROJECT_DIR$/js/map/zoomable_circles.js</url>
-          <line>825</line>
+          <line>839</line>
           <option name="timeStamp" value="692" />
         </line-breakpoint>
         <line-breakpoint type="javascript">
@@ -1166,7 +1118,7 @@
         </line-breakpoint>
         <line-breakpoint type="javascript">
           <url>file://$PROJECT_DIR$/main.html</url>
-          <line>247</line>
+          <line>250</line>
           <option name="timeStamp" value="705" />
         </line-breakpoint>
         <line-breakpoint type="javascript">
@@ -1176,7 +1128,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/js/map/zoomable_circles.js</url>
-          <line>782</line>
+          <line>796</line>
           <option name="timeStamp" value="739" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -1196,7 +1148,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/js/google_map/google_map.js</url>
-          <line>213</line>
+          <line>303</line>
           <option name="timeStamp" value="823" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -1204,11 +1156,45 @@
           <line>482</line>
           <option name="timeStamp" value="825" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/js/google_map/google_map.js</url>
+          <line>587</line>
+          <option name="timeStamp" value="840" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/js/google_map/google_map.js</url>
+          <line>586</line>
+          <option name="timeStamp" value="841" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/js/google_map/google_map.js</url>
+          <line>701</line>
+          <properties />
+          <option name="timeStamp" value="842" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/js/google_map/google_map.js</url>
+          <line>670</line>
+          <properties />
+          <option name="timeStamp" value="844" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/js/google_map/google_map.js</url>
+          <line>691</line>
+          <properties />
+          <option name="timeStamp" value="846" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/js/google_map/google_map.js</url>
+          <line>692</line>
+          <properties />
+          <option name="timeStamp" value="847" />
+        </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="840" />
+      <option name="time" value="848" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="JavascriptDebugType">
@@ -1436,13 +1422,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data/fcl/2. Global Network.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="26" column="43" selection-start-line="26" selection-start-column="14" selection-end-line="26" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/data/fitted/population_density.csv">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
@@ -1467,19 +1446,11 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/style">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/style" />
     <entry file="file://$PROJECT_DIR$/data/raw/CO2 emissions (metric tons per capita)/6026f721-0462-44b3-bec8-632bcdbd2462_v2.csv">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="21" selection-start-line="0" selection-start-column="21" selection-end-line="0" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1487,7 +1458,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
           <caret line="1" column="323" selection-start-line="1" selection-start-column="323" selection-end-line="1" selection-end-column="323" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1495,15 +1465,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
           <caret line="1" column="163" selection-start-line="1" selection-start-column="163" selection-end-line="1" selection-end-column="163" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/css/google_map.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="72" column="28" selection-start-line="72" selection-start-column="28" selection-end-line="72" selection-end-column="28" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1543,29 +1504,59 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
           <caret line="1" column="14" selection-start-line="1" selection-start-column="14" selection-end-line="1" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/topo/world-topo.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="22" column="12" selection-start-line="22" selection-start-column="12" selection-end-line="22" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/fcl/2. Global Network.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="21" selection-start-line="1" selection-start-column="21" selection-end-line="1" selection-end-column="21" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/map/population_density_display.js">
+    <entry file="file://$PROJECT_DIR$/css/google_map.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
-          <caret line="576" column="25" selection-start-line="576" selection-start-column="24" selection-end-line="576" selection-end-column="25" />
+        <state relative-caret-position="150">
+          <caret line="10" column="21" selection-start-line="10" selection-start-column="21" selection-end-line="10" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/main.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="50" column="14" selection-start-line="50" selection-start-column="14" selection-end-line="50" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/google_map/google_map.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="110" column="41" selection-start-line="110" selection-start-column="32" selection-end-line="110" selection-end-column="41" />
           <folding>
-            <element signature="n#!!block;n#adjust_opacity#0" expanded="false" />
-            <element signature="e#14250#14664#0" expanded="false" />
-            <marker date="1468379872000" expanded="true" signature="5023:5037" ph="..." />
-            <marker date="1468379872000" expanded="true" signature="5023:5054" ph="..." />
-            <marker date="1468379872000" expanded="true" signature="12408:12422" ph="..." />
-            <marker date="1468379872000" expanded="true" signature="20177:20191" ph="..." />
+            <element signature="n#!!block;n#makeMarkerIcon#0" expanded="false" />
+            <marker date="1468738298000" expanded="true" signature="8573:8588" ph="..." />
+            <marker date="1468738298000" expanded="true" signature="8812:8827" ph="..." />
+            <marker date="1468738298000" expanded="true" signature="16791:16806" ph="..." />
+            <marker date="1468738298000" expanded="true" signature="21549:21564" ph="..." />
+            <marker date="1468738298000" expanded="true" signature="24690:24705" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="38" column="30" selection-start-line="38" selection-start-column="30" selection-end-line="38" selection-end-column="30" />
+        <state relative-caret-position="135">
+          <caret line="156" column="32" selection-start-line="156" selection-start-column="32" selection-end-line="156" selection-end-column="32" />
           <folding>
             <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -1585,50 +1576,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data/topo/world-topo.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="22" column="12" selection-start-line="22" selection-start-column="12" selection-end-line="22" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/css/main.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="360" column="1" selection-start-line="360" selection-start-column="1" selection-end-line="360" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/map/zoomable_circles.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="106">
-          <caret line="343" column="59" selection-start-line="343" selection-start-column="59" selection-end-line="343" selection-end-column="59" />
-          <folding>
-            <marker date="1468382328000" expanded="true" signature="928:988" ph="..." />
-            <marker date="1468382328000" expanded="true" signature="26612:26634" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/map/world_map.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="463" column="0" selection-start-line="463" selection-start-column="0" selection-end-line="463" selection-end-column="0" />
+        <state relative-caret-position="181">
+          <caret line="327" column="14" selection-start-line="327" selection-start-column="4" selection-end-line="327" selection-end-column="14" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/google_map/google_map.js">
+    <entry file="file://$PROJECT_DIR$/js/map/population_density_display.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="300" column="61" selection-start-line="300" selection-start-column="61" selection-end-line="300" selection-end-column="61" />
+        <state relative-caret-position="121">
+          <caret line="44" column="50" selection-start-line="44" selection-start-column="50" selection-end-line="44" selection-end-column="50" />
           <folding>
-            <element signature="n#!!block;n#makeMarkerIcon#0" expanded="false" />
-            <marker date="1468497214000" expanded="true" signature="5704:5719" ph="..." />
+            <element signature="n#!!block;n#adjust_opacity#0" expanded="false" />
+            <element signature="e#14250#14664#0" expanded="false" />
+            <marker date="1468379872000" expanded="true" signature="5023:5037" ph="..." />
+            <marker date="1468379872000" expanded="true" signature="5023:5054" ph="..." />
+            <marker date="1468379872000" expanded="true" signature="12408:12422" ph="..." />
+            <marker date="1468379872000" expanded="true" signature="20177:20191" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/map/zoomable_circles.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-30">
+          <caret line="945" column="20" selection-start-line="945" selection-start-column="20" selection-end-line="945" selection-end-column="20" />
+          <folding>
+            <marker date="1468738615000" expanded="true" signature="928:988" ph="..." />
+            <marker date="1468738615000" expanded="true" signature="27095:27117" ph="..." />
           </folding>
         </state>
       </provider>

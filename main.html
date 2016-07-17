@@ -133,14 +133,15 @@
                     if(res){
                         project_layer = true;
                         document.getElementById("fcl_projectsBtn_img").src="img/yellow.png";
-                       display_googleM();
+
                         load_DData("project_layer");
                         point_layer_count ++;
                     }else{
                         project_layer = false;
                         document.getElementById("fcl_projectsBtn_img").src="img/grey_out.png";
                         remove_layer('.project_layer');
-                        display_NogoogleM();
+                        clear_allProject();//clear polygon
+                        clear_allProject_Circles();
                         point_layer_count--;
                     }
                     break;
@@ -159,6 +160,7 @@
                         network_layer = false;
                         document.getElementById("global_networkBtn_img").src="img/grey_out.png";
                         remove_layer('.network_layer');
+                        clear_allNetwork();
                         point_layer_count--;
                     }
                     break;
@@ -177,6 +179,7 @@
                         staff_layer = false;
                         document.getElementById("academic_staffBtn_img").src="img/grey_out.png";
                         remove_layer('.staff_layer');
+                        clear_allStaff();
                         point_layer_count--;
                     }
                     break;

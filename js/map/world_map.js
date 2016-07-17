@@ -162,7 +162,7 @@ function draw_worldmap() {
 
     removeAllChild();
     setup();
-
+    display_googleM();
     //svg.append("path").datum(graticule).attr("class", "graticule").attr("d", path);
 
     /*svg.append("path").datum({type: "LineString", coordinates: [[-180, 0], [-90, 0], [0, 0], [90, 0], [180, 0]]})
@@ -392,7 +392,7 @@ function move(t,s) {
         if(staff_layer)find_last_tier(tier_range,scale,'staff_layer');
 
     }else if(s>=tier1_scale){
-        
+
         tier_range = 50 ;
         scale = tier1_scale;
         svg.selectAll(".items").remove();

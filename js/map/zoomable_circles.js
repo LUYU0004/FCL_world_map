@@ -326,7 +326,6 @@ function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
             var project_img = new Image();
             project_img.src = "img/project_img/"+imgNo+"_fcl_vis.jpg";
 
-            console.log("x="+x);
             return one_tooltip.attr("style", "right:" + (innerWidth-x*sc-left)+ "px;bottom:" +(innerHeight-y*sc-top)+ "px;visibility: visible")
                 .html("<div class='tooltip_holder' ><div class='pic_holder Centerer'><img class='tooltip_pic Centered' src='"+project_img.src+"'> </div>" +
                     "<div class='tooltip_text'><b>" + title + "</b></div></div>");
@@ -454,7 +453,6 @@ function add_zoomable_cluster(color, lat, lon, title,text, area,scale,clusterObj
             var sc = zoom.scale();
 
 
-            console.log("x="+x);
             one_tooltip.attr("style", "right:" + (innerWidth-x*sc-left)+ "px;bottom:" +(innerHeight-y*sc-top)+ "px;visibility: visible");
 
 
@@ -468,25 +466,28 @@ function add_zoomable_cluster(color, lat, lon, title,text, area,scale,clusterObj
 
 /*for the last tier, to create tree-structure zoomable circles for projects with same 
 or very close coordinates*/
-function find_last_tier(tier_range,scale,className){
+function find_last_tier(tier_range, scale, className){
     
     var max_No;
     var items;
     var matrix;
     var color;
     switch(className){
-        case 'project_layer':
+        case 'project_layer':clear_allProject_Circles();
                                 matrix = SC.project_matrix;
                                 max_No = SC.projectNo;
                                 items = SC.projects;
                                 color = 'yellow';
                             break;
-        case 'network_layer':   matrix = SC.network_matrix;
+        case 'network_layer':   clear_allNetwork();
+                                matrix = SC.network_matrix;
                                 max_No = SC.networkNo;
                                 items = SC.network;
                                 color = 'blue';
                             break;
-        case 'staff_layer':   matrix = SC.staff_matrix;
+        case 'staff_layer':
+            clear_allStaff();
+            matrix = SC.staff_matrix;
             max_No = SC.staffNo;
             items = SC.staff;
             color = 'pink';
@@ -646,8 +647,11 @@ function find_last_tier(tier_range,scale,className){
             clusterObj["children"].push(itemObj);
             itemObj ={};
         }
-
-        add_zoomable_cluster(color,cluster_aver_lat[clusterIndex],cluster_aver_lon[clusterIndex],name,text,area,scale,clusterObj,className);
+        var lat = cluster_aver_lat[clusterIndex];
+        var lon = cluster_aver_lon[clusterIndex];
+        add_zoomable_cluster(color,lat,lon,name,text,area,scale,clusterObj,className);
+        //if(className!= 'project_layer')
+            add_cluster_googleMap(color, lat, lon,text, area,scale,clusterObj,className);
         //draw_circles(clusterObj);
         clusterObj = {};
     }
@@ -658,7 +662,14 @@ function find_last_tier(tier_range,scale,className){
     for (i=0;i<length;i++){
         itemIndex = clusters[0][i]-1;
         item = items[itemIndex];
-        addpoint(color,item["latitude"],item["longitude"],item["name"],item["text"],1,itemIndex+1,scale,className);
+        var lat1= item["latitude"];
+        var lon1 = item["longitude"];
+        var name1 = item["name"];
+        var text1 = item["text"];
+        var index1 = itemIndex+1;
+
+        addpoint(color,lat1,lon1,name1,text1,1,index1,scale,className);
+        add_point_googleMap(color, lat1, lon1,name1,text1,index1,className);
     }
 
 
@@ -706,6 +717,7 @@ function draw_circles(root,className){
     var nodes = pack.nodes(root);
 
 
+
     circle = cg_g.selectAll("circle")  //svg
         .data(nodes)
         .enter()
@@ -715,7 +727,9 @@ function draw_circles(root,className){
             return res;
         })
         .style("fill", function (d) {
-            return d.children ? color(d.depth) : null;
+            var res = d.children ? color(d.depth) : null;
+            
+            return res;
         })
         .style("fill-opacity", 0.9)
         .on("mouseover", function (d) {
@@ -888,7 +902,7 @@ function zoom_Circles(d) {
 }
 
 function zoomTo(v) {
-    var k = diameter / v[2];
+    var k = diameter / v[2]; //v[0] is root.x, v[1] is root.y, v[2] is root.r, k is actual_diameter/root.r
     view = v;
     node.attr("transform", function (d) {
         return "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")";
@@ -925,7 +939,7 @@ function draw_project_legend(className){
         hBox = 702/hFactor;//map_height / hFactor;
 
     var svg = project_legend
-        .attr("z-index", 3)
+        .attr("z-index", 5)
         .append("svg")
         .attr("width", wBox)
         .attr("height", hBox)
