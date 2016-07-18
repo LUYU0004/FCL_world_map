@@ -163,6 +163,7 @@ function draw_worldmap() {
     removeAllChild();
     setup();
     display_googleM();
+    generate_allDistMatrix(); // for 4-6 layers
     //svg.append("path").datum(graticule).attr("class", "graticule").attr("d", path);
 
     /*svg.append("path").datum({type: "LineString", coordinates: [[-180, 0], [-90, 0], [0, 0], [90, 0], [180, 0]]})
@@ -218,12 +219,7 @@ function draw_pop_country() {
 
     country.enter().insert("path").attr("class", "country")
         .attr("d", path)
-        /*.attr("id", function (d, i) {
-            return d.id;
-        })
-        .attr("title", function (d, i) {
-            return d.properties.name;
-        })*/.attr("fill", worldmap_background)
+        .attr("fill", worldmap_background)
         .style("opacity",function(){
             var res = 0.8-0.2*SC.layer_count;
             return res;
@@ -273,24 +269,6 @@ function redraw_worldmap(){
     country.attr("fill",worldmap_background);
 
     country.on("mouseover", function(d){
-        /*return country_info_tooltip.attr("style","visibility: visible;borderColor: #F5F5DC");})
-        .on("mousemove", function (d,i) {
-            var mouse = d3.mouse(svg.node()).map(function (d) {
-                return parseInt(d);
-            });
-
-            var scale = zoom.scale();
-            var t =zoom.translate();
-
-            var left = mouse[0]*scale + t[0]+offsetL;
-            var top = mouse[1]*scale + t[1]+offsetT;
-
-
-            return country_info_tooltip.attr("style", "left:" + left + "px;top:" + top + "px")
-                .html(d.properties.name);
-*/
-
-
 
         var left =d3.event.pageX+offsetL;
         var top = d3.event.pageY+offsetT;
@@ -326,17 +304,9 @@ function draw_pop_layer(){
     SC.layer_count++;
     SC.layer_stack[0]=SC.layer_count;
     load_DData("pop_layer");
-
 }
 
-/*
-function remove(th){
-    console.log("end");
-    th.remove();
-}*/
-
-
-//var callcount = 0;
+//adjust shapes upon zoom and drag
 function move(t,s) {
     if(t ==undefined || s== undefined){
         s = d3.event.scale ;
@@ -352,16 +322,7 @@ function move(t,s) {
     var tier_range = 100;
     var scale =2;
 
-
-    if(s>=google_map_scale){
-
-        if(project_layer){
-            //callcount++;
-            //console.log(callcount);
-            //if(callcount==1)load_google_map();
-
-        }
-    }else if(s>= tier4_scale) {
+    if(s>= tier4_scale) {
 
         /*if(project_layer&&callcount>0){
             callcount=0;
@@ -411,7 +372,8 @@ function move(t,s) {
     }
     
     
-    /*var h = map_height / 4;
+    /*//code for restrict base map boundary
+    var h = map_height / 4;
 
     t[0] = Math.min(
         (map_width / map_height) * (s - 1),
@@ -462,21 +424,7 @@ function move(t,s) {
     var center_x =  (innerWidth/2-t[0])/s;
     var center_y = (innerHeight/2-t[1])/s;
 
-    console.log(center_x,center_y);
 }
-
-
-/*
-var throttleTimer;
-
-function throttle() {
-    window.clearTimeout(throttleTimer);
-    throttleTimer = window.setTimeout(function () {
-        draw_worldmap(this.world_topo);
-    }, 200);
-}*/
-
-
 
 function click() {
     projection.invert(d3.mouse(this));

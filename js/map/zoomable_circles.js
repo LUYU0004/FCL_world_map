@@ -11,52 +11,8 @@
 
 
 /*calculate distance between any two project locations*/
-function generate_project_DistMatrix(){
-    SC.projectNo =0;
-
-    d3.csv("data/fcl/1. Projects.csv", function (err, projects) {
-        var positionA = [];
-        var positionB = [];
-        var matrix = [];
-        var distance;
-        var distance_Multiplier = 1000; // km to m??
-        var projectObj = {};
-        var lon_unit;
-        var lat_unit;
-
-        projects.forEach(function (pointA) {
-            var long="";
-            var descp = pointA.Description;
-            var imgc = pointA.Image_Credit;
-            if(descp.length>0) long += "<br><br>" +descp;
-            if(imgc) long +="<br><br>image credit:  <b style='font-style:italic;font-size:12px; text-decoration:underline;'>"+imgc+"</b>";
-
-            positionA = [];
-            positionA.push(pointA.Longitude, pointA.Latitude);
-            matrix.push([]);
-            SC.projectNo++;
-            projectObj["name"] = pointA.Index+" "+pointA.Name;
-            lat_unit  = Number(pointA.Latitude) >=0 ? Math.abs(pointA.Latitude) +'°N':Math.abs(pointA.Latitude) +'°S';
-            lon_unit = Number(pointA.Longitude) >=0 ? Math.abs(pointA.Longitude) +'°E':Math.abs(pointA.Longitude) +'°W';
-            projectObj["text"] ="<br>"+ pointA.Title+"<br>"+lat_unit+" , "+lon_unit+"<br>"+pointA.City+" , "+pointA.Country+long;
-            projectObj["latitude"] = pointA.Latitude;
-            projectObj["longitude"] = pointA.Longitude;
-            projectObj["city"] = pointA.City;
-            projectObj["country"] = pointA.Country;
-            SC.projects.push(projectObj);
-            projectObj = {};
-
-            projects.forEach(function(pointB){
-                positionB = [];
-                positionB.push(pointB.Longitude, pointB.Latitude);
-                
-                distance = d3.geo.distance(positionA, positionB)* distance_Multiplier;
-                matrix[pointA.No-1].push(distance);
-            })
-        });
-
-        SC.project_matrix = matrix;
-
+function draw_projectLayer(){
+    
         var tier1_scale = 2;
         var tier2_scale = 2.5;
         var tier3_scale = 3;
@@ -103,14 +59,58 @@ function generate_project_DistMatrix(){
                 return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
             });
 
-
-    });
-
     
 }
 
-/*calculate distance between any two partner locations*/
-function generate_network_DistMatrix(){
+function generate_allDistMatrix(){
+    //produce project distance matrix
+    SC.projectNo =0;
+
+    d3.csv("data/fcl/1. Projects.csv", function (err, projects) {
+        var positionA = [];
+        var positionB = [];
+        var matrix = [];
+        var distance;
+        var distance_Multiplier = 1000; // km to m??
+        var projectObj = {};
+        var lon_unit;
+        var lat_unit;
+
+        projects.forEach(function (pointA) {
+            var long = "";
+            var descp = pointA.Description;
+            var imgc = pointA.Image_Credit;
+            if (descp.length > 0) long += "<br><br>" + descp;
+            if (imgc) long += "<br><br>image credit:  <b style='font-style:italic;font-size:12px; text-decoration:underline;'>" + imgc + "</b>";
+
+            positionA = [];
+            positionA.push(pointA.Longitude, pointA.Latitude);
+            matrix.push([]);
+            SC.projectNo++;
+            projectObj["name"] = pointA.Index + " " + pointA.Name;
+            lat_unit = Number(pointA.Latitude) >= 0 ? Math.abs(pointA.Latitude) + '°N' : Math.abs(pointA.Latitude) + '°S';
+            lon_unit = Number(pointA.Longitude) >= 0 ? Math.abs(pointA.Longitude) + '°E' : Math.abs(pointA.Longitude) + '°W';
+            projectObj["text"] = "<br>" + pointA.Title + "<br>" + lat_unit + " , " + lon_unit + "<br>" + pointA.City + " , " + pointA.Country + long;
+            projectObj["latitude"] = pointA.Latitude;
+            projectObj["longitude"] = pointA.Longitude;
+            projectObj["city"] = pointA.City;
+            projectObj["country"] = pointA.Country;
+            SC.projects.push(projectObj);
+            projectObj = {};
+
+            projects.forEach(function (pointB) {
+                positionB = [];
+                positionB.push(pointB.Longitude, pointB.Latitude);
+
+                distance = d3.geo.distance(positionA, positionB) * distance_Multiplier;
+                matrix[pointA.No - 1].push(distance);
+            })
+        });
+
+        SC.project_matrix = matrix;
+    });
+        
+        //produce network distance matrix
     SC.networkNo =0;
 
     d3.csv("data/fcl/2. Global Network.csv", function (err, items) {
@@ -148,6 +148,55 @@ function generate_network_DistMatrix(){
         });
 
         SC.network_matrix = matrix;
+    });
+    
+    //produce staff distance matrix
+    SC.staffNo =0;
+
+    d3.csv("data/fcl/3. Academic staff.csv", function (err, items) {
+        var positionA = [];
+        var positionB = [];
+        var matrix = [];
+        var distance;
+        var distance_Multiplier = 1000; // km to m??
+        var Obj = {};
+        var lon_unit;
+        var lat_unit;
+
+        items.forEach(function (pointA) {
+            positionA = [];
+            positionA.push(pointA.Longitude, pointA.Latitude);
+            matrix.push([]);
+            SC.staffNo++;
+            Obj["name"] = pointA.Nationality;
+            lat_unit = Number(pointA.Latitude) >= 0 ? Math.abs(pointA.Latitude) + '°N' : Math.abs(pointA.Latitude) + '°S';
+            lon_unit = Number(pointA.Longitude) >= 0 ? Math.abs(pointA.Longitude) + '°E' : Math.abs(pointA.Longitude) + '°W';
+            Obj["text"] = lat_unit + " , " + lon_unit;
+            Obj["latitude"] = pointA.Latitude;
+            Obj["longitude"] = pointA.Longitude;
+            SC.staff.push(Obj);
+            Obj = {};
+
+            items.forEach(function (pointB) {
+                positionB = [];
+                positionB.push(pointB.Longitude, pointB.Latitude);
+
+                distance = d3.geo.distance(positionA, positionB) * distance_Multiplier;
+                matrix[pointA.No - 1].push(distance);
+            })
+        });
+
+        SC.staff_matrix = matrix;
+
+        console.log("generate all distance matrix!");
+    });
+
+
+}
+
+/*calculate distance between any two partner locations*/
+function draw_networkLayer(){
+
         var tier1_scale = 2;
         var tier2_scale = 2.5;
         var tier3_scale = 3;
@@ -192,52 +241,14 @@ function generate_network_DistMatrix(){
             .attr("r", function (d) {
                 return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
             });
-
-    });
-
-
+    
 }
 
 
 /*calculate distance between any two staff country
 Nationality,Based,Latitude,Longitude*/
-function generate_staff_DistMatrix(){
-    SC.staffNo =0;
-
-    d3.csv("data/fcl/3. Academic staff.csv", function (err, items) {
-        var positionA = [];
-        var positionB = [];
-        var matrix = [];
-        var distance;
-        var distance_Multiplier = 1000; // km to m??
-        var Obj = {};
-        var lon_unit;
-        var lat_unit;
-
-        items.forEach(function (pointA) {
-            positionA = [];
-            positionA.push(pointA.Longitude, pointA.Latitude);
-            matrix.push([]);
-            SC.staffNo++;
-            Obj["name"] = pointA.Nationality;
-            lat_unit  = Number(pointA.Latitude) >=0 ? Math.abs(pointA.Latitude) +'°N':Math.abs(pointA.Latitude) +'°S';
-            lon_unit = Number(pointA.Longitude) >=0 ? Math.abs(pointA.Longitude) +'°E':Math.abs(pointA.Longitude) +'°W';
-            Obj["text"] = lat_unit+" , "+lon_unit;
-            Obj["latitude"] = pointA.Latitude;
-            Obj["longitude"] = pointA.Longitude;
-            SC.staff.push(Obj);
-            Obj = {};
-
-            items.forEach(function(pointB){
-                positionB = [];
-                positionB.push(pointB.Longitude, pointB.Latitude);
-
-                distance = d3.geo.distance(positionA, positionB)* distance_Multiplier;
-                matrix[pointA.No-1].push(distance);
-            })
-        });
-
-        SC.staff_matrix = matrix;
+function draw_staffLayer(){
+    
         var tier1_scale = 2;
         var tier2_scale = 2.5;
         var tier3_scale = 3;
@@ -282,8 +293,6 @@ function generate_staff_DistMatrix(){
             .attr("r", function (d) {
                 return Math.sqrt(area_unit*d["area"]/Math.PI)/s;
             });
-    });
-
 
 }
 
@@ -473,7 +482,7 @@ function find_last_tier(tier_range, scale, className){
     var matrix;
     var color;
     switch(className){
-        case 'project_layer':clear_allProject_Circles();
+        case 'project_layer':  clear_allProject_Circles();
                                 matrix = SC.project_matrix;
                                 max_No = SC.projectNo;
                                 items = SC.projects;
@@ -651,7 +660,7 @@ function find_last_tier(tier_range, scale, className){
         var lon = cluster_aver_lon[clusterIndex];
         add_zoomable_cluster(color,lat,lon,name,text,area,scale,clusterObj,className);
         //if(className!= 'project_layer')
-            add_cluster_googleMap(color, lat, lon,text, area,scale,clusterObj,className);
+        add_cluster_googleMap(color, lat, lon,text, clusterObj,className);// area
         //draw_circles(clusterObj);
         clusterObj = {};
     }

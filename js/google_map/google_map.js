@@ -81,7 +81,8 @@ function initMap() {
 
        clear_allCircles();
            var s = gmap.getZoom()-1;
-       //console.log(s);
+        zoom.scale(s); //update the zoom level in base map
+
            var tier1_scale = 2;
            var tier2_scale = 2.5;
            var tier3_scale = 3;
@@ -91,22 +92,13 @@ function initMap() {
            var scale =2;
 
 
-           if(s>=google_map_scale){
-
-               if(project_layer){
-                   //callcount++;
-                   //console.log(callcount);
-                   //if(callcount==1)load_google_map();
-
-               }
-           }else if(s>= tier4_scale) {
+          if(s>= tier4_scale) {
 
                /*if(project_layer&&callcount>0){
                 callcount=0;
                 d3.select("#google_map").remove();
                 }*/
-               tier_range = 3;
-               scale = tier4_scale;
+
                svg.selectAll(".items").remove();
                if(project_layer)find_last_tier(tier_range,scale,'project_layer');
                if(network_layer)find_last_tier(tier_range,scale,'network_layer');
@@ -346,7 +338,7 @@ function draw_polygon(triangleCoords,markerPos,fillcolor,info){
 }
 
 //destruct all polygons
-function clear_allProject(){
+function clear_allProject_Poly(){
 
     console.log("clear all!");
     project_polygons.forEach(function (m) {
@@ -465,7 +457,7 @@ function open_GoogleMap() {
     google.maps.event.trigger(gmap, 'resize');
 
     gmap.panTo(c);
-    gmap.setZoom(parseInt(zoomlvl)+1);
+    gmap.setZoom(parseInt(zoomlvl-0.5)+2);
 
 
 
@@ -501,7 +493,7 @@ var staff_circles = [];
 var staff_infowindows = [];
 
 //function to add clusters of projects
-function add_cluster_googleMap(color, lat, lon,text, area,scale,clusterObj,className) {
+function add_cluster_googleMap(color, lat, lon,text, clusterObj,className) {
 
     var area = clusterObj["area"];
     if (area == undefined) area = 2;
@@ -616,6 +608,7 @@ function clear_allCircles(){
 //draw zoomable circles when clusters onclick
 function draw_zoomableCircles_googleMap(scale,latLng,clusterObj) {
 
+    clear_allCircles();
     var color ='#75dccd';
 
     var diameter = scale;
@@ -704,11 +697,11 @@ function draw_zoomableCircles_googleMap(scale,latLng,clusterObj) {
             map:gmap,
             icon: {
                 path: google.maps.SymbolPath.CIRCLE,
-                fillOpacity: 1,
-                fillColor: 'red',
-                strokeOpacity: 0.9,
+                fillOpacity: 0.2,
+                fillColor: '#751aff',
+                strokeOpacity: 0,
                 strokeColor: 'black',
-                strokeWeight: 0.5,
+                strokeWeight: 1,
                 scale: radius //pixels
             },
             zIndex:zindex
@@ -742,7 +735,7 @@ function draw_zoomableCircles_googleMap(scale,latLng,clusterObj) {
         infowindow_click.setContent(marker1.myHtmlContent);
 
         marker1.addListener('mouseover', function () {
-            this.set("strokeColor", 'red');
+            this.set("strokeOpacity", 1);
             infowindow_mouseover.open(gmap,this);
         });
 
@@ -754,7 +747,7 @@ function draw_zoomableCircles_googleMap(scale,latLng,clusterObj) {
         });
 
         marker1.addListener('mouseout', function () {
-            this.set("strokeColor", 'black');
+            this.set("strokeOpacity", 0);
             infowindow_mouseover.setMap(null);
         });
 
@@ -888,6 +881,8 @@ function clear_allProject_Circles(){
         m.setMap(null);
     });
     project_infowindows = [];
+
+    clear_allCircles();
 }
 
 
@@ -903,6 +898,7 @@ function clear_allNetwork(){
         m.setMap(null);
     });
     network_infowindows = [];
+    clear_allCircles();
 }
 
 
@@ -917,4 +913,5 @@ function clear_allStaff(){
         m.setMap(null);
     });
     staff_infowindows = [];
+    clear_allCircles();
 }

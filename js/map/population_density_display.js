@@ -43,15 +43,15 @@ function load_DData(_category){
 
         case "project_layer":        //remove_layer();
                                     draw_project_legend('project_layer');
-                                   generate_project_DistMatrix();
+                                    draw_projectLayer();
                                         break;
 
         case "network_layer":      draw_project_legend('network_layer');
-                                    generate_network_DistMatrix();
+                                    draw_networkLayer();
                                     break;
         
         case "staff_layer":      draw_project_legend('staff_layer');
-                                    generate_staff_DistMatrix();
+                                    draw_staffLayer();
                                     break;
         default: break;
     }
