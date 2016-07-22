@@ -1,91 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5cd72448-d8fc-45b4-afc0-c979ee3734fe" name="Default" comment="&#10;">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/Logo_FCLwhite.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/Twitter_icon_blue.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/blue.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/close_button.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/eth-zurich.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/eye_black.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/eye_white.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/facebook_icon_blue.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/facebook_icon_white.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/fcl-ethz-logo.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/grey_out.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/minimize_button.jpeg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/10_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/11_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/12_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/13_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/14_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/15_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/16_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/17_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/18_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/19_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/1_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/20_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/21_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/22_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/23_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/24_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/25_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/26_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/27_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/28_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/29_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/2_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/30_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/31_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/32_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/33_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/34_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/35_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/36_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/37_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/38_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/39_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/3_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/40_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/41_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/42_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/43_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/44_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/45_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/46_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/47_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/4_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/5_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/6_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/7_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/8_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/network_img/9_network.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/pink.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/sg-eth.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/vimeo_icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/yellow.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/zotero_icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/complementary/project_Cluster_Info.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/fitted/GDP.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/fitted/GDP_per_capita.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/fitted/co2_per_capita.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/fitted/population_density.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/flare.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/local_history.patch" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/js/complimentary_functions/csv_generation.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/js/complimentary_functions/zoomablw_circle_alternative.js" afterPath="" />
+    <list default="true" id="5cd72448-d8fc-45b4-afc0-c979ee3734fe" name="Default" comment="&#10;backup before tooltip changes">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/google_map.css" afterPath="$PROJECT_DIR$/css/google_map.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/main.css" afterPath="$PROJECT_DIR$/css/main.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/tooltip.css" afterPath="$PROJECT_DIR$/css/tooltip.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/fcl/2. Global Network.csv" afterPath="$PROJECT_DIR$/data/fcl/2. Global Network.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/google_map/google_map.js" afterPath="$PROJECT_DIR$/js/google_map/google_map.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/map/population_density_display.js" afterPath="$PROJECT_DIR$/js/map/population_density_display.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/map/world_map.js" afterPath="$PROJECT_DIR$/js/map/world_map.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/map/zoomable_circles.js" afterPath="$PROJECT_DIR$/js/map/zoomable_circles.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/slider/timer_slider.js" afterPath="$PROJECT_DIR$/js/slider/timer_slider.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.html" afterPath="$PROJECT_DIR$/main.html" />
     </list>
     <ignored path="FCL Explantory Visualization.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -148,11 +66,11 @@
       <file leaf-file-name="zoomable_circles.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/map/zoomable_circles.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="317" column="20" selection-start-line="317" selection-start-column="20" selection-end-line="317" selection-end-column="20" />
+            <state relative-caret-position="236">
+              <caret line="327" column="5" selection-start-line="327" selection-start-column="5" selection-end-line="327" selection-end-column="5" />
               <folding>
-                <marker date="1469154181000" expanded="true" signature="2182:2242" ph="..." />
-                <marker date="1469154181000" expanded="true" signature="28709:28731" ph="..." />
+                <marker date="1469154328000" expanded="true" signature="2182:2242" ph="..." />
+                <marker date="1469154328000" expanded="true" signature="28705:28727" ph="..." />
               </folding>
             </state>
           </provider>
@@ -755,7 +673,7 @@
       <workItem from="1468379067177" duration="49735000" />
       <workItem from="1468564207995" duration="28866000" />
       <workItem from="1468832228959" duration="24937000" />
-      <workItem from="1468977389360" duration="48946000" />
+      <workItem from="1468977389360" duration="49043000" />
     </task>
     <task id="LOCAL-00001" summary="Minor adjustments&#10;&#10;(1) logo display adjustment&#10;(2) Clear redundant rect in world_map.js&#10;    - class = legend_bg, legend_bar">
       <created>1463544024303</created>
@@ -1079,11 +997,18 @@
       <option name="project" value="LOCAL" />
       <updated>1468803769075</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="&#10;backup before tooltip changes">
+      <created>1469154297835</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1469154297835</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="911889000" />
+    <option name="totallyTimeSpent" value="911986000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1096,9 +1021,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17394757" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17394757" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32876712" sideWeight="0.49722" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32739726" sideWeight="0.47418585" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32465753" sideWeight="0.5258141" order="1" side_tool="false" content_ui="tabs" />
@@ -1135,7 +1060,6 @@
       <path value="$PROJECT_DIR$" />
       <path value="$PROJECT_DIR$/FCL_Explantory_Visualization" />
     </ignored-roots>
-    <MESSAGE value="Adjusted the tooltip display&#10;(1)with image&#10;(2)paddings" />
     <MESSAGE value="Deficted point classification for zoomable circles" />
     <MESSAGE value="Enable clusters of project within specified distance" />
     <MESSAGE value="Add in project circles" />
@@ -1160,7 +1084,8 @@
     <MESSAGE value="Recovered without connected map:&#10;(1) google map &amp; base map share consistent position &#10;(2) draggable base map outside to the edge" />
     <MESSAGE value="Mofications on google map&#10;- Draw zoomable circles&#10;" />
     <MESSAGE value="&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&#10;" />
+    <MESSAGE value="&#10;backup before tooltip changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="&#10;backup before tooltip changes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1526,6 +1451,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="155">
           <caret line="234" column="8" selection-start-line="234" selection-start-column="8" selection-end-line="234" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1540,6 +1466,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="146">
           <caret line="27" column="976" selection-start-line="27" selection-start-column="976" selection-end-line="27" selection-end-column="1007" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1547,6 +1474,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="146">
           <caret line="27" column="32" selection-start-line="27" selection-start-column="32" selection-end-line="27" selection-end-column="32" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1554,6 +1482,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="146">
           <caret line="27" column="32" selection-start-line="27" selection-start-column="32" selection-end-line="27" selection-end-column="32" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1717,11 +1646,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/map/zoomable_circles.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="317" column="20" selection-start-line="317" selection-start-column="20" selection-end-line="317" selection-end-column="20" />
+        <state relative-caret-position="236">
+          <caret line="327" column="5" selection-start-line="327" selection-start-column="5" selection-end-line="327" selection-end-column="5" />
           <folding>
-            <marker date="1469154181000" expanded="true" signature="2182:2242" ph="..." />
-            <marker date="1469154181000" expanded="true" signature="28709:28731" ph="..." />
+            <marker date="1469154328000" expanded="true" signature="2182:2242" ph="..." />
+            <marker date="1469154328000" expanded="true" signature="28705:28727" ph="..." />
           </folding>
         </state>
       </provider>

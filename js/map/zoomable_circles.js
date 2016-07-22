@@ -317,7 +317,7 @@ function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
 
     var img_src = [];
 
-    /*switch (className){
+    switch (className){
         case 'pop_layer': img_src = "img/project_img/"+imgNo+"_fcl_vis.jpg";
             break;
         case 'network_layer': img_src = "img/network_img/"+imgNo+"_network.png" +
@@ -325,7 +325,7 @@ function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
             break;
         default: img_src = "img/project_img/"+imgNo+"_fcl_vis.jpg";
             break;
-    }*/
+    }
     //add in picture for the project
     var project_img = new Image();
     project_img.src = img_src;
