@@ -87,6 +87,7 @@ function generate_allDistMatrix(){
             positionA.push(pointA.Longitude, pointA.Latitude);
             matrix.push([]);
             SC.projectNo++;
+            projectObj["index"] =pointA.No;
             projectObj["name"] = pointA.Index + " " + pointA.Name;
             lat_unit = Number(pointA.Latitude) >= 0 ? Math.abs(pointA.Latitude) + '°N' : Math.abs(pointA.Latitude) + '°S';
             lon_unit = Number(pointA.Longitude) >= 0 ? Math.abs(pointA.Longitude) + '°E' : Math.abs(pointA.Longitude) + '°W';
@@ -128,6 +129,7 @@ function generate_allDistMatrix(){
             positionA.push(pointA.Longitude, pointA.Latitude);
             matrix.push([]);
             SC.networkNo++;
+            Obj["index"] = pointA.index;
             Obj["name"] = pointA.Name;
             lat_unit  = Number(pointA.Latitude) >=0 ? Math.abs(pointA.Latitude) +'°N':Math.abs(pointA.Latitude) +'°S';
             lon_unit = Number(pointA.Longitude) >=0 ? Math.abs(pointA.Longitude) +'°E':Math.abs(pointA.Longitude) +'°W';
@@ -168,12 +170,14 @@ function generate_allDistMatrix(){
             positionA.push(pointA.Longitude, pointA.Latitude);
             matrix.push([]);
             SC.staffNo++;
+            Obj["index"] = pointA.No;
             Obj["name"] = pointA.Nationality;
             lat_unit = Number(pointA.Latitude) >= 0 ? Math.abs(pointA.Latitude) + '°N' : Math.abs(pointA.Latitude) + '°S';
             lon_unit = Number(pointA.Longitude) >= 0 ? Math.abs(pointA.Longitude) + '°E' : Math.abs(pointA.Longitude) + '°W';
             Obj["text"] = lat_unit + " , " + lon_unit;
             Obj["latitude"] = pointA.Latitude;
             Obj["longitude"] = pointA.Longitude;
+            Pbj["country"] = pointA.Nationality;
             SC.staff.push(Obj);
             Obj = {};
 
@@ -310,6 +314,21 @@ function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
     var gpoint = g.append("g").attr("class","items "+className);
     var x = projection([lon,lat])[0];
     var y = projection([lon, lat])[1];
+
+    var img_src = [];
+
+    /*switch (className){
+        case 'pop_layer': img_src = "img/project_img/"+imgNo+"_fcl_vis.jpg";
+            break;
+        case 'network_layer': img_src = "img/network_img/"+imgNo+"_network.png" +
+            "";
+            break;
+        default: img_src = "img/project_img/"+imgNo+"_fcl_vis.jpg";
+            break;
+    }*/
+    //add in picture for the project
+    var project_img = new Image();
+    project_img.src = img_src;
     
     gpoint.selectAll("circle")
         .data([{"area":area}])
@@ -321,7 +340,7 @@ function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
         .attr("cy", y)
         .attr("class", "point")
         .style("fill", color//function () {return color_scheme[color_status];}
-        ).style("opacity",0.7)
+        ).style("opacity",0.60)
         .attr("r", function (d) {
             return Math.sqrt(d["area"]*area_unit/Math.PI)/scale;
         })
@@ -331,12 +350,12 @@ function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
             var top= zoom.translate()[1];
             var sc = zoom.scale();
 
-            //add in picture for the project
+            /*add in picture for the project
             var project_img = new Image();
-            project_img.src = "img/project_img/"+imgNo+"_fcl_vis.jpg";
+            project_img.src = "img/project_img/"+imgNo+"_fcl_vis.jpg";*/
 
             return one_tooltip.attr("style", "right:" + (innerWidth-x*sc-left)+ "px;bottom:" +(innerHeight-y*sc-top)+ "px;visibility: visible")
-                .html("<div class='tooltip_holder' ><div class='pic_holder Centerer'><img class='tooltip_pic Centered' src='"+project_img.src+"'> </div>" +
+                .html("<div class='tooltip_holder' ><div class='pic_holder Centerer'><img class='tooltip_pic Centered' src='"+project_img.src+"' onerror='imgErr(this)'> </div>" +
                     "<div class='tooltip_text'><b>" + title + "</b></div></div>");
 
 
@@ -370,9 +389,6 @@ function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
                  var left = zoom.translate()[0];
                 var top= zoom.translate()[1];
 
-                 //add in picture for the project
-                 var project_img = new Image();
-                project_img.src = "img/project_img/"+imgNo+"_fcl_vis.jpg";
 
                 var the = fcl_tooltip
                         /*.selectAll("div")
@@ -381,7 +397,7 @@ function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
                         .append("div")
                         .attr("class","tooltip "+className)
                         .attr("style", "right:" + (innerWidth-x*scale-left)+ "px;bottom:" +(innerHeight - y*scale-top)+ "px;visibility: visible")
-                        .html("<div class='tooltip_holder'><div class='pic_holder Centerer'><img class='tooltip_pic Centered' src='"+project_img.src+"'></div>" +
+                        .html("<div class='tooltip_holder'><div class='pic_holder Centerer'><img class='tooltip_pic Centered' src='"+project_img.src+"' onerror='imgErr(this)'></div>" +
                                  "<div class='tooltip_text'><b>" + title + "</b><p>" + text + "</div></div>")
                         .on("click",function () {
                             this.remove();
@@ -434,7 +450,7 @@ function add_zoomable_cluster(color, lat, lon, title,text, area,scale,clusterObj
         .style("stroke","#000")
         .style("stroke-width", '0.5px')
         .style("fill", color//function () {return color_scheme[color_status];}
-        ).style("opacity",0.4)
+        ).style("opacity",0.60)
         .attr("r", function(d){
             return Math.sqrt(d["area"]*area_unit/Math.PI)/scale;
         })
@@ -659,7 +675,7 @@ function find_last_tier(tier_range, scale, className){
         var lat = cluster_aver_lat[clusterIndex];
         var lon = cluster_aver_lon[clusterIndex];
         add_zoomable_cluster(color,lat,lon,name,text,area,scale,clusterObj,className);
-        //if(className!= 'project_layer')
+
         add_cluster_googleMap(color, lat, lon,text, clusterObj,className);// area
         //draw_circles(clusterObj);
         clusterObj = {};
@@ -754,14 +770,23 @@ function draw_circles(root,className){
                 var k = diameter / (root.r * 2);
                 var left_adjust = (d.x - root.x) * k*scale;
                 var bottom_adjust = (d.y - root.y) * k*scale;
+                
+                var img_src;
 
+                switch (className){
+                    case 'pop_layer': img_src = "img/project_img/" + d["itemIndex"] + "_fcl_vis.jpg";
+                        break;
+                    case 'network_layer': img_src = "img/network_img/"+ d["itemIndex"]+"_network.png"  ;
+                        break;
+                    default: img_src = "img/project_img/0_fcl_vis.jpg";
+                        break;
+                }
                 //add in picture for the project
                 var item_img = new Image();
-                item_img.src = "img/project_img/" + d["itemIndex"] + "_fcl_vis.jpg";
-
+                item_img.src = img_src;
 
                 one_tooltip.attr("style", "visibility:visible;right:" + (innerWidth - root_x * scale - left - left_adjust) + "px;bottom:" + (innerHeight - root_y * scale - top - bottom_adjust) + "px")
-                   .html("<div class='tooltip_holder' ><span  class='Centerer pic_holder' ><img class='Centered tooltip_pic' src='"+item_img.src+"'></span>" +
+                   .html("<div class='tooltip_holder' ><span  class='Centerer pic_holder' ><img class='Centered tooltip_pic' src='"+item_img.src+"' onerror='imgErr(this)'></span>" +
                         "<div class='tooltip_text'><b>" + d["name"] + "</b></div></div>");
 
 
@@ -811,9 +836,18 @@ function draw_circles(root,className){
                     var left_adjust = (d.x - root.x) * k * sc;
                     var bottom_adjust = (d.y - root.y) * k * sc;
 
+                    var img_src;
+                    switch (className){
+                        case 'pop_layer': img_src = "img/project_img/" + d["itemIndex"] + "_fcl_vis.jpg";
+                            break;
+                        case 'network_layer': img_src = "img/network_img/"+ d["itemIndex"]+"_network.png"  ;
+                            break;
+                        default: img_src = "img/project_img/0_fcl_vis.jpg";
+                            break;
+                    }
                     //add in picture for the project
                     var item_img = new Image();
-                    item_img.src = "img/project_img/" + d["itemIndex"] + "_fcl_vis.jpg";
+                    item_img.src = img_src;
 
 
 
@@ -825,7 +859,7 @@ function draw_circles(root,className){
                             .append("div")
                         .attr("class", "tooltip " + className)
                         .attr("style", "right:" + (innerWidth - root_x * sc - left - left_adjust) + "px;bottom:" + (innerHeight - root_y * sc - top - bottom_adjust) + "px;visibility: visible")
-                        .html("<div class='tooltip_holder' style='vertical-align: middle'><div class='pic_holder Centerer'><img class='tooltip_pic Centered' src='" + item_img.src + "'></div>" +
+                        .html("<div class='tooltip_holder' style='vertical-align: middle'><div class='pic_holder Centerer'><img class='tooltip_pic Centered' src='" + item_img.src + "' onerror='imgErr(this)'></div>" +
                             "<div class='tooltip_text'><b>" + d["name"] + "</b><br><br><p>" + d["text"] + "</div></div>")
                         .on("mouseover",function(){
                             d3.select(this).moveToFront();

@@ -20,11 +20,7 @@
 
 <script>
 
-   /*
-   var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = '';   //adding  'callback=something' gets the maps module to load
-    document.body.appendChild(script);*/
+
 
     var pop_layer = false;
     var co2_layer = false;
@@ -40,10 +36,12 @@
 
     var point_layer_count = 0;
 
+
     function newInput(){
 
         //tooltip.style("visibility","hidden");
         //d3.selectAll(".navg_button").classed("selectedBtn",false);
+
 
         if(this.id){
             var holder = this.parentNode.id;
@@ -52,6 +50,7 @@
             switch(this.id){
                 case 'pop_densityBtn':
 
+                    chart_refresh = true;
                              this.classList.toggle("selectedBtn");
                              the_ul.style("height","93px");
                              var res  = d3.select(this).classed("selectedBtn");
@@ -61,6 +60,7 @@
                             SC.layer_count++;
                             SC.layer_stack[0]=SC.layer_count;
                             pop_layer = true;
+
                             document.getElementById("pop_densityBtn_img").src = "img/eye_white.png";
                             the_ul.style("height","93px");
                             load_DData("pop_layer");
@@ -78,6 +78,7 @@
                         }
                     break;
                 case 'co2_emissionBtn':
+                    chart_refresh = true;
                     this.classList.toggle("selectedBtn");
                     var res  = d3.select(this).classed("selectedBtn");
 
@@ -102,6 +103,7 @@
                     break;
 
                 case 'gdp_Btn':
+                    chart_refresh = true;
                     this.classList.toggle("selectedBtn");
                     var res  = d3.select(this).classed("selectedBtn");
 
@@ -341,7 +343,7 @@
     <nav id = "menu_bar" class="no_userselect" >
         <div class ="holder">
         <div class="menu-item" style="padding: 0px; border-top: 0" onmousedown='mydragg.startMoving("menu_bar","content_holder",event);' onmouseup='mydragg.stopMoving("content_holder");'>
-            <img id="fcl_logo" src="img/Logo_FCLwhite.png" alt="fcl_logo" width="210px" height="51.44px">
+            <img id="fcl_logo" src="img/Logo_FCLwhite.png" alt="fcl_logo" width="199.5px" height="48.87px">
         </div>
         <hr>
         <div class="menu-item navg_button" id="pop_densityHolder">
@@ -372,7 +374,7 @@
         <div class="line_break"></div>
         <div id="fclHolder">
             <div style="background-color: #FEFF8A;    -webkit-box-shadow: 2px 2px 5px rgba(0,0,0,0.2);-moz-box-shadow: 2px 2px 5px rgba(0,0,0,0.2);">
-                <button id="fcl_modal" onclick="modal_open()">FCL Rationale</button> |  <button id="fcl_projects" onclick="openNav()">FCL Projects</button>
+                <button id="fcl_modal" onclick="modal_open()">FCL RATIONALE</button> |  <button id="fcl_projects" onclick="openNav()">FCL INFORMATION</button>
             </div>
             <!-- side bar-->
                     <div id="fclSidenav" class="no_userselect">
@@ -381,10 +383,13 @@
                         <a href="#" id="academic_staffBtn"><img src="img/grey_out.png" id="academic_staffBtn_img">Academic Staff</a>
                     </div>
         </div>
-
-
     </nav>
 
+
+    <div class="zoom_ctl no_userselect">
+       <button class="zoom_Btn zoom_in" onclick="handle_zoom(this)">+</button><hr>
+       <button class="zoom_Btn" onclick="handle_zoom(this)">-</button>
+    </div>
     <!--the modal-->
     <div id="myModal" class="modal">
 
@@ -413,9 +418,40 @@
             </div>
             <div class="modal-footer">
                 <h5><a href="http://www.fcl.ethz.ch/" target="_blank" style="text-decoration:underline;color:dodgerblue;">www.fcl.ethz.ch</a></h5>
+
+        <span class="round-button">
+             <a href="https://www.facebook.com/futurecitieslaboratory">
+                 <img src="img/facebook_icon_blue.png" alt="Facabook" />
+             </a>
+        </span>
+
+        <span class="round-button">
+             <a href="https://twitter.com/_FCL">
+                 <img src="img/Twitter_icon_blue.png" alt="Twitter" />
+             </a>
+        </span>
+
+        <span class="round-button">
+             <a href="https://vimeo.com/futurecitieslaboratory">
+                 <img src="img/vimeo_icon.png" alt="vimeo" />
+             </a>
+        </span>
+         <span class="round-button">
+             <a href="https://vimeo.com/futurecitieslaboratory">
+                 <img src="img/vimeo_icon.png" alt="vimeo" />
+             </a>
+        </span>
+
+        <span class="round-button">
+             <a href="https://www.zotero.org/groups/future_cities_laboratory">
+                 <img src="img/zotero_icon.png" alt="zotero" />
+             </a>
+        </span>
+
             </div>
         </div>
     </div>
+    <button class="refresh_Btn" onclick="reset()">reset</button>
 
 
 
@@ -424,7 +460,8 @@
         <!--<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7830112895026!2d103.78620331459703!3d1.3052853620809883!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da1a431841d5f1%3A0x160f705c61acdff3!2ssixty40!5e0!3m2!1sen!2ssg!4v1466989919758" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>-->
     </div>
 
-    <span class="page_footer">Data Source: The World Bank  &emsp;  </span>
+    <span class="page_footer">Map Data ©The World Bank  &emsp;
+    </span>
 
 </div>
 

@@ -92,10 +92,10 @@ var projection, path, svg, g;
 //var graticule;
 var tooltip, one_tooltip, country_info_tooltip, fcl_tooltip,country_chart_tooltip;
 
-var zoom = d3.behavior.zoom().scaleExtent([1, 4])
+var zoom = d3.behavior.zoom().scaleExtent([1, 6])
             .on("zoom",move);
 
-
+var chart_refresh = true;
 function setup() {
 
     offsetL = document.getElementById("map_container").offsetLeft + 10;
@@ -121,15 +121,17 @@ function setup() {
             mydragg_L.stopMoving("content_holder");
         });
 
+    
     country_chart_tooltip.append("span")
         .attr("class","close")
         .html("x")
         .on("click",function(){
             //close
+            chart_refresh = true;
             country_chart_tooltip.style("visibility","hidden");
         });
 
-    country_info_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden").attr("z-index",4);
+    country_info_tooltip = tooltip.append("div").attr("class","tooltip").attr("style","visibility:hidden").attr("z-index",6);
 
     //<span class="close" onclick="close_modal()">×</span>
 
@@ -154,7 +156,8 @@ function setup() {
         .append("g");
 
     g = svg.append("g").attr("id","country_holder");
-
+   
+    svg.append('g').attr("id","point_tooltip")
     
 }
 
@@ -162,7 +165,6 @@ function draw_worldmap() {
 
     removeAllChild();
     setup();
-    display_googleM();
     generate_allDistMatrix(); // for 4-6 layers
     //svg.append("path").datum(graticule).attr("class", "graticule").attr("d", path);
 
@@ -211,7 +213,7 @@ function draw_worldmap() {
     
 }
 
-/* to draw the different layers of country shapes*/
+/* to draw a different layer of country shapes*/
 function draw_pop_country() {
     
     var country = g.append("g").attr("id","pop_countries")
@@ -311,8 +313,8 @@ function move(t,s) {
     if(t ==undefined || s== undefined){
         s = d3.event.scale ;
         t = d3.event.translate;
-
     }
+
 
     var tier1_scale = 2;
     var tier2_scale = 2.5;
@@ -372,17 +374,42 @@ function move(t,s) {
     }
     
     
-    /*//code for restrict base map boundary
-    var h = map_height / 4;
+    //code for restrict base map boundary
+  /*  var h = map_height / 4;
 
-    t[0] = Math.min(
-        (map_width / map_height) * (s - 1),
+    var res = (map_width / map_height) * (s - 1);
+    t[0] = Math.min(res
+        ,
         Math.max(map_width * (1 - s), t[0])
     );
     t[1] = Math.min(
         h * (s - 1) + h * s,
         Math.max(map_height * (1 - s) - h * s, t[1])
-    );*/
+    );
+
+    console.log("s = "+s+ "  res = "+res);
+    console.log('t[0] = '+t[0]+" t[1]="+t[1]);
+*/
+    var cur_scale = zoom.scale();
+
+    var margin_x = map_width*0.1;
+    var margin_y = map_height*0.3;
+
+    var max_t0 = (s-1) *map_width + 2*margin_x;
+    var max_t1 = (s-1)*map_height +2*margin_y;
+    if(t[0]>=0){
+        t[0] = Math.min(t[0],margin_x);
+        //console.log(t[0]);
+    }else{
+        t[0] = Math.max(t[0],-max_t0);
+
+    }
+
+    if(t[1]>=0){
+        t[1] = Math.min(t[1],margin_y);
+    }else{
+        t[1] = Math.max(t[1],-(max_t1*1.1));
+    }
 
 
     fcl_tooltip_list =[];
@@ -416,8 +443,22 @@ function move(t,s) {
 
 
     //adjust the country hover stroke map_width based on zoom level
-    d3.selectAll(".country").style("stroke-map_width", 1.5 / s);
+    d3.selectAll(".country").style("stroke-width", 1.5 / s);
     d3.selectAll(".text").style("font-size", 20 / s);
+
+
+    //the tooltips
+    /*svg.selectAll("text").style("font-size",12/s).attr("y",function (d) {
+            return d['y']-70/scale;
+    });
+    svg.selectAll("line").style("stroke-width", 2 / s).attr("y2", function(d){
+            return d['y']-100/scale;
+    });
+    svg.selectAll("rect")
+        .attr('y',function(d){
+            return d['y']-100/scale ;
+        })
+        .style("width", 100 / s).style("height",50/s);*/
     //d3.selectAll(".equator").style("stroke-width", 1/s+'px');
    // d3.selectAll("graticule").style("stroke-width", 0.5/s+'px');
 
@@ -449,4 +490,80 @@ function removeAllChild(){
         map_container .removeChild(map_container.firstChild);
     }
     
+}
+
+function handle_zoom(th){
+    var zoom_in = d3.select(th).classed("zoom_in");
+    var min_scale = zoom.scaleExtent()[0];
+    var max_scale = zoom.scaleExtent()[1];
+
+
+    var cur_scale = zoom.scale();
+    var new_scale;
+
+    if(zoom_in){//handle zoom in
+        new_scale = Math.min(cur_scale+1,max_scale);
+    }else{
+        new_scale = Math.max(cur_scale-1,min_scale);
+    }
+
+    var scale_factor = new_scale/cur_scale;
+    var cur_t = zoom.translate();
+
+    var new_t0 = map_width/2-scale_factor*(map_width/2-cur_t[0]);
+    var new_t1 = map_height/2-scale_factor*(map_height/2-cur_t[1]);
+
+    move([new_t0,new_t1],new_scale);
+}
+
+//reset to the beginning
+function reset(){
+
+    //clear all color layers
+    if(!pop_layer){
+        document.getElementById('pop_densityBtn').click();
+    }else{
+        document.getElementById('pop_densityBtn').click();
+        document.getElementById('pop_densityBtn').click();
+    }
+
+    if(gdp_layer){
+        document.getElementById('gdp_Btn').click();
+
+    }
+    if(co2_layer){
+        document.getElementById('co2_emissionBtn').click();
+    }
+    if(project_layer){
+        document.getElementById('fcl_projectsBtn').click();
+
+    }
+    if(network_layer){
+        document.getElementById('global_networkBtn').click();
+    }
+    if(staff_layer){
+        document.getElementById('academic_staffBtn').click();
+    }
+    //close google map
+    close_GoogleMap();
+    document.getElementById("googlem_switch").checked = false;
+
+    move([0,0],1);
+
+    //fcl side bar, close modal and close FCL information
+    close_modal();
+    if(sideBar_open)openNav();
+
+    //reset time slider
+    cur_year=1964;
+    brushed();
+
+    //reset nav location
+    document.getElementById('menu_bar').style.right = 40+'px';
+    document.getElementById('menu_bar').style.top = 0+'px';
+
+    //clear all charts
+    country_chart_tooltip.style("visibility","hidden");
+
+
 }

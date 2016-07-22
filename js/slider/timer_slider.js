@@ -178,9 +178,10 @@ function brushed() {
 
     var value = brush.extent()[0];
 
-        if (d3.event.sourceEvent) { // not a programmatic event
+        if (d3.event!=undefined && d3.event.sourceEvent) { // not a programmatic event
             value = x.invert(d3.mouse(this)[0]);
             brush.extent([value, value]);
+            console.log("event");
         }else{
             if(status == 0){
                 value = cur_year;

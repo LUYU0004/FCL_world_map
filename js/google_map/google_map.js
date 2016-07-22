@@ -53,7 +53,7 @@ function initMap() {
     var styledMap = new google.maps.StyledMapType(styles,
         {name: "Styled Map"});
 
-    center = new google.maps.LatLng(1.353083,103.819836);
+    center = new google.maps.LatLng(42.313,0);
 
     // Create a map object, and include the MapTypeId to add
     // to the map type control.
@@ -66,7 +66,7 @@ function initMap() {
         }*/
     };
 
-    var g_map = document.getElementById('google_map');
+    var g_map = document.getElementById('googlem_holder');
     
 
     gmap = new google.maps.Map(g_map, mapOptions);
@@ -98,7 +98,8 @@ function initMap() {
                 callcount=0;
                 d3.select("#google_map").remove();
                 }*/
-
+              tier_range = 3;
+              scale = tier4_scale;
                svg.selectAll(".items").remove();
                if(project_layer)find_last_tier(tier_range,scale,'project_layer');
                if(network_layer)find_last_tier(tier_range,scale,'network_layer');
@@ -143,14 +144,17 @@ function initMap() {
    });
 
     // restrict the appropriate region for users
-    /*
-     gmap.setOptions({minZoom:11});
-    var allowedBounds = new google.maps.LatLngBounds(
-        new google.maps.LatLng(1.1059477218902916, 103.38930926660157),
-        new google.maps.LatLng(1.600193102239492, 104.25036273339845)
+    var initial_center = gmap.getCenter();
+    console.log(initial_center.lng()+"  "+initial_center.lat());
+    var lastValidCenter = initial_center;
+
+     gmap.setOptions({minZoom:2},{maxZoom:17});
+   /* var allowedBounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(-82, 150),//bottom left corner
+        new google.maps.LatLng(87, -139)
     );
 
-   var lastValidCenter = gmap.getCenter();
+
 
     google.maps.event.addListener(gmap, 'center_changed', function() {
         if (allowedBounds.contains(gmap.getCenter())) {
@@ -161,21 +165,72 @@ function initMap() {
         }
 
         // not valid anymore => return to last valid position
-        gmap.panTo(lastValidCenter):
+        gmap.panTo(lastValidCenter);
+
+    });*/
+
+    var cur_bounds;
+    google.maps.event.addListener(gmap, 'bounds_changed', function() {
+        cur_bounds = gmap.getBounds();
+        var cur_scale =  gmap.getZoom();
+
+        var top_right_corner = cur_bounds.getNorthEast();
+        var bottom_left_corner = cur_bounds.getSouthWest();
+
+        if(cur_scale<=2){
+            gmap.panTo(initial_center);
+            return;
+        }
+
+
+        /*var R = top_right_corner.lng();
+        var L = bottom_left_corner.lng();
+
+
+        var resL_L = !(L>0 && lastValidCenter.lng()<0) ;
+        var bound_range = Math.abs(R-L);
+        if(!resL_L&&cur_scale<4)bound_range = Math.abs(180-L + R+180);
+        console.log("bound_range = "+bound_range);
+        console.log("-180"+"L="+L+"  "+(180-bound_range));
+
+
+        var resL_R = L<= (180-bound_range);
+
+
+            if(resL_L && resL_R){
+                lastValidCenter = gmap.getCenter();
+                return;
+            }else{
+                if(!resL_L){
+
+                    console.log("L wrong "+"BOUND_RANGE="+bound_range);
+
+                    lastValidCenter = new google.maps.LatLng(lastValidCenter.lat(),-(180-bound_range/2));
+                }else{
+                    console.log("R wrong"+"BOUND_RANGE="+bound_range);
+                    lastValidCenter = new google.maps.LatLng(lastValidCenter.lat(),(180-bound_range/2));
+                }
+                gmap.panTo(lastValidCenter);
+
+            }
+
+        //console.log("top_right = "+top_right_corner+" bottom_left = "+bottom_left_corner);
+
+       if(top_right_corner.lng()){
+
+       }*/
+        /*if ()//allowedBounds.contains(top_right_corner)&& allowedBounds.contains(bottom_left_corner)) {
+            // still within valid bounds, so save the last valid position
+            lastValidCenter = gmap.getCenter();
+
+            return;
+        }
+
+        // not valid anymore => return to last valid position
+         gmap.panTo(lastValidCenter);*/
+
 
     });
-*/
-    /*var initialBounds;
-    google.maps.event.addListener(gmap, 'bounds_changed', function() {
-        try {
-            if( initialBounds == null ) {
-                initialBounds = gmap.getBounds();
-                console.log("initial_Bounds = "+initialBounds);
-            }
-        } catch( err ) {
-            alert( err );
-        }
-    });*/
 
     // Define the LatLng coordinates for the polygon's path.
     var triangleCoords = [
@@ -251,8 +306,9 @@ function draw_polygon(triangleCoords,markerPos,fillcolor,info){
 
     bermudaTriangle.setMap(gmap);
 
+
     var project_img = new Image();
-    project_img.src = "img/project_img/"+2+"_fcl_vis.jpg";
+    project_img.src = "img/project_img/" + 1 + "_fcl_vis.jpg";
 
     var mouseover_String = " <div><div class='pic_holder Centerer'>" +
         "<img class='tooltip_pic' src='"+project_img.src+"'></div>" +
@@ -354,26 +410,29 @@ function clear_allProject_Poly(){
     });
 }
 
+
 function load_google_map() {
-    //if(googlem_holder !=undefined)googlem_holder.remove();
-    googlem_holder = d3.select("#content_holder").append("div").attr("id","googlem_holder")
-        .style("position","absolute")
+    d3.select("#content_holder").append("div").attr("id","googlem_holder")
         .style("visibility","hidden");
-    
+    document.getElementById("googlem_holder").style.width = innerWidth+"px";
+    document.getElementById("googlem_holder").style.height = innerHeight+"px";
+
+
     var toggle_switchHolder = document.createElement('div');
     toggle_switchHolder.id = "toggle_GM";
 
     var text = document.createElement('div');
     text.className = 'text_box';
-    text.innerHTML = 'Google Map';
+    text.innerHTML = 'GOOGLE MAP';
 
     var input = document.createElement('input');
+    input.id = 'googlem_switch';
     input.type = 'checkbox';
     input.className = 'switch-input';
     input.onchange = function() {handle_switch()};
 
     var toggle_slider= document.createElement('div');
-    toggle_slider.className = 'toggle_slider round';
+    toggle_slider.className = 'toggle_slider';
     
 
     var label =  document.createElement('label');
@@ -381,25 +440,18 @@ function load_google_map() {
 
     label.appendChild(input);
     label.appendChild(toggle_slider);
+    toggle_switchHolder.appendChild(text);
     toggle_switchHolder.appendChild(label);
-    document.getElementById("googlem_holder").appendChild(text);
-    document.getElementById("googlem_holder").appendChild(toggle_switchHolder);
+
+    //document.getElementById("googlem_holder").appendChild(text);
+     document.getElementById("content_holder").appendChild(toggle_switchHolder);
     //end of toggle switch
 
-    googlem_holder.append("div")//<a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="border-bottom:0 solid red;">&times;</a>
-        .attr("id","google_map");
-
 
 }
 
-/*make google visible*/
-function display_googleM(){
-    googlem_holder.style("visibility","visible");
-}
 
-function display_NogoogleM() {
-    googlem_holder.style("visibility","hidden");
-}
+
 
 function close_GoogleMap() {
 
@@ -416,33 +468,21 @@ function close_GoogleMap() {
 
     move(t,zoom);
 
-
-
-        document.getElementById("googlem_holder").style.width = "190px";
-        document.getElementById("googlem_holder").style.height = "40px";
+    
        // document.getElementById("google_map").style.width = "1250px";
 
-        d3.select("#google_map").style("visibility","hidden");
+        //document.getElementById("googlem_holder").style.width = innerWidth+"px";
+        //document.getElementById("googlem_holder").style.height = innerHeight+"px";
+        d3.select("#googlem_holder").style("visibility","hidden");
 }
 
 function open_GoogleMap() {
 
-    d3.select("#google_map").style("visibility","visible");
-    document.getElementById("googlem_holder").style.width = innerWidth+"px";
-    document.getElementById("googlem_holder").style.height = innerHeight+"px";
-
-
-    d3.select("#google_map").style("visibility","visible");
     //document.getElementById("googlem_holder").style.width = innerWidth+"px";
     //document.getElementById("googlem_holder").style.height = innerHeight+"px";
 
-    var holder_width = document.getElementById("googlem_holder").offsetWidth*0.98;
-    var holder_height = document.getElementById("googlem_holder").offsetHeight*0.99-50;
-
-    document.getElementById("google_map").style.width = holder_width+"px";
-    document.getElementById("google_map").style.height = holder_height+"px";
-
-
+    d3.select("#googlem_holder").style("visibility","visible");
+    
     //adjust the map to be return
     var zoomlvl = zoom.scale();
     var  translate= zoom.translate();
@@ -454,7 +494,7 @@ function open_GoogleMap() {
     var c = new google.maps.LatLng(map_center[1],map_center[0]);
 
 
-    google.maps.event.trigger(gmap, 'resize');
+    //google.maps.event.trigger(gmap, 'resize');
 
     gmap.panTo(c);
     gmap.setZoom(parseInt(zoomlvl-0.5)+2);
@@ -532,6 +572,7 @@ function add_cluster_googleMap(color, lat, lon,text, clusterObj,className) {
         strokeWeight: 0.5
     });*/
 
+
     var project_img = new Image();
     project_img.src = "img/project_img/" + 1 + "_fcl_vis.jpg";
 
@@ -606,7 +647,7 @@ function clear_allCircles(){
 }
 
 //draw zoomable circles when clusters onclick
-function draw_zoomableCircles_googleMap(scale,latLng,clusterObj) {
+function draw_zoomableCircles_googleMap(scale,latLng,clusterObj,className) {
 
     clear_allCircles();
     var color ='#75dccd';
@@ -622,7 +663,6 @@ function draw_zoomableCircles_googleMap(scale,latLng,clusterObj) {
     var nodes = pack.nodes(clusterObj);
 
 
-    console.log(nodes);
     //draw the root
     var holder = new google.maps.Marker({
         position: latLng,
@@ -643,7 +683,6 @@ function draw_zoomableCircles_googleMap(scale,latLng,clusterObj) {
     holder.addListener('click',function(){//onclick clear all circles
         console.log("clear the circles!");
         circles.forEach(function (m) {
-            console.log(m);
             m.setMap(null);
         });
 
@@ -680,7 +719,8 @@ function draw_zoomableCircles_googleMap(scale,latLng,clusterObj) {
     var t = 0.2*s+0.7;
     if(s>=15)t = 0.2*s+0.5;
 
-    console.log("k="+k+"  s="+s);
+    var infowindows_mouseover = {};
+    var infowindows_click = {};
 
     for(var i =1;i<length;i++){
         node = nodes[i];
@@ -707,16 +747,26 @@ function draw_zoomableCircles_googleMap(scale,latLng,clusterObj) {
             zIndex:zindex
         });
 
-        console.log(zindex);
+
+        var img_src;
+        switch (className){
+            case 'pop_layer': img_src = "img/project_img/" + node.itemIndex  + "_fcl_vis.jpg";
+                break;
+            case 'network_layer': img_src = "img/network_img/"+ node.itemIndex +"_network.png"  ;
+                break;
+            default: img_src = "img/project_img/0_fcl_vis.jpg";
+                break;
+        }
 
         var project_img = new Image();
-        project_img.src = "img/project_img/" + node.itemIndex + "_fcl_vis.jpg";
+        project_img.src = img_src;
+        console.log(img_src);
 
         var mouseover_String = " <div><div class='pic_holder Centerer'>" +
             "<img class='tooltip_pic' src='"+project_img.src+"'></div>" +
             "<div class='tooltip_text'><b style='font-size:17px;'>" + node.name+ "</b>";
 
-        var click_String = "<div class='tooltip_holder'><div class='pic_holder Centerer'><img class='tooltip_pic Centered' src='"+project_img.src+"'></div>" +
+        var click_String = "<div class='tooltip_holder'><div class='pic_holder Centerer'><img class='tooltip_pic Centered' src='"+project_img.src+"' onerror='imgErr(this)'></div>" +
             "<div class='tooltip_text'><b>" + node.name + "</b><p>" + node.text + "</div></div>";
 
 
@@ -727,28 +777,36 @@ function draw_zoomableCircles_googleMap(scale,latLng,clusterObj) {
         });
 
         var infowindow_click = new google.maps.InfoWindow({
+            content: click_String,
             maxWidth: 300
             // position:latLng
         });
 
-        marker1.myHtmlContent = click_String;
-        infowindow_click.setContent(marker1.myHtmlContent);
+
+        marker1.myHtmlContent = node.itemIndex;
+
+        infowindows_mouseover[node.itemIndex]=infowindow_mouseover;
+        infowindows_click[node.itemIndex]=infowindow_click;
 
         marker1.addListener('mouseover', function () {
             this.set("strokeOpacity", 1);
-            infowindow_mouseover.open(gmap,this);
+            infowindows_mouseover[this.myHtmlContent].open(gmap,this);
+
         });
 
         marker1.addListener('click', function () {
-            gmap.panTo(latLng);
-            infowindow_mouseover.setMap(null);
-            infowindow_click.open(gmap,this);
+            //gmap.panTo(latLng);
+
             // draw_circles(clusterObj,className)
+            //console.log();
+            infowindows_click[this.myHtmlContent].setContent(this.myHtmlContent);
+            infowindows_mouseover[this.myHtmlContent].setMap(null);
+            infowindows_click[this.myHtmlContent].open(gmap,this);
         });
 
         marker1.addListener('mouseout', function () {
             this.set("strokeOpacity", 0);
-            infowindow_mouseover.setMap(null);
+            infowindows_mouseover[this.myHtmlContent].setMap(null);
         });
 
         circles.push(marker1);
@@ -781,8 +839,7 @@ function project(latLng) {
 //function to add clusters of projects
 //color,item["latitude"],item["longitude"],item["name"],item["text"],1,itemIndex+1,scale,className
 function add_point_googleMap(color, lat, lon,name,text,index,className) {
-
-
+    
     var area = 1;
     //var radius_unit = 100000;
     //var radius = Math.sqrt(clusterObj["area"] / Math.PI) / scale;
@@ -807,14 +864,25 @@ function add_point_googleMap(color, lat, lon,name,text,index,className) {
         }
     });
 
-    var project_img = new Image();
-    project_img.src = "img/project_img/" + index + "_fcl_vis.jpg";
+    var img_src;
+
+    switch (className){
+        case 'pop_layer': img_src = "img/project_img/" + index + "_fcl_vis.jpg";
+            break;
+        case 'network_layer': img_src = "img/network_img/"+index+"_network.png"  ;
+            break;
+        default: img_src = "img/project_img/0_fcl_vis.jpg";
+            break;
+    }
+    //add in picture for the project
+    var item_img = new Image();
+    item_img.src = img_src;
 
     var mouseover_String = " <div><div class='pic_holder Centerer'>" +
-        "<img class='tooltip_pic' src='"+project_img.src+"'></div>" +
-        "<div class='tooltip_text'><b style='font-size:17px;'>" + name+ "</b>"
+        "<img class='tooltip_pic' src='"+item_img.src+"'></div>" +
+        "<div class='tooltip_text'><b style='font-size:17px;'>" + name+ "</b>";
 
-    var click_String = "<div class='tooltip_holder'><div class='pic_holder Centerer'><img class='tooltip_pic Centered' src='"+project_img.src+"'></div>" +
+    var click_String = "<div class='tooltip_holder'><div class='pic_holder Centerer'><img class='tooltip_pic Centered' src='"+item_img.src+"'></div>" +
         "<div class='tooltip_text'><b>" + name + "</b><p>" + text + "</div></div>";
 
 
@@ -838,7 +906,7 @@ function add_point_googleMap(color, lat, lon,name,text,index,className) {
     });
 
     marker.addListener('click', function () {
-        gmap.panTo(latLng);
+       // gmap.panTo(latLng);
         infowindow_mouseover.setMap(null);
         infowindow_click.open(gmap,this);
         // draw_circles(clusterObj,className)
@@ -915,3 +983,11 @@ function clear_allStaff(){
     staff_infowindows = [];
     clear_allCircles();
 }
+
+//Handle the onError event for the image to reassign its source using JavaScript:
+
+    function imgErr(image) {
+        image.onerror = "";
+        image.src = "img/project_img/0_fcl_vis.jpg";
+        return true;
+    }

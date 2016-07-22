@@ -1,0 +1,16 @@
+Index: css/main.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- css/main.css	(revision )
++++ css/main.css	(revision )
+@@ -20,7 +20,6 @@
+     width: 510px;
+     height: 123px;
+     padding: 10px;
+-    vertical-align: text-top;
+ }
+ 
+ #map_container {
+\ No newline at end of file
