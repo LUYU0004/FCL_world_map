@@ -309,6 +309,7 @@ function addpoint(color, lat, lon, title,text, area, imgNo,scale,className) {
 
     if(area == undefined) area = 1;
     if(imgNo == undefined) imgNo = 0;
+    console.log("testing");
 
 
     var gpoint = g.append("g").attr("class","items "+className);
